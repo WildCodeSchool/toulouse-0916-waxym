@@ -2,6 +2,7 @@ package fr.wildcodeschool.haa.waxym;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -159,6 +160,13 @@ public class CalendarView extends LinearLayout {
                 return true;
             }
         });
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(),DetailsActivity.class);
+                getContext().startActivity(intent);
+            }
+        });
     }
 
     /**
@@ -225,6 +233,7 @@ public class CalendarView extends LinearLayout {
         @Override
         public View getView(int position, View view, ViewGroup parent)
         {
+
             // day in question
             Date date = getItem(position);
             int day = date.getDate();
@@ -239,7 +248,7 @@ public class CalendarView extends LinearLayout {
                 view = inflater.inflate(R.layout.control_calendar_day, parent, false);
 
             // if this day has an event, specify event image
-            view.setBackgroundResource(0);
+            view.setBackgroundResource(R.drawable.next_icon);
             if (eventDays != null)
             {
                 for (Date eventDate : eventDays)
@@ -273,7 +282,8 @@ public class CalendarView extends LinearLayout {
 
             // set text
             ((TextView)view).setText(String.valueOf(date.getDate()));
-
+            //set row height
+            view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,200));
             return view;
         }
     }
