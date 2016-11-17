@@ -21,14 +21,16 @@ public class MainActivity extends OptionMenuActivity
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        if (getIntent().getSerializableExtra("date et event") !=null) {
+            DayEvent eventRtt = (DayEvent) getIntent().getSerializableExtra("date et event");
+            HashSet<DayEvent> events = new HashSet<>();
+            events.add(eventRtt);
 
-        HashSet<Date> events = new HashSet<>();
-        events.add(new Date());
-
-        CalendarView cv = ((CalendarView)findViewById(R.id.calendar_view));
-        cv.updateCalendar(events);
-
+            CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
+            cv.updateCalendar(events);
+        }
         // assign event handler
+        CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
         cv.setEventHandler(new CalendarView.EventHandler()
         {
             @Override

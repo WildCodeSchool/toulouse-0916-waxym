@@ -22,8 +22,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
-
-        android:id="@+id/button" />
+        android:id="@+id/cp" />
 
     <Button
         android:text="ABS"
@@ -32,7 +31,7 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/button2"
         android:layout_marginEnd="15dp"
-        android:id="@+id/button2" />
+        android:id="@+id/abs" />
 
     <Button
         android:text="RTT"
@@ -40,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="15dp"
-        android:id="@+id/button3"
+        android:id="@+id/rtt"
       />
     </LinearLayout>
     <LinearLayout

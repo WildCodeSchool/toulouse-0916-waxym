@@ -1,14 +1,17 @@
 package fr.wildcodeschool.haa.waxym;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.Date;
 import java.util.zip.Inflater;
 
 public class DetailsActivity extends OptionMenuActivity implements AdapterView.OnItemSelectedListener {
@@ -17,6 +20,20 @@ public class DetailsActivity extends OptionMenuActivity implements AdapterView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
+        // get serialized date
+        final Date date = (Date)getIntent().getSerializableExtra("date");
+
+        Button rtt = (Button)findViewById(R.id.rtt);
+        rtt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(DetailsActivity.this,MainActivity.class);
+                intent.putExtra("date et event", new DayEvent(date,"RTT"));
+                finish();
+                startActivity(intent);
+            }
+        });
+        //activities list
         Spinner spinner = (Spinner)findViewById(R.id.spinner);
         spinner.setOnItemSelectedListener(this);
     }
