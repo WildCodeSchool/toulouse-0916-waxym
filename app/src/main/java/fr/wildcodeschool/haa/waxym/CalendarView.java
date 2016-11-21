@@ -1,6 +1,5 @@
 package fr.wildcodeschool.haa.waxym;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -8,6 +7,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -44,7 +44,9 @@ public class CalendarView extends LinearLayout {
 
     //event handling
     private EventHandler eventHandler = null;
-
+    // init move pos
+    private float startX = 0;
+    private float startY = 0;
     // internal components
     private LinearLayout header;
     private ImageView btnPrev;
@@ -168,6 +170,7 @@ public class CalendarView extends LinearLayout {
                 getContext().startActivity(intent);
             }
         });
+
     }
 
     /**
@@ -183,12 +186,12 @@ public class CalendarView extends LinearLayout {
      */
     public void updateCalendar(HashSet<DayEvent> events)
     {
-        ArrayList<Date> cells = new ArrayList<>();
-        Calendar calendar = (Calendar)currentDate.clone();
+        final ArrayList<GridDate> cells = new ArrayList<>();
+        final Calendar calendar = (Calendar)currentDate.clone();
 
         // determine the cell for current month's beginning
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+        final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) - 1;
 
         // move calendar backwards to the beginning of the week
         calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell);
@@ -196,13 +199,38 @@ public class CalendarView extends LinearLayout {
         // fill cells
         while (cells.size() < DAYS_COUNT)
         {
-            cells.add(calendar.getTime());
+            cells.add(new GridDate(calendar.getTime()));
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
         // update grid
-        grid.setAdapter(new CalendarAdapter(getContext(), cells, events));
+        final CalendarAdapter calendarAdapter = new CalendarAdapter(getContext(),cells,events);
+        grid.setAdapter(calendarAdapter);
 
+        // multiselect
+        //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
+        //on touch
+        grid.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+               float initialY =motionEvent.getY(), initialX =motionEvent.getX();
+                int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
+                if (i >= 0 && i < 42) {
+
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                        changeSateAndResetPos(cells.get(i),i,initialX,initialY);
+                        //on swipe
+                    }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                        if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(),grid.getChildAt(i).getHeight())) {
+                            changeSateAndResetPos(cells.get(i),i,initialX,initialY);
+                        }
+
+                    }
+
+                }
+                return true;
+            }
+        });
         // update title
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         txtDate.setText(sdf.format(currentDate.getTime()));
@@ -216,7 +244,7 @@ public class CalendarView extends LinearLayout {
     }
 
 
-    private class CalendarAdapter extends ArrayAdapter<Date>
+    private class CalendarAdapter extends ArrayAdapter<GridDate>
     {
         // days with events
         private HashSet<DayEvent> eventDays;
@@ -224,7 +252,7 @@ public class CalendarView extends LinearLayout {
         // for view inflation
         private LayoutInflater inflater;
 
-        public CalendarAdapter(Context context, ArrayList<Date> days, HashSet<DayEvent> eventDays)
+        public CalendarAdapter(Context context, ArrayList<GridDate> days, HashSet<DayEvent> eventDays)
         {
             super(context, R.layout.calendar_day2, days);
             this.eventDays = eventDays;
@@ -237,7 +265,7 @@ public class CalendarView extends LinearLayout {
         {
 
             // day in question
-            Date date = getItem(position);
+            Date date = getItem(position).getDate();
             int day = date.getDate();
             int month = date.getMonth();
             int year = date.getYear();
@@ -313,5 +341,35 @@ public class CalendarView extends LinearLayout {
     {
         void onDayLongPress(Date date);
     }
+    // check if distance between two point is higher than max entered
 
+    public boolean checkDistance(float x, float y, float deltaX, float deltaY, int width, int height) {
+        float diffX = 0;
+        float diffY = 0;
+                diffX = Math.abs(deltaX - x);
+                diffY = Math.abs(deltaY - y);
+        if(diffX>width || diffY >height)
+            return true;
+        else
+            return false;
+
+
+    }
+    // change state of cell at position and set associated background and reset start positions
+    public void changeSateAndResetPos(GridDate selectedDay, int position,float x, float y){
+        startX = x;
+        startY = y;
+        if (!selectedDay.isState()){
+            grid.getChildAt(position).setBackgroundResource(R.color.RTT);
+            selectedDay.setState(true);
+        }else {
+            grid.getChildAt(position).setBackgroundResource(0);
+            selectedDay.setState(false);
+        }
+
+    }
+    // end button selection
+    public void showFinishSelection(View view){
+
+    }
 }
