@@ -1,8 +1,10 @@
 package fr.wildcodeschool.haa.waxym;
 
-import android.support.v7.app.ActionBarActivity;
+import android.app.Fragment;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -13,14 +15,16 @@ import java.util.HashSet;
 
 
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
 {
+    private static final String LIST_FRAGMENT_TAG = "list_fragment";
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         HashSet<Date> events = new HashSet<>();
         events.add(new Date());
@@ -41,15 +45,42 @@ public class MainActivity extends ActionBarActivity
         });
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu)
     {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
     @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_show_list) {
+            toggleList();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+    //animation du menu
+    private void toggleList() {
+        Fragment f = getFragmentManager().findFragmentByTag(LIST_FRAGMENT_TAG);
+        if (f != null) {
+            getFragmentManager().popBackStack();
+        } else {
+            getFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.animator.slide_up,
+                            R.animator.slide_down,
+                            R.animator.slide_up,
+                            R.animator.slide_down)
+                    .add(R.id.list_fragment_container, SlidingListFragment
+                                    .instantiate(this, SlidingListFragment.class.getName()),
+                            LIST_FRAGMENT_TAG
+                    ).addToBackStack(null).commit();
+        }
+    }
+   /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
@@ -62,6 +93,6 @@ public class MainActivity extends ActionBarActivity
             return true;
         }*/
 
-        return super.onOptionsItemSelected(item);
-    }
+      ////  return super.onOptionsItemSelected(item);
+    //}
 }

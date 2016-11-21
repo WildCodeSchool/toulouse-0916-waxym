@@ -240,6 +240,7 @@ public class CalendarView extends LinearLayout {
 
             // if this day has an event, specify event image
             view.setBackgroundResource(0);
+
             if (eventDays != null)
             {
                 for (Date eventDate : eventDays)
@@ -273,7 +274,9 @@ public class CalendarView extends LinearLayout {
 
             // set text
             ((TextView)view).setText(String.valueOf(date.getDate()));
-
+            //ici pour changer la taille des cases
+            view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,200));
+            //view.setBackgroundColor(Color.RED);
             return view;
         }
     }
