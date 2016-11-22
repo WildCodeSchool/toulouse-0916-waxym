@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name">Waxym</string>
-
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
-
+    <string name="action_show_list">mes choix</string>
     <string-array name="out_of_space">
         <item>Mercury</item>
         <item>Venus</item>
@@ -15,4 +14,3 @@
         <item>Neptune</item>
     </string-array>
 </resources>
-
