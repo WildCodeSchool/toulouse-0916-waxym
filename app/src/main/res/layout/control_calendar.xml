@@ -61,7 +61,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="#222222"
-            android:text="SUN"/>
+            android:text="DIM"/>
 
         <TextView
             android:layout_width="0dp"
@@ -69,7 +69,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="#222222"
-            android:text="MON"/>
+            android:text="LUN"/>
 
         <TextView
             android:layout_width="0dp"
@@ -77,7 +77,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="#222222"
-            android:text="TUE"/>
+            android:text="MAR"/>
 
         <TextView
             android:layout_width="0dp"
@@ -85,7 +85,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="#222222"
-            android:text="WED"/>
+            android:text="MER"/>
 
         <TextView
             android:layout_width="0dp"
@@ -93,7 +93,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="#222222"
-            android:text="THU"/>
+            android:text="JEU"/>
 
         <TextView
             android:layout_width="0dp"
@@ -101,7 +101,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="#222222"
-            android:text="FRI"/>
+            android:text="VEN"/>
 
         <TextView
             android:layout_width="0dp"
@@ -109,7 +109,7 @@
             android:layout_weight="1"
             android:gravity="center_horizontal"
             android:textColor="#222222"
-            android:text="SAT"/>
+            android:text="SAM"/>
     </LinearLayout>
 
     <!-- days view -->
@@ -117,5 +117,5 @@
         android:id="@+id/calendar_grid"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:numColumns="7"/>
+        android:numColumns="7" />
 </LinearLayout>
