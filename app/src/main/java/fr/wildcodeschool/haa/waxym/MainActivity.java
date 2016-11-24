@@ -16,7 +16,9 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
-        copyDatabase(getApplicationContext());
+        //copyDatabase(getApplicationContext());
         if (!database.exists()) {
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
@@ -48,9 +50,25 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+        DayStuff dayStuff = null;
+        try {
+            dayStuff = mDBHelper.getEvents("Robert").get(mDBHelper.getEvents("Robert").keySet().toArray()[0]);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        dayStuff.setDate(Calendar.getInstance().getTime());
+        try {
+            mDBHelper.setEvent(dayStuff);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         TextView textView = (TextView)findViewById(R.id.test);
 
-        textView.setText(mDBHelper.getEvents(1).get(mDBHelper.getEvents(1).keySet().toArray()[0]).getUserName());
+        try {
+            textView.setText(mDBHelper.getEvents("Robert").get(mDBHelper.getEvents("Robert").keySet().toArray()[0]).getUserName());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         if (getIntent().getSerializableExtra("date et event") != null) {
             DayEvent eventRtt = (DayEvent) getIntent().getSerializableExtra("date et event");
             HashSet<DayEvent> events = new HashSet<>();

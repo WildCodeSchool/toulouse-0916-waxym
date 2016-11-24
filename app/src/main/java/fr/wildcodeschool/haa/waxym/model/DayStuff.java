@@ -13,14 +13,24 @@ public class DayStuff {
     private int afternoon;
     private String contractNumber;
     private String userName;
+    private int userId;
 
-    public DayStuff(Date date, String activity, String contractNumber, int morning, int afternoon, String userName) {
+    public DayStuff(Date date, String activity, String contractNumber, int morning, int afternoon, String userName, int userId) {
         this.date = date;
         this.activity = activity;
         this.morning = morning;
         this.afternoon = afternoon;
         this.contractNumber = contractNumber;
         this.userName = userName;
+        this.userId = userId;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public Date getDate() {

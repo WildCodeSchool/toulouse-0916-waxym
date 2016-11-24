@@ -6,6 +6,8 @@ package fr.wildcodeschool.haa.waxym;
 
 public class Constants {
     public static String DBNAME ="database.sqlite";
+    //
+    public static String DATE_FORMAT  = "yyyy-MM-dd";
     // table columns names
     public static String DATE_ACTIVITY = "activity.date";
     public static String NAME_ACTIVITY = "activity_name";
