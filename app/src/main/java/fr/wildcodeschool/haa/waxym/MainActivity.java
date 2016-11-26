@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         }
         DayStuff dayStuff = null;
         try {
-            dayStuff = mDBHelper.getEvents("Robert").get(mDBHelper.getEvents("Robert").keySet().toArray()[0]);
+            dayStuff = mDBHelper.getEvents("Robert",Calendar.getInstance().getTime()).get(0);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = (TextView)findViewById(R.id.test);
 
         try {
-            textView.setText(mDBHelper.getEvents("Robert").get(mDBHelper.getEvents("Robert").keySet().toArray()[0]).getUserName());
+            textView.setText(mDBHelper.getEvents("Robert",Calendar.getInstance().getTime()).get(0).getUserName());
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -83,8 +83,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onDayLongPress(Date date) {
                 // show returned day
-                DateFormat df = SimpleDateFormat.getDateInstance();
-                Toast.makeText(MainActivity.this, df.format(date), Toast.LENGTH_SHORT).show();
+                DateFormat sdf = SimpleDateFormat.getDateInstance();
+                Toast.makeText(MainActivity.this, sdf.format(date), Toast.LENGTH_SHORT).show();
             }
         });
     }

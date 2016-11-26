@@ -23,4 +23,7 @@ public class Constants {
     public static String ACTIVITY = "activity";
     public static String ACTIVITY_TYPE = "activity_type";
     public static String USER = "user";
+
+    //Id error
+    public static int ID_ERROR = 404;
 }

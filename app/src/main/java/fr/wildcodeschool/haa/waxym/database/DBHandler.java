@@ -16,9 +16,9 @@ import android.database.Cursor;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.HashSet;
 
 import fr.wildcodeschool.haa.waxym.Constants;
 import fr.wildcodeschool.haa.waxym.model.DayStuff;
@@ -60,25 +60,33 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
                 mDatabase.close();
             }
         }
-    // get all events of mentioned used
-        public HashMap<Date,DayStuff> getEvents (String user) throws ParseException {
+    // get all events of mentioned user from 1 month of the entered date
+        public ArrayList<DayStuff> getEvents (String user, Date referenceDate) throws ParseException {
             DayStuff dayStuff = null;
-            HashMap<Date,DayStuff> eventsList = new HashMap<>();
+            ArrayList<DayStuff> eventsList = new ArrayList<>();
+            Calendar fromDate = Calendar.getInstance();
+            Calendar toDate = Calendar.getInstance();
+            toDate.setTime(referenceDate);
+            fromDate.setTime(referenceDate);
+            fromDate.add(Calendar.MONTH, -1);
+            toDate.add(Calendar.MONTH, 1);
             SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
             openDatabase();
             // sqlite request : SQLiteQuery: SELECT activity.date, activity_name, contract_number,morning, afternoon, name_user, id_user FROM user,activity,activity_type
-            // WHERE user.id_user = activity.id_user AND user.id_user = '1' AND activity.id_activity_type = activity_type.id_activity_type
+            // WHERE user.id_user = activity.id_user AND user.id_user = '1' AND activity.id_activity_type = activity_type.id_activity_type AND date >= entered date -1 month And date <= entered date +1 month
             Cursor cursor = mDatabase.rawQuery("SELECT "+ Constants.DATE_ACTIVITY + ", " + Constants.NAME_ACTIVITY+
                     ", "+ Constants.CONTRACT_NUMBER +"," + Constants.MORNING + ", " + Constants.AFTERNOON +", "+Constants.NAME_USER+ ", "+ Constants.ID_USER_USER +
                     " FROM "+Constants.USER+","+ Constants.ACTIVITY+","+Constants.ACTIVITY_TYPE+
                     " WHERE "+Constants.ID_USER_USER + " = " + Constants.ID_USER_ACTIVITY +
                     " AND " + Constants.NAME_USER + " = " + "'"+user+"'"+
-                    " AND " + Constants.ID_ACTIVITY_TYPE_ACTIVITY + " = " + Constants.ID_ACTIVITY_TYPE_ACTIVITY_TYPE, null);
+                    " AND " + Constants.ID_ACTIVITY_TYPE_ACTIVITY + " = " + Constants.ID_ACTIVITY_TYPE_ACTIVITY_TYPE +
+                    " AND " +Constants.DATE_ACTIVITY + " >= " + "'"+ convertDatetoString(fromDate.getTime()) +"'" +
+                    " AND " +Constants.DATE_ACTIVITY + " <= " + "'"+ convertDatetoString(toDate.getTime()) +"'", null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()){
                 dayStuff = new DayStuff(convertStringToDate(cursor.getString(0)),cursor.getString(1),cursor.getString(2),cursor.getInt(3),
                         cursor.getInt(4),cursor.getString(5),cursor.getInt(6));
-                eventsList.put(dayStuff.getDate(),dayStuff);
+                eventsList.add(dayStuff);
                 cursor.moveToNext();
             }
             cursor.close();
@@ -90,8 +98,8 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues valuesActivity = new ContentValues();
-            // if date already exists in db for this user
-            if (searchAndCompareDate(getEvents(dayEvent.getUserName()),dayEvent)){
+            // if date half- day already exists in db for this user
+            if (searchAndCompareDate(getEvents(dayEvent.getUserName(),dayEvent.getDate()),dayEvent)){
 
 
                 // Activity table
@@ -118,8 +126,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
     private Date convertStringToDate(String toDate) throws ParseException {
         SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
         try {
-            Date date = sdf.parse(toDate);
-            return date;
+            return sdf.parse(toDate);
         }catch (ParseException e) {
             e.printStackTrace();
 
@@ -129,15 +136,16 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
     }
     private String convertDatetoString(Date toString) {
         SimpleDateFormat sdf = new SimpleDateFormat(Constants.DATE_FORMAT);
-        String dateInString = sdf.format(toString);
-        return dateInString;
+        return sdf.format(toString);
 
     }
-    // search if date is already used in hashSet
-    private boolean searchAndCompareDate(HashMap<Date,DayStuff> list,DayStuff arg){
-        for (Date date : list.keySet()) {
-            if (date != null) {
-                if (convertDatetoString(date).equals(convertDatetoString(arg.getDate())))
+    // search if date is already used with the same half-day
+    private boolean searchAndCompareDate(ArrayList<DayStuff> list, DayStuff arg){
+        for (DayStuff day : list) {
+            if (day.getDate() != null) {
+                if (convertDatetoString(day.getDate()).equals(convertDatetoString(arg.getDate()))
+                        && (day.getAfternoon() == arg.getAfternoon()
+                        || day.getMorning() == arg.getMorning()))
                     return true;
             }
         }
@@ -145,15 +153,12 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
     }
     private int determineActyvityTypeID(DayStuff checkedDay){
         if(checkedDay.getMorning() == checkedDay.getAfternoon()){
-            if (checkedDay.getAfternoon()==0)
-                return 1;
-            else
-                return 4;
+            return Constants.ID_ERROR;
         }else {
             if (checkedDay.getMorning() == 1)
-                return 2;
+                return 1;
             else
-                return 3;
+                return 2;
             }
         }
 
