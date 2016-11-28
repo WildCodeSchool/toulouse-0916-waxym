@@ -165,9 +165,6 @@ public class CalendarView extends LinearLayout {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getContext(),DetailsActivity.class);
-                intent.putExtra("date", (Date)parent.getItemAtPosition(position));
-                getContext().startActivity(intent);
             }
         });
 
@@ -178,13 +175,13 @@ public class CalendarView extends LinearLayout {
      */
     public void updateCalendar()
     {
-        updateCalendar(null);
+        updateCalendar(null, false);
     }
 
     /**
      * Display dates correctly in grid
      */
-    public void updateCalendar(HashSet<DayEvent> events)
+    public void updateCalendar(HashSet<DayEvent> events, boolean isEditMode)
     {
         final ArrayList<GridDate> cells = new ArrayList<>();
         final Calendar calendar = (Calendar)currentDate.clone();
@@ -210,27 +207,36 @@ public class CalendarView extends LinearLayout {
         // multiselect
         //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         //on touch
-        grid.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-               float initialY =motionEvent.getY(), initialX =motionEvent.getX();
-                int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
-                if (i >= 0 && i < 42) {
+        if(isEditMode) {
 
-                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                        changeSateAndResetPos(cells.get(i),i,initialX,initialY);
-                        //on swipe
-                    }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                        if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(),grid.getChildAt(i).getHeight())) {
-                            changeSateAndResetPos(cells.get(i),i,initialX,initialY);
+            grid.setOnTouchListener(new OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    float initialY = motionEvent.getY(), initialX = motionEvent.getX();
+                    int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
+                    if (i >= 0 && i < 42) {
+
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                            changeSateAndResetPos(cells.get(i), i, initialX, initialY);
+                            //on swipe
+                        } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                            if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(), grid.getChildAt(i).getHeight())) {
+                                changeSateAndResetPos(cells.get(i), i, initialX, initialY);
+                            }
+
                         }
 
                     }
-
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
+        else{
+            grid.setOnTouchListener(null);
+            assignClickHandlers();
+            // à faire ( swipe changer mois
+        }
         // update title
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         txtDate.setText(sdf.format(currentDate.getTime()));

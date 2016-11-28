@@ -18,13 +18,13 @@
         android:id="@+id/list_fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/button">
+        android:layout_above="@+id/buttonEdit">
 
     </FrameLayout>
 
     <Button
         android:background="@drawable/edit"
-        android:id="@+id/button"
+        android:id="@+id/buttonEdit"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_marginBottom="15dp"
