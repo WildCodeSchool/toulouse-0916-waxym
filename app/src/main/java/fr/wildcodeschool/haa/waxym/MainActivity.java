@@ -7,6 +7,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,6 +30,8 @@ import fr.wildcodeschool.haa.waxym.model.DayStuff;
 public class MainActivity extends AppCompatActivity {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
+    private boolean isEdit = true;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,21 +67,33 @@ public class MainActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        TextView textView = (TextView)findViewById(R.id.test);
 
-        try {
-            textView.setText(mDBHelper.getEvents(1,Calendar.getInstance().getTime()).get(0).getUserName());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         if (getIntent().getSerializableExtra("date et event") != null) {
             DayEvent eventRtt = (DayEvent) getIntent().getSerializableExtra("date et event");
             HashSet<DayEvent> events = new HashSet<>();
             events.add(eventRtt);
 
             CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
-            cv.updateCalendar(events);
+            cv.updateCalendar(events, false);
         }
+        final Button editButton = (Button) findViewById(R.id.buttonEdit);
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
+
+                if( isEdit){
+                    cv.updateCalendar(null, true);
+                    editButton.setBackgroundResource(R.drawable.annul);
+                    isEdit = false;
+                }
+                else{
+                    cv.updateCalendar(null, false);
+                    editButton.setBackgroundResource(R.drawable.edit);
+                    isEdit = true;
+                }
+            }
+        });
         // assign event handler
         CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
         cv.setEventHandler(new CalendarView.EventHandler() {
