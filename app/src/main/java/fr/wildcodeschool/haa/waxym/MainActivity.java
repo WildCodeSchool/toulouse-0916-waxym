@@ -63,13 +63,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        TextView textView = (TextView)findViewById(R.id.test);
 
-        try {
-            textView.setText(mDBHelper.getEvents(1,Calendar.getInstance().getTime()).get(0).getUserName());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         if (getIntent().getSerializableExtra("date et event") != null) {
             DayEvent eventRtt = (DayEvent) getIntent().getSerializableExtra("date et event");
             HashSet<DayEvent> events = new HashSet<>();
