@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,7 +19,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
@@ -50,9 +48,12 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
+        // test to get activities list
+        mDBHelper.getUserActivitiesList(1);
         DayStuff dayStuff = null;
+        // test to get events of user
         try {
-            dayStuff = mDBHelper.getEvents("Robert",Calendar.getInstance().getTime()).get(0);
+            dayStuff = mDBHelper.getEvents(1,Calendar.getInstance().getTime()).get(0);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         TextView textView = (TextView)findViewById(R.id.test);
 
         try {
-            textView.setText(mDBHelper.getEvents("Robert",Calendar.getInstance().getTime()).get(0).getUserName());
+            textView.setText(mDBHelper.getEvents(1,Calendar.getInstance().getTime()).get(0).getUserName());
         } catch (ParseException e) {
             e.printStackTrace();
         }

@@ -9,14 +9,17 @@ public class Constants {
     //
     public static String DATE_FORMAT  = "yyyy-MM-dd";
     // table columns names
+    public static String DATE = "date";
     public static String DATE_ACTIVITY = "activity.date";
     public static String NAME_ACTIVITY = "activity_name";
     public static String CONTRACT_NUMBER = "contract_number";
     public static String MORNING = "morning";
     public static String AFTERNOON = "afternoon";
+    public static String ID_USER = "user";
     public static String ID_USER_ACTIVITY = "activity.id_user";
     public static String ID_USER_USER = "user.id_user";
     public static String NAME_USER = "name_user";
+    public static String ID_ACTIVITY_TYPE = "id_activity__type";
     public static String ID_ACTIVITY_TYPE_ACTIVITY_TYPE = "activity_type.id_activity_type";
     public static String ID_ACTIVITY_TYPE_ACTIVITY = "activity.id_activity_type";
     // table names
