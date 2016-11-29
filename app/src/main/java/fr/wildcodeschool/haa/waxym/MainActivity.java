@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -15,14 +14,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
-import fr.wildcodeschool.haa.waxym.model.DayStuff;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -48,28 +44,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-        // test to get activities list
-        mDBHelper.getUserActivitiesList(1);
-        DayStuff dayStuff = null;
-        // test to get events of user
-        try {
-            dayStuff = mDBHelper.getEvents(1,Calendar.getInstance().getTime()).get(0);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        dayStuff.setDate(Calendar.getInstance().getTime());
-        try {
-            mDBHelper.setEvent(dayStuff);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        TextView textView = (TextView)findViewById(R.id.test);
 
-        try {
-            textView.setText(mDBHelper.getEvents(1,Calendar.getInstance().getTime()).get(0).getUserName());
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
         if (getIntent().getSerializableExtra("date et event") != null) {
             DayEvent eventRtt = (DayEvent) getIntent().getSerializableExtra("date et event");
             HashSet<DayEvent> events = new HashSet<>();
@@ -150,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             return false;
         }
+
    /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
