@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="56dp"
+        android:paddingLeft="24dp"
+        android:paddingRight="24dp">
+
+        <TextView
+            android:text="EmploYeah!"
+            android:layout_marginLeft="40dp"
+            android:layout_width="match_parent"
+            android:textStyle="bold"
+            android:textColor="#000000"
+            android:textSize="40dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/textView" />
+
+
+
+        <EditText android:id="@+id/input_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
+            android:hint="Email" />
+
+
+        <EditText android:id="@+id/input_password"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textPassword"
+            android:hint="Password"/>
+
+        <ImageButton
+            android:id="@+id/btn_login"
+            android:layout_width="200dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="24dp"
+            android:layout_marginLeft="50dp"
+            android:padding="12dp"
+            android:text="login"/>
+    </LinearLayout>
+
+</LinearLayout>

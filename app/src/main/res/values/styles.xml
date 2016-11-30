@@ -9,7 +9,6 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
     <style name="AppTheme2" parent="android:Theme.Holo.Light">
-        <!-- Customize your theme here. -->
     </style>
     <style name="customSpinner">
         <item name="android:background">#ffff</item>
