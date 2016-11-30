@@ -17,14 +17,11 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
-import fr.wildcodeschool.haa.waxym.model.DayStuff;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -51,21 +48,6 @@ public class MainActivity extends AppCompatActivity {
                 return;
             }
 
-        }
-        // test to get activities list
-        mDBHelper.getUserActivitiesList(1);
-        DayStuff dayStuff = null;
-        // test to get events of user
-        try {
-            dayStuff = mDBHelper.getEvents(1,Calendar.getInstance().getTime()).get(0);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        dayStuff.setDate(Calendar.getInstance().getTime());
-        try {
-            mDBHelper.setEvent(dayStuff);
-        } catch (ParseException e) {
-            e.printStackTrace();
         }
 
         if (getIntent().getSerializableExtra("date et event") != null) {
@@ -166,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             return false;
         }
+
    /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

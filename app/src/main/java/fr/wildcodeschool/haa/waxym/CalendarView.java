@@ -1,5 +1,9 @@
 package fr.wildcodeschool.haa.waxym;
 
+import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
@@ -26,7 +30,9 @@ import java.util.HashSet;
 /**
  * Created by a7med on 28/06/2015.
  */
-public class CalendarView extends LinearLayout {
+public class CalendarView extends LinearLayout implements AdapterCallBackInterface {
+     private final ArrayList<GridDate> cells = new ArrayList<>();
+    private HashSet<DayEvent> prout;
     // for logging
     private static final String LOGTAG = "Calendar View";
 
@@ -165,6 +171,9 @@ public class CalendarView extends LinearLayout {
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getContext(),DetailsActivity.class);
+                intent.putExtra("date", (Date)parent.getItemAtPosition(position));
+                getContext().startActivity(intent);
             }
         });
 
@@ -183,7 +192,7 @@ public class CalendarView extends LinearLayout {
      */
     public void updateCalendar(HashSet<DayEvent> events, boolean isEditMode)
     {
-        final ArrayList<GridDate> cells = new ArrayList<>();
+        this.prout = events;
         final Calendar calendar = (Calendar)currentDate.clone();
 
         // determine the cell for current month's beginning
@@ -217,13 +226,15 @@ public class CalendarView extends LinearLayout {
                     int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
                     if (i >= 0 && i < 42) {
 
-                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                            changeSateAndResetPos(cells.get(i), i, initialX, initialY);
-                            //on swipe
-                        } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                            if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(), grid.getChildAt(i).getHeight())) {
-                                changeSateAndResetPos(cells.get(i), i, initialX, initialY);
-                            }
+                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                        changeSateAndResetPos(cells.get(i),i,initialX,initialY);
+                        launchMultiSelectMenu();
+
+                        //on swipe
+                    }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                        if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(),grid.getChildAt(i).getHeight())) {
+                            changeSateAndResetPos(cells.get(i),i,initialX,initialY);
+                        }
 
                         }
 
@@ -247,8 +258,13 @@ public class CalendarView extends LinearLayout {
         int color = rainbow[season];
 
         header.setBackgroundColor(getResources().getColor(color));
+
     }
 
+    @Override
+    public void onMethodCallBack() {
+        updateCalendar();
+    }
 
     private class CalendarAdapter extends ArrayAdapter<GridDate>
     {
@@ -329,6 +345,7 @@ public class CalendarView extends LinearLayout {
             view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,200));
             return view;
         }
+
     }
 
     /**
@@ -374,8 +391,30 @@ public class CalendarView extends LinearLayout {
         }
 
     }
-    // end button selection
-    public void showFinishSelection(View view){
+    public void launchMultiSelectMenu(){
+
+
+        final Activity activity = (MainActivity)getContext();
+        FragmentManager fm = activity.getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        MultiSelectMenuFragment fragment = new MultiSelectMenuFragment();
+
+
+        ft.add(R.id.list_fragment_container,fragment,"prout").commit();
+
 
     }
+    public void onButtonCancel(boolean bool){
+        if (!bool) {
+            for (int i = 0 ; i < grid.getChildCount();i++)
+            grid.getChildAt(i).setBackgroundResource(0);
+
+
+
+        }
+
+    }
+    // end button selection
+
+
 }
