@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -17,20 +16,19 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
-import fr.wildcodeschool.haa.waxym.model.DayStuff;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MultiselectCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
     private boolean isEdit = true;
+    CalendarView cv;
 
 
     @Override
@@ -52,21 +50,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
         }
-        // test to get activities list
-        mDBHelper.getUserActivitiesList(1);
-        DayStuff dayStuff = null;
-        // test to get events of user
-        try {
-            dayStuff = mDBHelper.getEvents(1,Calendar.getInstance().getTime()).get(0);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        dayStuff.setDate(Calendar.getInstance().getTime());
-        try {
-            mDBHelper.setEvent(dayStuff);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         if (getIntent().getSerializableExtra("date et event") != null) {
             DayEvent eventRtt = (DayEvent) getIntent().getSerializableExtra("date et event");
@@ -80,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
+                 cv = ((CalendarView) findViewById(R.id.calendar_view));
 
                 if( isEdit){
                     cv.updateCalendar(null, true);
@@ -94,14 +77,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         // assign event handler
         CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
         cv.setEventHandler(new CalendarView.EventHandler() {
             @Override
-            public void onDayLongPress(Date date) {
+            public void onDayLongPress(GridDate date) {
                 // show returned day
                 DateFormat sdf = SimpleDateFormat.getDateInstance();
-                Toast.makeText(MainActivity.this, sdf.format(date), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, sdf.format(date.getDate()), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -166,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
             return false;
         }
+
    /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -182,4 +167,17 @@ public class MainActivity extends AppCompatActivity {
         ////  return super.onOptionsItemSelected(item);
         //}
     }
+    @Override
+    public void onMethodCallBack() {
+           cv.updateCalendar(null, true);
+    }
+
+    @Override
+    public void sendSelectedDays(ArrayList<Date> passedList) {
+        ArrayList<Date> dates = new ArrayList<>();
+        dates = passedList;
+    toggleList();
+    }
+
+
 }
