@@ -78,6 +78,8 @@ public class LogActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         btn_login.setEnabled(true);
         finish();
+        Intent intent = new Intent(this,MainActivity.class);
+        startActivity(intent);
     }
 
     public void onLoginFailed() {
