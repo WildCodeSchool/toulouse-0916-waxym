@@ -9,7 +9,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -18,16 +17,18 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MultiselectCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
     private boolean isEdit = true;
+    CalendarView cv;
 
 
     @Override
@@ -62,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
+                 cv = ((CalendarView) findViewById(R.id.calendar_view));
 
                 if( isEdit){
                     cv.updateCalendar(null, true);
@@ -76,14 +77,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         });
+
         // assign event handler
         CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
         cv.setEventHandler(new CalendarView.EventHandler() {
             @Override
-            public void onDayLongPress(Date date) {
+            public void onDayLongPress(GridDate date) {
                 // show returned day
                 DateFormat sdf = SimpleDateFormat.getDateInstance();
-                Toast.makeText(MainActivity.this, sdf.format(date), Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, sdf.format(date.getDate()), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -165,4 +167,17 @@ public class MainActivity extends AppCompatActivity {
         ////  return super.onOptionsItemSelected(item);
         //}
     }
+    @Override
+    public void onMethodCallBack() {
+           cv.updateCalendar(null, true);
+    }
+
+    @Override
+    public void sendSelectedDays(ArrayList<Date> passedList) {
+        ArrayList<Date> dates = new ArrayList<>();
+        dates = passedList;
+    toggleList();
+    }
+
+
 }

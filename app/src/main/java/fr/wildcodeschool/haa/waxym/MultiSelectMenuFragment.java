@@ -1,15 +1,15 @@
 package fr.wildcodeschool.haa.waxym;
 
-import android.app.Activity;
 import android.app.Fragment;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+
+import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -19,10 +19,9 @@ import android.widget.Button;
  * Use the {@link MultiSelectMenuFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MultiSelectMenuFragment extends Fragment {
+public class MultiSelectMenuFragment extends Fragment implements AdapterCallbackInterface {
 
-    private AdapterCallBackInterface mListener;
-
+    ArrayList<Date> selectedList = new ArrayList<>() ;
     public MultiSelectMenuFragment() {
         // Required empty public constructor
     }
@@ -38,6 +37,7 @@ public class MultiSelectMenuFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+
     }
 
     @Override
@@ -52,18 +52,33 @@ public class MultiSelectMenuFragment extends Fragment {
             public void onClick(View v) {
                 getActivity().getFragmentManager().beginTransaction().remove(MultiSelectMenuFragment.this).commit();
                 try {
-                    ((AdapterCallBackInterface)getActivity()).onMethodCallBack();
+
+                    ((MultiselectCallBackInterface)getView().getContext()
+                    ).onMethodCallBack();
                 }catch (ClassCastException e){
 
                 }
+                resetMultiselect();
+            }
+        });
+        final Button valid = (Button)view.findViewById(R.id.valid);
+        valid.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                getActivity().getFragmentManager().beginTransaction().remove(MultiSelectMenuFragment.this).commit();
+                try {
+
+                    ((MultiselectCallBackInterface)getView().getContext()
+                    ).sendSelectedDays(selectedList);
+                }catch (ClassCastException e){
+
+                }
+                resetMultiselect();
             }
         });
         return view;
     }
 
-    public void onButtonPressed() {
-
-    }
 
     @Override
     public void onAttach(Context context) {
@@ -76,6 +91,18 @@ public class MultiSelectMenuFragment extends Fragment {
         super.onDetach();
     }
 
+    @Override
+    public void passCheckedDay(Date date, boolean isChecked) {
+
+        if (isChecked )
+        this.selectedList.add(date);
+        else
+            this.selectedList.remove(date);
+    }
+private void resetMultiselect(){
+    CalendarView.isMenuCreated = false;
+
+}
 
     /*public interface OnFragmentInteractionListener {
         public void onButtonCancel(boolean bool);
