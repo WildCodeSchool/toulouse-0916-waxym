@@ -108,4 +108,5 @@ public class LogActivity extends AppCompatActivity {
 
         return valid;
     }
+
 }
