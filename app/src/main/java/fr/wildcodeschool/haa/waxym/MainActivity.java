@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (ParseException e) {
             e.printStackTrace();
         }
-        TextView textView = (TextView)findViewById(R.id.test);
+       /* TextView textView = (TextView)findViewById(R.id.test);
 
         try {
             textView.setText(mDBHelper.getEvents("Robert",Calendar.getInstance().getTime()).get(0).getUserName());
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
             CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
             cv.updateCalendar(events);
-        }
+        }*/
         // assign event handler
         CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
         cv.setEventHandler(new CalendarView.EventHandler() {
