@@ -6,6 +6,7 @@ import android.support.annotation.ColorInt;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
@@ -19,49 +20,43 @@ public class CustomAdapter extends BaseAdapter {
     Context context;
     String[] values;
     LayoutInflater inflater;
+    int[] color;
 
-    public CustomAdapter(Context context, String[] contrat){
-       // super(context, R.layout.list_view_item, contrat);
+    public CustomAdapter(Context context, String[] values, int[] color){
+        //super(context, R.layout.list_view_item);
         this.context = context;
-        this.values = contrat;
-        inflater = (LayoutInflater.from(context));
+        this.values = values;
+        this.color = color;
     }
 
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        inflater = (LayoutInflater) context
-                .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View rowView = inflater.inflate(R.layout.list_view_item, null);
-        TextView textView = (TextView) rowView.findViewById(R.id.list);
-
-        textView.setText(values[position]);
-
-        String s = values[position];
-
-        if (s.startsWith("Contrat1") || s.startsWith("Contrat2")
-                || s.startsWith("Contrat3")) {
-            textView.setBackgroundColor(0x3FA851);
-        } else {
-            textView.setBackgroundColor(0x709DAE);
-        }
-
-        return rowView;
-
-    }
     @Override
     public int getCount() {
-        return 0;
+        return values.length;
     }
 
     @Override
     public Object getItem(int position) {
-        return null;
+        return values[position];
     }
 
     @Override
     public long getItemId(int position) {
-        return 0;
+        return position;
     }
 
+    public View getView(int position, View convertView, ViewGroup parent) {
+        inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                //(LayoutInflater.from(getContext()));
+        View customView;
+
+        customView = inflater.inflate(R.layout.list_view_item, parent, false);
+        TextView text = (TextView) customView.findViewById(R.id.list);
+
+            text.setText(values[position]);
+            text.setBackgroundColor(this.color[position]);
+
+        return customView;
+
+    }
 
 }

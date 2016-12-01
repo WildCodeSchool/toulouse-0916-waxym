@@ -24,13 +24,12 @@
 
             <ListView
                 android:id="@+id/listview"
-                style="@style/customSpinner"
+                android:background="#fff"
                 android:layout_width="150dp"
                 android:layout_height="150dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:padding="2dp">
-                <!--android:entries="@array/numMission"-->
 
             </ListView>
         </LinearLayout>

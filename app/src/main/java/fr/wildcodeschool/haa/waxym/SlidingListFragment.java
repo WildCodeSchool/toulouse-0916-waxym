@@ -11,9 +11,17 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import static android.graphics.Color.BLUE;
+import static android.graphics.Color.CYAN;
+import static android.graphics.Color.GRAY;
+import static android.graphics.Color.GREEN;
+import static android.graphics.Color.RED;
+import static android.graphics.Color.YELLOW;
 
 /**
  * Created by apprenti on 15/11/16.
@@ -29,11 +37,14 @@ public class SlidingListFragment extends DialogFragment {
 
         String[] values = new String[] { "Contrat1", "Contrat2", "Contrat3",
                 "Contrat4", "Contrat5" };
+        int[] colorValues = new int[] {BLUE, GREEN, RED, GRAY, YELLOW, CYAN};
         // use your custom layout
-        this.adapter = new ArrayAdapter<String>(container.getContext(),
-                R.layout.list_view_item, R.id.list, values);
+      /*  this.adapter = new ArrayAdapter<String>(container.getContext(),
+                R.layout.list_view_item, R.id.list, values); */
+
+        BaseAdapter customAdapter = new CustomAdapter(view.getContext(), values, colorValues);
         ListView listView = (ListView) view.findViewById(R.id.listview);
-        listView.setAdapter(adapter);
+        listView.setAdapter(customAdapter);
 
         return view;
     }
