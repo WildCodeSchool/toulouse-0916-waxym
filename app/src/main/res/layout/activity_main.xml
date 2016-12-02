@@ -6,8 +6,17 @@
     android:weightSum="1"
     android:orientation="vertical"
     tools:context=".MainActivity">
+    <FrameLayout
+        android:id="@+id/list_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
 
 
+
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
     <fr.wildcodeschool.haa.waxym.CalendarView
         xmlns:calendarNS="http://schemas.android.com/apk/res/fr.wildcodeschool.haa.waxym"
         android:id="@+id/calendar_view"
@@ -15,13 +24,6 @@
         android:layout_height="wrap_content"
         calendarNS:dateFormat="MMMM yyyy"/>
 
-    <FrameLayout
-        android:id="@+id/list_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/buttonEdit">
-
-    </FrameLayout>
 
     <Button
         android:background="@drawable/edit"
@@ -33,6 +35,6 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:scaleType="fitXY"/>
-
-
+</RelativeLayout>
+    </FrameLayout>
 </RelativeLayout>

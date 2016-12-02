@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 
+import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 /**
@@ -35,6 +36,7 @@ public class CalendarView extends LinearLayout {
     private boolean isDoneOnce = false;
     private MultiSelectMenuFragment fragment;
     private ArrayList<DayStuffModel> events;
+    private DBHandler mDBHandler;
     // for logging
     private static final String LOGTAG = "Calendar View";
 
@@ -211,7 +213,7 @@ public class CalendarView extends LinearLayout {
         }
 
         // update grid
-        final CalendarAdapter calendarAdapter = new CalendarAdapter(getContext(),cells,events);
+        final CalendarAdapter calendarAdapter = new CalendarAdapter(getContext(),cells);
         grid.setAdapter(calendarAdapter);
 
         // multiselect
@@ -288,7 +290,7 @@ public class CalendarView extends LinearLayout {
         // for view inflation
         private LayoutInflater inflater;
 
-        public CalendarAdapter(Context context, ArrayList<GridDate> days, ArrayList<DayStuffModel> eventDays)
+        public CalendarAdapter(Context context, ArrayList<GridDate> days)
         {
             super(context, R.layout.calendar_day2, days);
             this.eventDays = eventDays;
