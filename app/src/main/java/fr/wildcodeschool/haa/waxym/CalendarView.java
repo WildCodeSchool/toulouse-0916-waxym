@@ -29,10 +29,11 @@ import java.util.HashSet;
  * Created by a7med on 28/06/2015.
  */
 public class CalendarView extends LinearLayout {
+    private ArrayList<GridDate> cells ;
     public static boolean isMenuCreated = false;
     private boolean isDoneOnce = false;
     private MultiSelectMenuFragment fragment;
-    private final ArrayList<GridDate> cells = new ArrayList<>();
+
     private HashSet<DayEvent> prout;
     // for logging
     private static final String LOGTAG = "Calendar View";
@@ -191,7 +192,9 @@ public class CalendarView extends LinearLayout {
      */
     public void updateCalendar(HashSet<DayEvent> events, boolean isEditMode)
     {
+        this.cells = new ArrayList<>();
         this.prout = events;
+
         final Calendar calendar = (Calendar)currentDate.clone();
 
         // determine the cell for current month's beginning
