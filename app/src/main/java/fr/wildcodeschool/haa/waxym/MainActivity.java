@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.HashSet;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
-import fr.wildcodeschool.haa.waxym.model.DayStuff;
+import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -50,7 +50,7 @@ public class MainActivity extends AppCompatActivity {
         }
         // test to get activities list
         mDBHelper.getUserActivitiesList(1);
-        DayStuff dayStuff = null;
+        DayStuffModel dayStuff = null;
         // test to get events of user
         try {
             dayStuff = mDBHelper.getEvents(1,Calendar.getInstance().getTime()).get(0);

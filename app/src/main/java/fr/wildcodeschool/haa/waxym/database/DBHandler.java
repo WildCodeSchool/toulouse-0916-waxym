@@ -21,7 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import fr.wildcodeschool.haa.waxym.Constants;
-import fr.wildcodeschool.haa.waxym.model.DayStuff;
+import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 
 public class DBHandler extends SQLiteOpenHelper implements Serializable {
@@ -62,9 +62,9 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             }
         }
     // get all events of mentioned user from 1 month of the entered date
-        public ArrayList<DayStuff> getEvents (int user, Date referenceDate) throws ParseException {
-            DayStuff dayStuff = null;
-            ArrayList<DayStuff> eventsList = new ArrayList<>();
+        public ArrayList<DayStuffModel> getEvents (int user, Date referenceDate) throws ParseException {
+            DayStuffModel dayStuff = null;
+            ArrayList<DayStuffModel> eventsList = new ArrayList<>();
             Calendar fromDate = Calendar.getInstance();
             Calendar toDate = Calendar.getInstance();
             toDate.setTime(referenceDate);
@@ -74,8 +74,8 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             openDatabase();
             // sqlite request : SQLiteQuery: SELECT activity.date, activity_name, contract_number,morning, afternoon, name_user, id_user FROM user,activity,activity_type
             // WHERE user.id_user = activity.id_user AND user.id_user = '1' AND activity.id_activity_type = activity_type.id_activity_type AND date >= entered date -1 month And date <= entered date +1 month
-            Cursor cursor = mDatabase.rawQuery("SELECT "+ Constants.DATE_ACTIVITY + ", " + Constants.NAME_ACTIVITY+
-                    ", "+ Constants.CONTRACT_NUMBER +"," + Constants.MORNING + ", " + Constants.AFTERNOON +", "+Constants.NAME_USER+ ", "+ Constants.ID_USER_USER +
+            Cursor cursor = mDatabase.rawQuery("SELECT "+ Constants.DATE_ACTIVITY + ", " + Constants.NAME_ACTIVITY+ ", " + Constants.CONTRACT_NUMBER +
+                    ", "+ Constants.ACTIVITY_COLOR +"," + Constants.MORNING + ", " + Constants.AFTERNOON +", "+Constants.NAME_USER+ ", "+ Constants.ID_USER_USER +
                     " FROM "+Constants.USER+","+ Constants.ACTIVITY+","+Constants.ACTIVITY_TYPE+
                     " WHERE "+Constants.ID_USER_USER + " = " + Constants.ID_USER_ACTIVITY +
                     " AND " + Constants.ID_USER_ACTIVITY + " = " + "'"+user+"'"+
@@ -84,8 +84,8 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
                     " AND " +Constants.DATE_ACTIVITY + " <= " + "'"+ convertDatetoString(toDate.getTime()) +"'", null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()){
-                dayStuff = new DayStuff(convertStringToDate(cursor.getString(0)),cursor.getString(1),cursor.getString(2),cursor.getInt(3),
-                        cursor.getInt(4),cursor.getString(5),cursor.getInt(6));
+                dayStuff = new DayStuffModel(convertStringToDate(cursor.getString(0)),cursor.getString(1),cursor.getString(2),cursor.getString(3),cursor.getInt(4),
+                        cursor.getInt(5),cursor.getString(6),cursor.getInt(7));
                 eventsList.add(dayStuff);
                 cursor.moveToNext();
             }
@@ -94,7 +94,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             return eventsList;
         }
         // set activity event on date
-        public void setEvent ( DayStuff dayEvent) throws ParseException {
+        public void setEvent ( DayStuffModel dayEvent) throws ParseException {
             SQLiteDatabase db = this.getWritableDatabase();
             ContentValues valuesActivity = new ContentValues();
             // if date half- day already exists in db for this user
@@ -104,6 +104,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
                 // Activity table
                 valuesActivity.put(Constants.NAME_ACTIVITY,dayEvent.getActivity());
                 valuesActivity.put(Constants.CONTRACT_NUMBER,dayEvent.getContractNumber());
+                valuesActivity.put(Constants.ACTIVITY_COLOR, dayEvent.getActivityColor());
                 valuesActivity.put(Constants.ID_ACTIVITY_TYPE, determineActyvityTypeID(dayEvent));
 
                 String SQLActivity = Constants.DATE +" = " + this.sdf.format(dayEvent.getDate()) + " AND "+ "id_user" + " = " + dayEvent.getUserId();
@@ -113,6 +114,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
                 // Activity table
                 valuesActivity.put(Constants.NAME_ACTIVITY,dayEvent.getActivity());
                 valuesActivity.put(Constants.CONTRACT_NUMBER,dayEvent.getContractNumber());
+                valuesActivity.put(Constants.ACTIVITY_COLOR, dayEvent.getActivityColor());
                 valuesActivity.put(Constants.ID_ACTIVITY_TYPE, determineActyvityTypeID(dayEvent));
                 valuesActivity.put(Constants.DATE, this.sdf.format(dayEvent.getDate()));
                 valuesActivity.put(Constants.ID_USER, dayEvent.getUserId());
@@ -128,22 +130,22 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         Calendar to = Calendar.getInstance();
         from.add(Calendar.MONTH, -1);
         to.add(Calendar.MONTH, 1);
-        String activity, contractNumber;
+        String activity, contractNumber, activityColor;
         openDatabase();
        /* "SELECT activity.activity_name , activity.contract_number " +
         "From activity WHERE" +" activity.id_activity_type is null " +
                 "AND activity.id_user = 'userId' " +
                 "OR activity.id_user is null",null);*/
-        Cursor cursor = mDatabase.rawQuery("SELECT "+Constants.NAME_ACTIVITY +", " + Constants.CONTRACT_NUMBER +
+        Cursor cursor = mDatabase.rawQuery("SELECT "+Constants.NAME_ACTIVITY +", " + Constants.CONTRACT_NUMBER + ", " + Constants.ACTIVITY_COLOR +
                 " FROM " + Constants.ACTIVITY +
                 " WHERE " + Constants.ID_ACTIVITY_TYPE_ACTIVITY +" is null " +
-                " AND " + Constants.ID_USER_ACTIVITY+ " = '"+userId+"'" +
-                " OR " +Constants.ID_USER_ACTIVITY +" is null",null);
+                " AND " +Constants.ID_USER_ACTIVITY +" is null",null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()){
             activity = cursor.getString(0);
             contractNumber = cursor.getString(1);
-            activitiesList.add(contractNumber+" "+ activity);
+            activityColor = cursor.getString(2);
+            activitiesList.add(contractNumber+" "+ activity + " " +activityColor);
             cursor.moveToNext();
         }
         cursor.close();
@@ -167,8 +169,8 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
 
     }
     // search if date is already used with the same half-day
-    private boolean searchAndCompareDate(ArrayList<DayStuff> list, DayStuff arg){
-        for (DayStuff day : list) {
+    private boolean searchAndCompareDate(ArrayList<DayStuffModel> list, DayStuffModel arg){
+        for (DayStuffModel day : list) {
             if (day.getDate() != null) {
                 if (convertDatetoString(day.getDate()).equals(convertDatetoString(arg.getDate()))
                         && (day.getAfternoon() == arg.getAfternoon()
@@ -178,7 +180,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         }
         return false;
     }
-    private int determineActyvityTypeID(DayStuff checkedDay){
+    private int determineActyvityTypeID(DayStuffModel checkedDay){
         if(checkedDay.getMorning() == checkedDay.getAfternoon()){
             return Constants.ID_ERROR;
         }else {
