@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 
 import fr.wildcodeschool.haa.waxym.Constants;
+import fr.wildcodeschool.haa.waxym.model.ActivityItemModel;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 
@@ -124,8 +125,8 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             }
 
         }
-    public ArrayList<String> getUserActivitiesList(int userId){
-        ArrayList<String> activitiesList = new ArrayList<>();
+    public ArrayList<ActivityItemModel> getUserActivitiesList(int userId){
+        ArrayList<ActivityItemModel> activitiesList = new ArrayList<>();
         Calendar from = Calendar.getInstance();
         Calendar to = Calendar.getInstance();
         from.add(Calendar.MONTH, -1);
@@ -145,7 +146,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             activity = cursor.getString(0);
             contractNumber = cursor.getString(1);
             activityColor = cursor.getString(2);
-            activitiesList.add(contractNumber+" "+ activity + " " +activityColor);
+            activitiesList.add(new ActivityItemModel(contractNumber+" "+ activity,activityColor));
             cursor.moveToNext();
         }
         cursor.close();
