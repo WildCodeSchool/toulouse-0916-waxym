@@ -1,7 +1,9 @@
 package fr.wildcodeschool.haa.waxym;
 
+import android.app.Activity;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -27,6 +29,11 @@ import java.util.HashSet;
  * Created by a7med on 28/06/2015.
  */
 public class CalendarView extends LinearLayout {
+    public static boolean isMenuCreated = false;
+    private boolean isDoneOnce = false;
+    private MultiSelectMenuFragment fragment;
+    private final ArrayList<GridDate> cells = new ArrayList<>();
+    private HashSet<DayEvent> prout;
     // for logging
     private static final String LOGTAG = "Calendar View";
 
@@ -158,16 +165,14 @@ public class CalendarView extends LinearLayout {
                 if (eventHandler == null)
                     return false;
 
-                eventHandler.onDayLongPress((Date)view.getItemAtPosition(position));
+                eventHandler.onDayLongPress((GridDate)view.getItemAtPosition(position));
                 return true;
             }
         });
         grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getContext(),DetailsActivity.class);
-                intent.putExtra("date", (Date)parent.getItemAtPosition(position));
-                getContext().startActivity(intent);
+
             }
         });
 
@@ -178,15 +183,15 @@ public class CalendarView extends LinearLayout {
      */
     public void updateCalendar()
     {
-        updateCalendar(null);
+        updateCalendar(null, false);
     }
 
     /**
      * Display dates correctly in grid
      */
-    public void updateCalendar(HashSet<DayEvent> events)
+    public void updateCalendar(HashSet<DayEvent> events, boolean isEditMode)
     {
-        final ArrayList<GridDate> cells = new ArrayList<>();
+        this.prout = events;
         final Calendar calendar = (Calendar)currentDate.clone();
 
         // determine the cell for current month's beginning
@@ -210,27 +215,53 @@ public class CalendarView extends LinearLayout {
         // multiselect
         //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         //on touch
-        grid.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-               float initialY =motionEvent.getY(), initialX =motionEvent.getX();
-                int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
-                if (i >= 0 && i < 42) {
+        if(isEditMode) {
 
-                    if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            grid.setOnTouchListener(new OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    float initialY = motionEvent.getY(), initialX = motionEvent.getX();
+                    int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
+                    if (i >= 0 && i < 42) {
+
+                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP){
+                            isDoneOnce = false;
+                        }
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                         changeSateAndResetPos(cells.get(i),i,initialX,initialY);
+                            if(!isMenuCreated) {
+                                launchMultiSelectMenu();
+                                isMenuCreated =true;
+                            }
+                        if (!isDoneOnce) {
+                            sendDataToFragment(i, cells.get(i));
+                            isDoneOnce = true;
+                        }
+
+                        return true;
+
                         //on swipe
-                    }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                        }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                         if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(),grid.getChildAt(i).getHeight())) {
                             changeSateAndResetPos(cells.get(i),i,initialX,initialY);
+                            sendDataToFragment(i,cells.get(i));
+
+                        }
+
                         }
 
                     }
 
+                    return true;
                 }
-                return true;
-            }
-        });
+            });
+        }
+        else{
+            grid.setOnTouchListener(null);
+            assignClickHandlers();
+            // à faire ( swipe changer mois
+        }
         // update title
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
         txtDate.setText(sdf.format(currentDate.getTime()));
@@ -241,7 +272,10 @@ public class CalendarView extends LinearLayout {
         int color = rainbow[season];
 
         header.setBackgroundColor(getResources().getColor(color));
+
     }
+
+   
 
 
     private class CalendarAdapter extends ArrayAdapter<GridDate>
@@ -323,10 +357,11 @@ public class CalendarView extends LinearLayout {
             view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,200));
             return view;
         }
+
     }
 
     /**
-     * Assign event handler to be passed needed events
+     * Assign event handler to be passselectedList = new ArrayList<>();ed needed events
      */
     public void setEventHandler(EventHandler eventHandler)
     {
@@ -339,7 +374,7 @@ public class CalendarView extends LinearLayout {
      */
     public interface EventHandler
     {
-        void onDayLongPress(Date date);
+        void onDayLongPress(GridDate date);
     }
     // check if distance between two point is higher than max entered
 
@@ -362,14 +397,54 @@ public class CalendarView extends LinearLayout {
         if (!selectedDay.isState()){
             grid.getChildAt(position).setBackgroundResource(R.color.RTT);
             selectedDay.setState(true);
+
         }else {
             grid.getChildAt(position).setBackgroundResource(0);
             selectedDay.setState(false);
+
         }
 
     }
-    // end button selection
-    public void showFinishSelection(View view){
+
+    public void sendDataToFragment(int position, GridDate gridDate){
+        if(this.fragment != null) {
+            if (gridDate.isState()) {
+                try {
+                    ((AdapterCallbackInterface) this.fragment).passCheckedDay(cells.get(position).getDate(), true);
+                } catch (ClassCastException e) {
+
+                }
+            } else {
+                try {
+                    ((AdapterCallbackInterface) this.fragment).passCheckedDay(cells.get(position).getDate(), false);
+                } catch (ClassCastException e) {
+
+                }
+            }
+        }
+    }
+    public void launchMultiSelectMenu(){
+
+
+        final Activity activity = (MainActivity)getContext();
+        FragmentManager fm = activity.getFragmentManager();
+        FragmentTransaction ft = fm.beginTransaction();
+        this.fragment = new MultiSelectMenuFragment();
+        ft.add(R.id.list_fragment_container,fragment).commit();
+
 
     }
+    public void onButtonCancel(boolean bool){
+        if (!bool) {
+            for (int i = 0 ; i < grid.getChildCount();i++)
+            grid.getChildAt(i).setBackgroundResource(0);
+
+
+
+        }
+
+    }
+
+
+
 }
