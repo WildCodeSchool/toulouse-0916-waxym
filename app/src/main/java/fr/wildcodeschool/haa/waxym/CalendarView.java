@@ -192,6 +192,7 @@ public class CalendarView extends LinearLayout {
      */
     public void updateCalendar(ArrayList<DayStuffModel> events, boolean isEditMode)
     {
+        this.cells = new ArrayList<>();
         this.events = events;
         final Calendar calendar = (Calendar)currentDate.clone();
 
