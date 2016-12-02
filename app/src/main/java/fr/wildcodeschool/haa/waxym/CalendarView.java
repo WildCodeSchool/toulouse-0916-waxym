@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -36,7 +37,7 @@ public class CalendarView extends LinearLayout {
     private boolean isDoneOnce = false;
     private MultiSelectMenuFragment fragment;
     private ArrayList<DayStuffModel> events;
-    private DBHandler mDBHandler;
+
     // for logging
     private static final String LOGTAG = "Calendar View";
 
@@ -286,15 +287,15 @@ public class CalendarView extends LinearLayout {
     {
         // days with events
         private ArrayList<DayStuffModel> eventDays;
-
+        private DBHandler mDBHandler;
         // for view inflation
         private LayoutInflater inflater;
 
         public CalendarAdapter(Context context, ArrayList<GridDate> days)
         {
             super(context, R.layout.calendar_day2, days);
-            this.eventDays = eventDays;
             inflater = LayoutInflater.from(context);
+
         }
 
 
@@ -307,7 +308,12 @@ public class CalendarView extends LinearLayout {
             int day = date.getDate();
             int month = date.getMonth();
             int year = date.getYear();
-
+            mDBHandler = new DBHandler(getContext());
+            try {
+                eventDays = this.mDBHandler.getEvents(1, date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             // today
             Date today = new Date();
 
@@ -323,17 +329,20 @@ public class CalendarView extends LinearLayout {
 
             // if this day has an event, specify event image
 
-            if (eventDays != null)
-            {
-                for (DayStuffModel eventDate : eventDays)
-                {
+            if (eventDays != null) {
+                for (DayStuffModel eventDate : eventDays) {
                     if (eventDate.getDate().getDate() == day &&
                             eventDate.getDate().getMonth() == month &&
-                            eventDate.getDate().getYear() == year)
-                    {
-                        // mark this day for event
-                        matinView.setBackgroundResource(R.color.SELECTING_COLOR);
-                        break;
+                            eventDate.getDate().getYear() == year) {
+                        if (eventDate.getAfternoon() == 1) {
+                            apresMidiView.setText(eventDate.getActivity());
+                            apresMidiView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
+                        } else {
+                            matinView.setText(eventDate.getActivity());
+                            matinView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
+
+
+                        }
                     }
                 }
             }

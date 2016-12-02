@@ -25,6 +25,7 @@
             android:id="@+id/image_matin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:gravity="center"
             />
 
 
@@ -40,7 +41,9 @@
         <TextView
             android:id="@+id/image_apres_midi"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:gravity="center"
+            />
 
     </RelativeLayout>
 
