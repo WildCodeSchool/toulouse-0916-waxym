@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         }
 
         if (getIntent().getSerializableExtra("date et event") != null) {
-            DayEvent eventRtt = (DayEvent) getIntent().getSerializableExtra("date et event");
-            HashSet<DayEvent> events = new HashSet<>();
+            DayStuffModel eventRtt = (DayStuffModel) getIntent().getSerializableExtra("date et event");
+            ArrayList<DayStuffModel> events = new ArrayList<>();
             events.add(eventRtt);
 
             CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
