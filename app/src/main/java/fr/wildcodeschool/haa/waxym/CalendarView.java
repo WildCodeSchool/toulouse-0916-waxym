@@ -329,7 +329,7 @@ public class CalendarView extends LinearLayout {
                             eventDate.getDate().getYear() == year)
                     {
                         // mark this day for event
-                        matinView.setBackgroundResource(R.color.RTT);
+                        matinView.setBackgroundResource(R.color.SELECTING_COLOR);
                         break;
                     }
                 }
@@ -395,7 +395,7 @@ public class CalendarView extends LinearLayout {
         startX = x;
         startY = y;
         if (!selectedDay.isState()){
-            grid.getChildAt(position).setBackgroundResource(R.color.RTT);
+            grid.getChildAt(position).setBackgroundResource(R.color.SELECTING_COLOR);
             selectedDay.setState(true);
 
         }else {

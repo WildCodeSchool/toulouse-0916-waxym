@@ -11,5 +11,5 @@
 
     <color name="today">#4b82ff</color>
     <color name="greyed_out">#c7c7c7</color>
-    <color name="RTT">#00f2f2</color>
+    <color name="SELECTING_COLOR">#00f2f2</color>
 </resources>
