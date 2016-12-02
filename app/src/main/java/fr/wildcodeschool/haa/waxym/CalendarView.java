@@ -30,10 +30,10 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
  * Created by a7med on 28/06/2015.
  */
 public class CalendarView extends LinearLayout {
+    private ArrayList<GridDate> cells ;
     public static boolean isMenuCreated = false;
     private boolean isDoneOnce = false;
     private MultiSelectMenuFragment fragment;
-    private final ArrayList<GridDate> cells = new ArrayList<>();
     private ArrayList<DayStuffModel> events;
     // for logging
     private static final String LOGTAG = "Calendar View";
