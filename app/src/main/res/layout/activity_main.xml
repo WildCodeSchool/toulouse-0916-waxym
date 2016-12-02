@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         calendarNS:dateFormat="MMMM yyyy"/>
+
     <FrameLayout
         android:id="@+id/list_fragment_container"
         android:layout_width="match_parent"

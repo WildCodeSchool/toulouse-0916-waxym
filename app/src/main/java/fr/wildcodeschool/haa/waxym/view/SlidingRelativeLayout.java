@@ -6,7 +6,7 @@
     import android.widget.RelativeLayout;
 
     /**
-     * Created by paveld on 4/13/14.
+     * animation fragment
      */
     public class SlidingRelativeLayout extends RelativeLayout {
 
