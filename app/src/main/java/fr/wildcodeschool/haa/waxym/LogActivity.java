@@ -14,7 +14,7 @@ import android.widget.Toast;
 
 public class LogActivity extends AppCompatActivity {
     private static final String TAG = "LogActivity";
-    private ImageButton btn_login;
+    private Button btn_login;
     private EditText textEmailAddress;
     private EditText textPassword;
 
@@ -22,7 +22,7 @@ public class LogActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_log);
-        this.btn_login = (ImageButton)findViewById(R.id.btn_login);
+        this.btn_login = (Button)findViewById(R.id.btn_login);
         this.textEmailAddress = (EditText)findViewById(R.id.input_email);
 
         this.textPassword = (EditText)findViewById(R.id.input_password);
@@ -94,11 +94,11 @@ public class LogActivity extends AppCompatActivity {
         String email = textEmailAddress.getText().toString();
         String password = textPassword.getText().toString();
 
-        if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+       /* *//*if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
             textEmailAddress.setError("enter a valid email address");
             valid = false;
         } else {
-            textEmailAddress.setError(null);
+            textEmailAddress.setError(null);*//*
         }
 
         if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
@@ -106,7 +106,7 @@ public class LogActivity extends AppCompatActivity {
             valid = false;
         } else {
             textPassword.setError(null);
-        }
+        }*/
 
         return valid;
     }

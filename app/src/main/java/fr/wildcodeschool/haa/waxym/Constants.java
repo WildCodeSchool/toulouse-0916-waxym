@@ -9,6 +9,7 @@ public class Constants {
     //
     public static String DATE_FORMAT  = "yyyy-MM-dd";
     // table columns names
+    public static String ACTIVITY_COLOR = "activity_color";
     public static String DATE = "date";
     public static String DATE_ACTIVITY = "activity.date";
     public static String NAME_ACTIVITY = "activity_name";

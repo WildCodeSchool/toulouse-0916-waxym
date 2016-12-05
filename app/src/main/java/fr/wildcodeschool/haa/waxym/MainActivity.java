@@ -16,12 +16,14 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
+import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 
 public class MainActivity extends AppCompatActivity implements MultiselectCallBackInterface {
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
-        //copyDatabase(getApplicationContext());
+        copyDatabase(getApplicationContext());
         if (!database.exists()) {
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
@@ -52,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         }
 
         if (getIntent().getSerializableExtra("date et event") != null) {
-            DayEvent eventRtt = (DayEvent) getIntent().getSerializableExtra("date et event");
-            HashSet<DayEvent> events = new HashSet<>();
+            DayStuffModel eventRtt = (DayStuffModel) getIntent().getSerializableExtra("date et event");
+            ArrayList<DayStuffModel> events = new ArrayList<>();
             events.add(eventRtt);
 
             CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
@@ -150,7 +152,6 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
             e.printStackTrace();
             return false;
         }
-
    /* @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will

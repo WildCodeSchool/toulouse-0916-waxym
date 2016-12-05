@@ -19,21 +19,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
+
+import fr.wildcodeschool.haa.waxym.database.DBHandler;
+import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 /**
  * Created by a7med on 28/06/2015.
  */
 public class CalendarView extends LinearLayout {
+    private ArrayList<GridDate> cells ;
     public static boolean isMenuCreated = false;
     private boolean isDoneOnce = false;
     private MultiSelectMenuFragment fragment;
-    private final ArrayList<GridDate> cells = new ArrayList<>();
-    private HashSet<DayEvent> prout;
+    private ArrayList<DayStuffModel> events;
+
     // for logging
     private static final String LOGTAG = "Calendar View";
 
@@ -183,15 +187,16 @@ public class CalendarView extends LinearLayout {
      */
     public void updateCalendar()
     {
-        updateCalendar(null, false);
+        updateCalendar(events, false);
     }
 
     /**
      * Display dates correctly in grid
      */
-    public void updateCalendar(HashSet<DayEvent> events, boolean isEditMode)
+    public void updateCalendar(ArrayList<DayStuffModel> events, boolean isEditMode)
     {
-        this.prout = events;
+        this.cells = new ArrayList<>();
+        this.events = events;
         final Calendar calendar = (Calendar)currentDate.clone();
 
         // determine the cell for current month's beginning
@@ -209,7 +214,7 @@ public class CalendarView extends LinearLayout {
         }
 
         // update grid
-        final CalendarAdapter calendarAdapter = new CalendarAdapter(getContext(),cells,events);
+        final CalendarAdapter calendarAdapter = new CalendarAdapter(getContext(),cells);
         grid.setAdapter(calendarAdapter);
 
         // multiselect
@@ -281,16 +286,16 @@ public class CalendarView extends LinearLayout {
     private class CalendarAdapter extends ArrayAdapter<GridDate>
     {
         // days with events
-        private HashSet<DayEvent> eventDays;
-
+        private ArrayList<DayStuffModel> eventDays;
+        private DBHandler mDBHandler;
         // for view inflation
         private LayoutInflater inflater;
 
-        public CalendarAdapter(Context context, ArrayList<GridDate> days, HashSet<DayEvent> eventDays)
+        public CalendarAdapter(Context context, ArrayList<GridDate> days)
         {
             super(context, R.layout.calendar_day2, days);
-            this.eventDays = eventDays;
             inflater = LayoutInflater.from(context);
+
         }
 
 
@@ -303,7 +308,12 @@ public class CalendarView extends LinearLayout {
             int day = date.getDate();
             int month = date.getMonth();
             int year = date.getYear();
-
+            mDBHandler = new DBHandler(getContext());
+            try {
+                eventDays = this.mDBHandler.getEvents(1, date);
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
             // today
             Date today = new Date();
 
@@ -312,25 +322,27 @@ public class CalendarView extends LinearLayout {
                 view = inflater.inflate(R.layout.calendar_day2, parent, false);
             //get views
             TextView dayDateView = (TextView)view.findViewById(R.id.day_date);
-            ImageView matinView = (ImageView)view.findViewById(R.id.image_matin);
-            ImageView apresMidiView = (ImageView)view.findViewById(R.id.image_apres_midi);
-            ImageView matinCheckView = (ImageView)view.findViewById(R.id.check_matin);
-            ImageView apresMidiCheckView = (ImageView)view.findViewById(R.id.check_apres_midi);
+            TextView matinView = (TextView) view.findViewById(R.id.image_matin);
+            TextView apresMidiView = (TextView)view.findViewById(R.id.image_apres_midi);
+
 
 
             // if this day has an event, specify event image
 
-            if (eventDays != null)
-            {
-                for (DayEvent eventDate : eventDays)
-                {
+            if (eventDays != null) {
+                for (DayStuffModel eventDate : eventDays) {
                     if (eventDate.getDate().getDate() == day &&
                             eventDate.getDate().getMonth() == month &&
-                            eventDate.getDate().getYear() == year)
-                    {
-                        // mark this day for event
-                        matinView.setImageResource(R.color.RTT);
-                        break;
+                            eventDate.getDate().getYear() == year) {
+                        if (eventDate.getAfternoon() == 1) {
+                            apresMidiView.setText(eventDate.getActivity());
+                            apresMidiView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
+                        } else {
+                            matinView.setText(eventDate.getActivity());
+                            matinView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
+
+
+                        }
                     }
                 }
             }
@@ -395,7 +407,7 @@ public class CalendarView extends LinearLayout {
         startX = x;
         startY = y;
         if (!selectedDay.isState()){
-            grid.getChildAt(position).setBackgroundResource(R.color.RTT);
+            grid.getChildAt(position).setBackgroundResource(R.color.SELECTING_COLOR);
             selectedDay.setState(true);
 
         }else {

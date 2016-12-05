@@ -6,7 +6,7 @@ import java.util.Date;
  * Created by tuffery on 23/11/16.
  */
 
-public class DayStuff {
+public class DayStuffModel {
     private Date date;
     private String activity;
     private int morning;
@@ -14,10 +14,12 @@ public class DayStuff {
     private String contractNumber;
     private String userName;
     private int userId;
+    private String activityColor;
 
-    public DayStuff(Date date, String activity, String contractNumber, int morning, int afternoon, String userName, int userId) {
+    public DayStuffModel(Date date, String activity, String contractNumber, String activityColor, int morning, int afternoon, String userName, int userId) {
         this.date = date;
         this.activity = activity;
+        this.activityColor = activityColor;
         this.morning = morning;
         this.afternoon = afternoon;
         this.contractNumber = contractNumber;
@@ -79,5 +81,13 @@ public class DayStuff {
 
     public void setUserName(String userName) {
         this.userName = userName;
+    }
+
+    public String getActivityColor() {
+        return activityColor;
+    }
+
+    public void setActivityColor(String activityColor) {
+        this.activityColor = activityColor;
     }
 }

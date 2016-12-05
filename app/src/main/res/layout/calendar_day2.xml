@@ -8,57 +8,43 @@
     android:gravity="center"
     android:minHeight="35dp"
     android:orientation="vertical">
-
+    <TextView
+        android:id="@+id/day_date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="day"
+        android:textSize="20sp"
+        android:textStyle="bold" />
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
         android:background="#fff">
 
-        <ImageView
+        <TextView
             android:id="@+id/image_matin"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="#fff" />
-
-        <ImageView
-            android:id="@+id/check_matin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
+            android:gravity="center"
             />
 
-        <TextView
-            android:id="@+id/day_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:text="day"
-            android:textSize="20sp"
-            android:textStyle="bold" />
+
+
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="0.5"
-        android:background="#fff">
+        android:background="#ffff">
 
-        <ImageView
+        <TextView
             android:id="@+id/image_apres_midi"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:src="#ffff" />
+            android:gravity="center"
+            />
 
-        <ImageView
-            android:id="@+id/check_apres_midi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentTop="true"
-             />
     </RelativeLayout>
 
 
