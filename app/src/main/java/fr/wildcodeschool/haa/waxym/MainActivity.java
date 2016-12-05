@@ -27,7 +27,6 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 public class MainActivity extends AppCompatActivity implements MultiselectCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
-    private boolean isEdit = true;
     CalendarView cv;
 
 
@@ -51,29 +50,22 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
 
         }
 
-        if (getIntent().getSerializableExtra("date et event") != null) {
-            DayStuffModel eventRtt = (DayStuffModel) getIntent().getSerializableExtra("date et event");
-            ArrayList<DayStuffModel> events = new ArrayList<>();
-            events.add(eventRtt);
 
-            CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
-            cv.updateCalendar(events, false);
-        }
         final Button editButton = (Button) findViewById(R.id.buttonEdit);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                  cv = ((CalendarView) findViewById(R.id.calendar_view));
 
-                if( isEdit){
-                    cv.updateCalendar(null, true);
+                if( CalendarView.isEditMode){
+                    cv.updateCalendar();
                     editButton.setBackgroundResource(R.drawable.annul);
-                    isEdit = false;
+                    CalendarView.isEditMode = false;
                 }
                 else{
-                    cv.updateCalendar(null, false);
+                    cv.updateCalendar();
                     editButton.setBackgroundResource(R.drawable.edit);
-                    isEdit = true;
+                    CalendarView.isEditMode = true;
                 }
             }
         });
@@ -168,7 +160,9 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     }
     @Override
     public void onMethodCallBack() {
-           cv.updateCalendar(null, true);
+           this.cv.updateCalendar();
+
+
     }
 
     @Override

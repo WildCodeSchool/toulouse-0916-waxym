@@ -27,6 +27,7 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 public class CalendarView extends LinearLayout {
     private ArrayList<GridDateModel> cells ;
     public static boolean isMenuCreated = false;
+    public static boolean isEditMode = false;
     private boolean isDoneOnce = false;
     private MultiSelectMenuFragment fragment;
     private ArrayList<DayStuffModel> events;
@@ -178,18 +179,14 @@ public class CalendarView extends LinearLayout {
     /**
      * Display dates correctly in grid
      */
-    public void updateCalendar()
-    {
-        updateCalendar(events, false);
-    }
 
     /**
      * Display dates correctly in grid
      */
-    public void updateCalendar(ArrayList<DayStuffModel> events, boolean isEditMode)
+    public void updateCalendar()
     {
+
         this.cells = new ArrayList<>();
-        this.events = events;
         final Calendar calendar = (Calendar)currentDate.clone();
 
         // determine the cell for current month's beginning
@@ -213,7 +210,7 @@ public class CalendarView extends LinearLayout {
         // multiselect
         //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         //on touch
-        if(isEditMode) {
+        if(this.isEditMode) {
 
             grid.setOnTouchListener(new OnTouchListener() {
 
@@ -299,9 +296,9 @@ public class CalendarView extends LinearLayout {
     public boolean checkDistance(float x, float y, float deltaX, float deltaY, int width, int height) {
         float diffX = 0;
         float diffY = 0;
-                diffX = Math.abs(deltaX - x);
+                diffX = Math.abs(deltaX - x );
                 diffY = Math.abs(deltaY - y);
-        if(diffX>width || diffY >height)
+        if(diffX>width-width*0.1 || diffY >height-height *0.1)
             return true;
         else
             return false;
