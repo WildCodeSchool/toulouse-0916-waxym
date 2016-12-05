@@ -6,10 +6,9 @@ package fr.wildcodeschool.haa.waxym.login;
 
 public interface LoginContract {
     interface View extends BaseView<Presenter> {
-        void onError();
-        void onSuccess(String email);
+
     }
     interface Presenter extends BasePresenter {
-        void onLoginButtonClicked(String mail);
+        void onLoginButtonClicked();
     }
 }

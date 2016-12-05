@@ -1,25 +1,33 @@
 package fr.wildcodeschool.haa.waxym.login;
 
+import android.content.Context;
+import android.content.Intent;
+
+import fr.wildcodeschool.haa.waxym.MainActivity;
+
 /**
  * Created by tuffery on 05/12/16.
  */
 
 public class LoginPresenter implements LoginContract.Presenter {
-    private final LoginContract.View mView;
 
+    Context context;
 
-    public LoginPresenter(LoginContract.View view) {
-        mView = view;
-        view.setPresenter(this);
+    public LoginPresenter(Context context) {
+        this.context = context;
     }
 
-    @Override
-    public void onLoginButtonClicked(String mail) {
 
-    }
 
     @Override
     public void start() {
+
+    }
+
+    @Override
+    public void onLoginButtonClicked() {
+       Intent intent = new Intent(context,MainActivity.class);
+        context.startActivity(intent);
 
     }
 }
