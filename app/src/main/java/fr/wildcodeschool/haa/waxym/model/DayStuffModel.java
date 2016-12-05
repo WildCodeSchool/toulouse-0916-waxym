@@ -27,6 +27,9 @@ public class DayStuffModel {
         this.userId = userId;
     }
 
+    public DayStuffModel() {
+    }
+
     public int getUserId() {
         return userId;
     }

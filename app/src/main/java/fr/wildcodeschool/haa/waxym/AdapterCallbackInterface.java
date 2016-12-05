@@ -9,5 +9,5 @@ import java.util.Date;
  */
 
 public interface AdapterCallbackInterface {
-    void passCheckedDay(Date date, boolean bool);
+    void passCheckedDay(Date date,int position, boolean bool);
 }
