@@ -12,6 +12,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
@@ -32,6 +33,7 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
  * Created by a7med on 28/06/2015.
  */
 public class CalendarView extends LinearLayout {
+
     private ArrayList<GridDate> cells ;
     public static boolean isMenuCreated = false;
     private boolean isDoneOnce = false;
