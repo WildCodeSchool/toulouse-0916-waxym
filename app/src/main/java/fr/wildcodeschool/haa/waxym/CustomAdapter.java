@@ -10,7 +10,10 @@ import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import java.util.ArrayList;
 import java.util.zip.Inflater;
+
+import fr.wildcodeschool.haa.waxym.model.ActivityItemModel;
 
 /**
  * Created by apprenti on 30/11/16.
@@ -18,25 +21,23 @@ import java.util.zip.Inflater;
 
 public class CustomAdapter extends BaseAdapter {
     Context context;
-    String[] values;
     LayoutInflater inflater;
-    int[] color;
+    ArrayList<ActivityItemModel> listContrat;
 
-    public CustomAdapter(Context context, String[] values, int[] color){
+    public CustomAdapter(Context context, ArrayList<ActivityItemModel> listContrat){
         //super(context, R.layout.list_view_item);
         this.context = context;
-        this.values = values;
-        this.color = color;
+        this.listContrat = listContrat;
     }
 
     @Override
     public int getCount() {
-        return values.length;
+        return listContrat.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return values[position];
+        return listContrat.get(position);
     }
 
     @Override
@@ -52,8 +53,8 @@ public class CustomAdapter extends BaseAdapter {
         customView = inflater.inflate(R.layout.list_view_item, parent, false);
         TextView text = (TextView) customView.findViewById(R.id.list);
 
-            text.setText(values[position]);
-            text.setBackgroundColor(this.color[position]);
+            text.setText(listContrat.get(position).getActivityName());
+            text.setBackgroundColor(Color.parseColor(this.listContrat.get(position).getActivityColor()));
 
         return customView;
 
