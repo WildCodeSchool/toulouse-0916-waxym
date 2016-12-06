@@ -104,9 +104,9 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
         DayStuffModel passedDay = new DayStuffModel();
         if (isChecked) {
             passedDay.setDate(date);
-            if (position % 2 == 0) {
+
                 passedDay.setMorning(1);
-            } else
+
                 passedDay.setAfternoon(1);
 
             this.selectedList.add(passedDay);
