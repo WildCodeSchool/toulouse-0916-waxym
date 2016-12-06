@@ -16,6 +16,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
+import fr.wildcodeschool.haa.waxym.database.DBHandler;
+import fr.wildcodeschool.haa.waxym.model.ActivityItemModel;
+import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
+
 import static android.graphics.Color.BLUE;
 import static android.graphics.Color.CYAN;
 import static android.graphics.Color.GRAY;
@@ -33,16 +39,20 @@ public class SlidingListFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        ArrayList<ActivityItemModel> mesContrats;
         View view = inflater.inflate(R.layout.sliding_fragment_layout, container, false);
+        DBHandler mHandler = new DBHandler(view.getContext());
+        mesContrats = mHandler.getUserActivitiesList(1);
 
-        String[] values = new String[] { "Contrat1", "Contrat2", "Contrat3",
-                "Contrat4", "Contrat5" };
-        int[] colorValues = new int[] {BLUE, GREEN, RED, GRAY, YELLOW, CYAN};
+
+        //String[] values = new String[] { "Contrat1", "Contrat2", "Contrat3",
+               // "Contrat4", "Contrat5" };
+      //  int[] colorValues = new int[] {BLUE, GREEN, RED, GRAY, YELLOW, CYAN};
         // use your custom layout
       /*  this.adapter = new ArrayAdapter<String>(container.getContext(),
                 R.layout.list_view_item, R.id.list, values); */
 
-        BaseAdapter customAdapter = new CustomAdapter(view.getContext(), values, colorValues);
+        BaseAdapter customAdapter = new CustomAdapter(view.getContext(), mesContrats);
         ListView listView = (ListView) view.findViewById(R.id.listview);
         listView.setAdapter(customAdapter);
 

@@ -146,6 +146,9 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             activity = cursor.getString(0);
             contractNumber = cursor.getString(1);
             activityColor = cursor.getString(2);
+            if(contractNumber == null){
+                contractNumber = "";
+            }
             activitiesList.add(new ActivityItemModel(contractNumber+" "+ activity,activityColor));
             cursor.moveToNext();
         }
