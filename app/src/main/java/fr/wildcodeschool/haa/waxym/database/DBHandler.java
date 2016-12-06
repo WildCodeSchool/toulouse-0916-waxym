@@ -172,7 +172,10 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             activity = cursor.getString(0);
             contractNumber = cursor.getString(1);
             activityColor = cursor.getString(2);
-            activitiesList.add(new ActivityItemModel(contractNumber + " " + activity, activityColor));
+            if(contractNumber == null){
+                contractNumber = "";
+            }
+            activitiesList.add(new ActivityItemModel(contractNumber+" "+ activity,activityColor));
             cursor.moveToNext();
         }
         cursor.close();

@@ -13,7 +13,7 @@
 
         <TextView
             android:text="EmploYeah!"
-            android:layout_marginLeft="40dp"
+            android:gravity="center_horizontal"
             android:layout_width="match_parent"
             android:textStyle="bold"
             android:textColor="#000000"
@@ -39,10 +39,11 @@
         <Button
             android:id="@+id/btn_login"
             android:layout_width="200dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal"
             android:layout_height="50dp"
             android:layout_marginTop="24dp"
             android:layout_marginBottom="24dp"
-            android:layout_marginLeft="50dp"
             android:padding="12dp"
             android:text="login"/>
     </LinearLayout>
