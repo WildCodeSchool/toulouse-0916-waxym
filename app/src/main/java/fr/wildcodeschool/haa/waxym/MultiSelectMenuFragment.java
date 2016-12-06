@@ -54,6 +54,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
             public void onClick(View v) {
                 getActivity().getFragmentManager().beginTransaction().remove(MultiSelectMenuFragment.this).commit();
                 try {
+                    closeMenu();
 
                     ((MultiselectCallBackInterface)getView().getContext()
                     ).onMethodCallBack();
@@ -67,7 +68,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
         valid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getFragmentManager().beginTransaction().remove(MultiSelectMenuFragment.this).commit();
+                closeMenu();
                 try {
 
                     ((MultiselectCallBackInterface)getView().getContext()
@@ -79,6 +80,11 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
             }
         });
         return view;
+    }
+    public  void closeMenu(){
+        getActivity().getFragmentManager().beginTransaction().remove(MultiSelectMenuFragment.this).commit();
+
+
     }
 
 

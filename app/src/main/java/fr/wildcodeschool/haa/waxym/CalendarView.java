@@ -30,7 +30,6 @@ public class CalendarView extends LinearLayout {
     public static boolean isEditMode = false;
     private boolean isDoneOnce = false;
     private MultiSelectMenuFragment fragment;
-    private ArrayList<DayStuffModel> events;
 
     // for logging
     private static final String LOGTAG = "Calendar View";
@@ -45,7 +44,7 @@ public class CalendarView extends LinearLayout {
     private String dateFormat;
 
     // current displayed month
-    private Calendar currentDate = Calendar.getInstance();
+    public static Calendar currentDate = Calendar.getInstance();
 
     //event handling
     private EventHandler eventHandler = null;

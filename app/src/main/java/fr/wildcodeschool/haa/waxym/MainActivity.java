@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import java.io.File;
@@ -18,6 +19,7 @@ import java.io.OutputStream;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
@@ -58,21 +60,24 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
                  cv = ((CalendarView) findViewById(R.id.calendar_view));
 
                 if( CalendarView.isEditMode){
-                    cv.updateCalendar();
-                    editButton.setBackgroundResource(R.drawable.annul);
                     CalendarView.isEditMode = false;
-                }
-                else{
+                    getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
+                    CalendarView.isMenuCreated = false;
                     cv.updateCalendar();
                     editButton.setBackgroundResource(R.drawable.edit);
+                }
+                else{
                     CalendarView.isEditMode = true;
+                    cv.updateCalendar();
+                    editButton.setBackgroundResource(R.drawable.annul);
+
                 }
             }
         });
 
         // assign event handler
-        CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
-        cv.setEventHandler(new CalendarView.EventHandler() {
+        this.cv = ((CalendarView) findViewById(R.id.calendar_view));
+        this.cv.setEventHandler(new CalendarView.EventHandler() {
             @Override
             public void onDayLongPress(GridDateModel date) {
                 // show returned day
@@ -94,7 +99,8 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_show_list) {
-            toggleList();
+            CalendarView.currentDate = Calendar.getInstance();
+            this.cv.updateCalendar();
             return true;
         }
         return super.onOptionsItemSelected(item);
