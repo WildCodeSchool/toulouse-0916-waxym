@@ -10,7 +10,8 @@
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="24dip"
+        android:padding="10dp"
+        android:textAlignment="center"
         android:text="Contrat"
         android:textAppearance="?android:attr/textAppearanceMedium">
 

@@ -25,7 +25,7 @@
             <ListView
                 android:id="@+id/listview"
                 android:background="#fff"
-                android:layout_width="150dp"
+                android:layout_width="200dp"
                 android:layout_height="150dp"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
