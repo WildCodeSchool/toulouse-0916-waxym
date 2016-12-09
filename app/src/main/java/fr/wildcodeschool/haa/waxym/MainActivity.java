@@ -1,14 +1,22 @@
 package fr.wildcodeschool.haa.waxym;
 
+
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import java.io.File;
@@ -21,9 +29,11 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.zip.Inflater;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
+
 
 
 public class MainActivity extends AppCompatActivity implements MultiselectCallBackInterface {
@@ -31,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     private DBHandler mDBHelper;
     private boolean isEdit = true;
     CalendarView cv;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,6 +99,7 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
                 Toast.makeText(MainActivity.this, sdf.format(date.getDate()), Toast.LENGTH_SHORT).show();
             }
         });
+
     }
 
 
@@ -97,7 +107,19 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        // Spinner action bar
+        MenuItem mitem = menu.findItem(R.id.item1);
+        Spinner spin =(Spinner) mitem.getActionView();
+        setupSpinner(spin);
         return true;
+    }
+    public void setupSpinner(Spinner spin){
+        String[] items={"Jour","Semaine","Mois"};
+        //wrap the items in the Adapter
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.spinner_item,items);
+        //assign adapter to the Spinner
+        spin.setAdapter(adapter);
+
     }
 
     @Override
@@ -179,6 +201,5 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         dates = passedList;
     toggleList();
     }
-
 
 }

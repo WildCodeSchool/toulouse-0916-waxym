@@ -1,38 +1,35 @@
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:weightSum="1"
     android:orientation="vertical"
+    android:weightSum="1"
     tools:context=".MainActivity">
+
     <FrameLayout
         android:id="@+id/list_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        >
+        android:layout_height="match_parent">
 
-
-    <fr.wildcodeschool.haa.waxym.CalendarView
-        xmlns:calendarNS="http://schemas.android.com/apk/res/fr.wildcodeschool.haa.waxym"
-        android:id="@+id/calendar_view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        calendarNS:dateFormat="MMMM yyyy"/>
+        <fr.wildcodeschool.haa.waxym.CalendarView xmlns:calendarNS="http://schemas.android.com/apk/res/fr.wildcodeschool.haa.waxym"
+            android:id="@+id/calendar_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            calendarNS:dateFormat="MMMM yyyy" />
 
         <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="15sp"
             android:layout_marginRight="15sp">
-    <Button
-        android:background="@drawable/edit"
-        android:id="@+id/buttonEdit"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        />
+
+            <Button
+                android:id="@+id/buttonEdit"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:background="@drawable/edit" />
         </RelativeLayout>
     </FrameLayout>
 </RelativeLayout>
