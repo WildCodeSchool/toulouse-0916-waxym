@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.text.format.DateUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -24,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
@@ -32,7 +34,7 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
  * Created by a7med on 28/06/2015.
  */
 public class CalendarView extends LinearLayout {
-    private ArrayList<GridDate> cells ;
+    private ArrayList<GridDate> cells;
     public static boolean isMenuCreated = false;
     private boolean isDoneOnce = false;
     private MultiSelectMenuFragment fragment;
@@ -51,7 +53,7 @@ public class CalendarView extends LinearLayout {
     private String dateFormat;
 
     // current displayed month
-    private Calendar currentDate = Calendar.getInstance();
+    private Calendar currentDate = Calendar.getInstance(Locale.FRANCE);
 
     //event handling
     private EventHandler eventHandler = null;
@@ -66,7 +68,7 @@ public class CalendarView extends LinearLayout {
     private GridView grid;
 
     // seasons' rainbow
-    int[] rainbow = new int[] {
+    int[] rainbow = new int[]{
             R.color.summer,
             R.color.fall,
             R.color.winter,
@@ -74,21 +76,18 @@ public class CalendarView extends LinearLayout {
     };
 
     // month-season association (northern hemisphere, sorry australia :)
-    int[] monthSeason = new int[] {2, 2, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2};
+    int[] monthSeason = new int[]{2, 2, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2};
 
-    public CalendarView(Context context)
-    {
+    public CalendarView(Context context) {
         super(context);
     }
 
-    public CalendarView(Context context, AttributeSet attrs)
-    {
+    public CalendarView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initControl(context, attrs);
     }
 
-    public CalendarView(Context context, AttributeSet attrs, int defStyleAttr)
-    {
+    public CalendarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initControl(context, attrs);
     }
@@ -96,8 +95,7 @@ public class CalendarView extends LinearLayout {
     /**
      * Load control xml layout
      */
-    private void initControl(Context context, AttributeSet attrs)
-    {
+    private void initControl(Context context, AttributeSet attrs) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.control_calendar, this);
 
@@ -108,68 +106,57 @@ public class CalendarView extends LinearLayout {
         updateCalendar();
     }
 
-    private void loadDateFormat(AttributeSet attrs)
-    {
+    private void loadDateFormat(AttributeSet attrs) {
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.CalendarView);
 
-        try
-        {
+        try {
             // try to load provided date format, and fallback to default otherwise
             dateFormat = ta.getString(R.styleable.CalendarView_dateFormat);
             if (dateFormat == null)
                 dateFormat = DATE_FORMAT;
-        }
-        finally
-        {
+        } finally {
             ta.recycle();
         }
     }
-    private void assignUiElements()
-    {
+
+    private void assignUiElements() {
         // layout is inflated, assign local variables to components
-        header = (LinearLayout)findViewById(R.id.calendar_header);
-        btnPrev = (ImageView)findViewById(R.id.calendar_prev_button);
-        btnNext = (ImageView)findViewById(R.id.calendar_next_button);
-        txtDate = (TextView)findViewById(R.id.calendar_date_display);
-        grid = (GridView)findViewById(R.id.calendar_grid);
+        header = (LinearLayout) findViewById(R.id.calendar_header);
+        btnPrev = (ImageView) findViewById(R.id.calendar_prev_button);
+        btnNext = (ImageView) findViewById(R.id.calendar_next_button);
+        txtDate = (TextView) findViewById(R.id.calendar_date_display);
+        grid = (GridView) findViewById(R.id.calendar_grid);
     }
 
-    private void assignClickHandlers()
-    {
+    private void assignClickHandlers() {
         // add one month and refresh UI
-        btnNext.setOnClickListener(new OnClickListener()
-        {
+        btnNext.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 currentDate.add(Calendar.MONTH, 1);
                 updateCalendar();
             }
         });
 
         // subtract one month and refresh UI
-        btnPrev.setOnClickListener(new OnClickListener()
-        {
+        btnPrev.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 currentDate.add(Calendar.MONTH, -1);
                 updateCalendar();
             }
         });
 
         // long-pressing a day
-        grid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
-        {
+        grid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
-            public boolean onItemLongClick(AdapterView<?> view, View cell, int position, long id)
-            {
+            public boolean onItemLongClick(AdapterView<?> view, View cell, int position, long id) {
                 // handle long-press
                 if (eventHandler == null)
                     return false;
 
-                eventHandler.onDayLongPress((GridDate)view.getItemAtPosition(position));
+                eventHandler.onDayLongPress((GridDate) view.getItemAtPosition(position));
                 return true;
             }
         });
@@ -182,45 +169,44 @@ public class CalendarView extends LinearLayout {
 
     }
 
+
     /**
      * Display dates correctly in grid
      */
-    public void updateCalendar()
-    {
+    public void updateCalendar() {
         updateCalendar(events, false);
     }
 
     /**
      * Display dates correctly in grid
      */
-    public void updateCalendar(ArrayList<DayStuffModel> events, boolean isEditMode)
-    {
+    public void updateCalendar(ArrayList<DayStuffModel> events, boolean isEditMode) {
         this.cells = new ArrayList<>();
         this.events = events;
-        final Calendar calendar = (Calendar)currentDate.clone();
+        final Calendar calendar = (Calendar) currentDate.clone();
 
         // determine the cell for current month's beginning
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
+        final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) - 2;
 
         // move calendar backwards to the beginning of the week
         calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell);
 
         // fill cells
-        while (cells.size() < DAYS_COUNT)
-        {
+        while (cells.size() < DAYS_COUNT) {
             cells.add(new GridDate(calendar.getTime()));
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
 
         // update grid
-        final CalendarAdapter calendarAdapter = new CalendarAdapter(getContext(),cells);
+        final CalendarAdapter calendarAdapter = new CalendarAdapter(getContext(), cells);
         grid.setAdapter(calendarAdapter);
 
         // multiselect
         //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         //on touch
-        if(isEditMode) {
+        if (isEditMode) {
 
             grid.setOnTouchListener(new OnTouchListener() {
 
@@ -230,29 +216,29 @@ public class CalendarView extends LinearLayout {
                     int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
                     if (i >= 0 && i < 42) {
 
-                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP){
+                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
                             isDoneOnce = false;
                         }
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                        changeSateAndResetPos(cells.get(i),i,initialX,initialY);
-                            if(!isMenuCreated) {
+                            changeSateAndResetPos(cells.get(i), i, initialX, initialY);
+                            if (!isMenuCreated) {
                                 launchMultiSelectMenu();
-                                isMenuCreated =true;
+                                isMenuCreated = true;
                             }
-                        if (!isDoneOnce) {
-                            sendDataToFragment(i, cells.get(i));
-                            isDoneOnce = true;
-                        }
+                            if (!isDoneOnce) {
+                                sendDataToFragment(i, cells.get(i));
+                                isDoneOnce = true;
+                            }
 
-                        return true;
+                            return true;
 
-                        //on swipe
-                        }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                        if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(),grid.getChildAt(i).getHeight())) {
-                            changeSateAndResetPos(cells.get(i),i,initialX,initialY);
-                            sendDataToFragment(i,cells.get(i));
+                            //on swipe
+                        } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                            if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(), grid.getChildAt(i).getHeight())) {
+                                changeSateAndResetPos(cells.get(i), i, initialX, initialY);
+                                sendDataToFragment(i, cells.get(i));
 
-                        }
+                            }
 
                         }
 
@@ -261,8 +247,7 @@ public class CalendarView extends LinearLayout {
                     return true;
                 }
             });
-        }
-        else{
+        } else {
             grid.setOnTouchListener(null);
             assignClickHandlers();
             // à faire ( swipe changer mois
@@ -280,19 +265,15 @@ public class CalendarView extends LinearLayout {
 
     }
 
-   
 
-
-    private class CalendarAdapter extends ArrayAdapter<GridDate>
-    {
+    private class CalendarAdapter extends ArrayAdapter<GridDate> {
         // days with events
         private ArrayList<DayStuffModel> eventDays;
         private DBHandler mDBHandler;
         // for view inflation
         private LayoutInflater inflater;
 
-        public CalendarAdapter(Context context, ArrayList<GridDate> days)
-        {
+        public CalendarAdapter(Context context, ArrayList<GridDate> days) {
             super(context, R.layout.calendar_day2, days);
             inflater = LayoutInflater.from(context);
 
@@ -300,8 +281,7 @@ public class CalendarView extends LinearLayout {
 
 
         @Override
-        public View getView(int position, View view, ViewGroup parent)
-        {
+        public View getView(int position, View view, ViewGroup parent) {
 
             // day in question
             Date date = getItem(position).getDate();
@@ -321,10 +301,9 @@ public class CalendarView extends LinearLayout {
             if (view == null)
                 view = inflater.inflate(R.layout.calendar_day2, parent, false);
             //get views
-            TextView dayDateView = (TextView)view.findViewById(R.id.day_date);
+            TextView dayDateView = (TextView) view.findViewById(R.id.day_date);
             TextView matinView = (TextView) view.findViewById(R.id.image_matin);
-            TextView apresMidiView = (TextView)view.findViewById(R.id.image_apres_midi);
-
+            TextView apresMidiView = (TextView) view.findViewById(R.id.image_apres_midi);
 
 
             // if this day has an event, specify event image
@@ -351,13 +330,10 @@ public class CalendarView extends LinearLayout {
             dayDateView.setTypeface(null, Typeface.NORMAL);
             dayDateView.setTextColor(Color.BLACK);
 
-            if (month != today.getMonth() || year != today.getYear())
-            {
+            if (month != today.getMonth() || year != today.getYear()) {
                 // if this day is outside current month, grey it out
                 dayDateView.setTextColor(getResources().getColor(R.color.greyed_out));
-            }
-            else if (day == today.getDate())
-            {
+            } else if (day == today.getDate()) {
                 // if it is today, set it to blue/bold
                 dayDateView.setTypeface(null, Typeface.BOLD);
                 dayDateView.setTextColor(getResources().getColor(R.color.today));
@@ -366,7 +342,7 @@ public class CalendarView extends LinearLayout {
             // set text
             dayDateView.setText(String.valueOf(date.getDate()));
             //set row height
-            view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,200));
+            view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT, 200));
             return view;
         }
 
@@ -375,8 +351,7 @@ public class CalendarView extends LinearLayout {
     /**
      * Assign event handler to be passselectedList = new ArrayList<>();ed needed events
      */
-    public void setEventHandler(EventHandler eventHandler)
-    {
+    public void setEventHandler(EventHandler eventHandler) {
         this.eventHandler = eventHandler;
     }
 
@@ -384,8 +359,7 @@ public class CalendarView extends LinearLayout {
      * This interface defines what events to be reported to
      * the outside world
      */
-    public interface EventHandler
-    {
+    public interface EventHandler {
         void onDayLongPress(GridDate date);
     }
     // check if distance between two point is higher than max entered
@@ -393,24 +367,25 @@ public class CalendarView extends LinearLayout {
     public boolean checkDistance(float x, float y, float deltaX, float deltaY, int width, int height) {
         float diffX = 0;
         float diffY = 0;
-                diffX = Math.abs(deltaX - x);
-                diffY = Math.abs(deltaY - y);
-        if(diffX>width || diffY >height)
+        diffX = Math.abs(deltaX - x);
+        diffY = Math.abs(deltaY - y);
+        if (diffX > width || diffY > height)
             return true;
         else
             return false;
 
 
     }
+
     // change state of cell at position and set associated background and reset start positions
-    public void changeSateAndResetPos(GridDate selectedDay, int position,float x, float y){
+    public void changeSateAndResetPos(GridDate selectedDay, int position, float x, float y) {
         startX = x;
         startY = y;
-        if (!selectedDay.isState()){
+        if (!selectedDay.isState()) {
             grid.getChildAt(position).setBackgroundResource(R.color.SELECTING_COLOR);
             selectedDay.setState(true);
 
-        }else {
+        } else {
             grid.getChildAt(position).setBackgroundResource(0);
             selectedDay.setState(false);
 
@@ -418,8 +393,8 @@ public class CalendarView extends LinearLayout {
 
     }
 
-    public void sendDataToFragment(int position, GridDate gridDate){
-        if(this.fragment != null) {
+    public void sendDataToFragment(int position, GridDate gridDate) {
+        if (this.fragment != null) {
             if (gridDate.isState()) {
                 try {
                     ((AdapterCallbackInterface) this.fragment).passCheckedDay(cells.get(position).getDate(), true);
@@ -435,28 +410,28 @@ public class CalendarView extends LinearLayout {
             }
         }
     }
-    public void launchMultiSelectMenu(){
+
+    public void launchMultiSelectMenu() {
 
 
-        final Activity activity = (MainActivity)getContext();
+        final Activity activity = (MainActivity) getContext();
         FragmentManager fm = activity.getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         this.fragment = new MultiSelectMenuFragment();
-        ft.add(R.id.list_fragment_container,fragment).commit();
+        ft.add(R.id.list_fragment_container, fragment).commit();
 
 
     }
-    public void onButtonCancel(boolean bool){
-        if (!bool) {
-            for (int i = 0 ; i < grid.getChildCount();i++)
-            grid.getChildAt(i).setBackgroundResource(0);
 
+    public void onButtonCancel(boolean bool) {
+        if (!bool) {
+            for (int i = 0; i < grid.getChildCount(); i++)
+                grid.getChildAt(i).setBackgroundResource(0);
 
 
         }
 
     }
-
 
 
 }

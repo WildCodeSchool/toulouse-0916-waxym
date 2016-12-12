@@ -14,10 +14,4 @@
         <item>Uranus</item>
         <item>Neptune</item>
     </string-array>
-
-    <string-array name="jsm">
-        <item>Jour</item>
-        <item>Semaine</item>
-        <item>Mois</item>
-    </string-array>
 </resources>

@@ -10,6 +10,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -46,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
         // create  DBHandler
         this.mDBHelper = new DBHandler(this);
@@ -111,6 +113,9 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         MenuItem mitem = menu.findItem(R.id.item1);
         Spinner spin =(Spinner) mitem.getActionView();
         setupSpinner(spin);
+        //employeah action bar centre
+        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
+        getSupportActionBar().setCustomView(R.layout.actionbar_title);
         return true;
     }
     public void setupSpinner(Spinner spin){
@@ -119,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.spinner_item,items);
         //assign adapter to the Spinner
         spin.setAdapter(adapter);
-
     }
 
     @Override
@@ -199,7 +203,7 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     public void sendSelectedDays(ArrayList<Date> passedList) {
         ArrayList<Date> dates = new ArrayList<>();
         dates = passedList;
-    toggleList();
+        toggleList();
     }
 
 }
