@@ -11,6 +11,8 @@ import android.widget.Button;
 import java.util.ArrayList;
 import java.util.Date;
 
+import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -21,7 +23,7 @@ import java.util.Date;
  */
 public class MultiSelectMenuFragment extends Fragment implements AdapterCallbackInterface {
 
-    ArrayList<Date> selectedList = new ArrayList<>() ;
+    ArrayList<DayStuffModel> selectedList = new ArrayList<>() ;
     public MultiSelectMenuFragment() {
         // Required empty public constructor
     }
@@ -52,6 +54,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
             public void onClick(View v) {
                 getActivity().getFragmentManager().beginTransaction().remove(MultiSelectMenuFragment.this).commit();
                 try {
+                    closeMenu();
 
                     ((MultiselectCallBackInterface)getView().getContext()
                     ).onMethodCallBack();
@@ -65,7 +68,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
         valid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getFragmentManager().beginTransaction().remove(MultiSelectMenuFragment.this).commit();
+                closeMenu();
                 try {
 
                     ((MultiselectCallBackInterface)getView().getContext()
@@ -77,6 +80,11 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
             }
         });
         return view;
+    }
+    public  void closeMenu(){
+        getActivity().getFragmentManager().beginTransaction().remove(MultiSelectMenuFragment.this).commit();
+
+
     }
 
 
@@ -92,12 +100,19 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
     }
 
     @Override
-    public void passCheckedDay(Date date, boolean isChecked) {
+    public void passCheckedDay(Date date,int position, boolean isChecked) {
+        DayStuffModel passedDay = new DayStuffModel();
+        if (isChecked) {
+            passedDay.setDate(date);
+            if (position % 2 == 0) {
+                passedDay.setMorning(1);
+            } else
+                passedDay.setAfternoon(1);
 
-        if (isChecked )
-        this.selectedList.add(date);
-        else
+            this.selectedList.add(passedDay);
+        }  else
             this.selectedList.remove(date);
+
     }
 private void resetMultiselect(){
     CalendarView.isMenuCreated = false;

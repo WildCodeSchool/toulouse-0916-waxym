@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -16,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
 import android.widget.Toast;
@@ -25,12 +25,10 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.zip.Inflater;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
@@ -40,7 +38,6 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 public class MainActivity extends AppCompatActivity implements MultiselectCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
-    private boolean isEdit = true;
     CalendarView cv;
 
     @Override
@@ -64,38 +61,34 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
 
         }
 
-        if (getIntent().getSerializableExtra("date et event") != null) {
-            DayStuffModel eventRtt = (DayStuffModel) getIntent().getSerializableExtra("date et event");
-            ArrayList<DayStuffModel> events = new ArrayList<>();
-            events.add(eventRtt);
 
-            CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
-            cv.updateCalendar(events, false);
-        }
         final Button editButton = (Button) findViewById(R.id.buttonEdit);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                  cv = ((CalendarView) findViewById(R.id.calendar_view));
 
-                if( isEdit){
-                    cv.updateCalendar(null, true);
-                    editButton.setBackgroundResource(R.drawable.annul);
-                    isEdit = false;
+                if( CalendarView.isEditMode){
+                    CalendarView.isEditMode = false;
+                    getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
+                    CalendarView.isMenuCreated = false;
+                    cv.updateCalendar();
+                    editButton.setBackgroundResource(R.drawable.edit);
                 }
                 else{
-                    cv.updateCalendar(null, false);
-                    editButton.setBackgroundResource(R.drawable.edit);
-                    isEdit = true;
+                    CalendarView.isEditMode = true;
+                    cv.updateCalendar();
+                    editButton.setBackgroundResource(R.drawable.annul);
+
                 }
             }
         });
 
         // assign event handler
-        CalendarView cv = ((CalendarView) findViewById(R.id.calendar_view));
-        cv.setEventHandler(new CalendarView.EventHandler() {
+        this.cv = ((CalendarView) findViewById(R.id.calendar_view));
+        this.cv.setEventHandler(new CalendarView.EventHandler() {
             @Override
-            public void onDayLongPress(GridDate date) {
+            public void onDayLongPress(GridDateModel date) {
                 // show returned day
                 DateFormat sdf = SimpleDateFormat.getDateInstance();
                 Toast.makeText(MainActivity.this, sdf.format(date.getDate()), Toast.LENGTH_SHORT).show();
@@ -130,7 +123,8 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_show_list) {
-            toggleList();
+            CalendarView.currentDate = Calendar.getInstance();
+            this.cv.updateCalendar();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -196,12 +190,14 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     }
     @Override
     public void onMethodCallBack() {
-           cv.updateCalendar(null, true);
+           this.cv.updateCalendar();
+
+
     }
 
     @Override
-    public void sendSelectedDays(ArrayList<Date> passedList) {
-        ArrayList<Date> dates = new ArrayList<>();
+    public void sendSelectedDays(ArrayList<DayStuffModel> passedList) {
+        ArrayList<DayStuffModel> dates = new ArrayList<>();
         dates = passedList;
         toggleList();
     }

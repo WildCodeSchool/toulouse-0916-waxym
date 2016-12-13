@@ -6,11 +6,11 @@ import java.util.Date;
  * Created by tuffery on 20/11/16.
  */
 
-public class GridDate {
+public class GridDateModel {
     private Date date;
     private boolean state;
 
-    public GridDate(Date date) {
+    public GridDateModel(Date date) {
         this.date = date;
         this.state = false;
     }
