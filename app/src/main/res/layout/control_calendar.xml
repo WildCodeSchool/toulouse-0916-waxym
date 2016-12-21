@@ -55,13 +55,6 @@
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
-        <TextView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:gravity="center_horizontal"
-            android:textColor="#222222"
-            android:text="DIM"/>
 
         <TextView
             android:layout_width="0dp"
@@ -110,6 +103,14 @@
             android:gravity="center_horizontal"
             android:textColor="#222222"
             android:text="SAM"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center_horizontal"
+            android:textColor="#222222"
+            android:text="DIM"/>
     </LinearLayout>
 
     <!-- days view -->
