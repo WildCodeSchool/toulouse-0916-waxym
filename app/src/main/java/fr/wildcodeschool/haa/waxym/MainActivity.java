@@ -3,6 +3,10 @@ package fr.wildcodeschool.haa.waxym;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -11,6 +15,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
+
+import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,10 +32,11 @@ import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 
-public class MainActivity extends AppCompatActivity implements MultiselectCallBackInterface {
+public class MainActivity extends FragmentActivity implements MultiselectCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
     CalendarView cv;
+    ViewPager myViewPager;
 
 
     @Override
@@ -59,16 +66,16 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
             public void onClick(View v) {
                  cv = ((CalendarView) findViewById(R.id.calendar_view));
 
-                if( CalendarView.isEditMode){
-                    CalendarView.isEditMode = false;
+                if( CalendarFragment.isEditMode){
+                    CalendarFragment.isEditMode = false;
                     getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
-                    CalendarView.isMenuCreated = false;
-                    cv.updateCalendar();
+                    CalendarFragment.isMenuCreated = false;
+                    ((CalendarInterface)getApplicationContext()).updateCalendar(getApplicationContext());
                     editButton.setBackgroundResource(R.drawable.edit);
                 }
                 else{
-                    CalendarView.isEditMode = true;
-                    cv.updateCalendar();
+                    CalendarFragment.isEditMode = true;
+                    ((CalendarInterface)getApplicationContext()).updateCalendar(getApplicationContext());
                     editButton.setBackgroundResource(R.drawable.annul);
 
                 }
@@ -77,14 +84,32 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
 
         // assign event handler
         this.cv = ((CalendarView) findViewById(R.id.calendar_view));
-        this.cv.setEventHandler(new CalendarView.EventHandler() {
+
+
+        PagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()){
+
             @Override
-            public void onDayLongPress(GridDateModel date) {
-                // show returned day
-                DateFormat sdf = SimpleDateFormat.getDateInstance();
-                Toast.makeText(MainActivity.this, sdf.format(date.getDate()), Toast.LENGTH_SHORT).show();
+            public int getCount() {
+                return Integer.MAX_VALUE;
             }
-        });
+
+            @Override
+            public android.support.v4.app.Fragment getItem(int position) {
+
+                Bundle bundle = new Bundle();
+                bundle.putInt("Month",position);
+
+                return CalendarFragment.newInstance(bundle);
+            }
+
+        };
+
+        PagerAdapter wrappedAdapter = new InfinitePagerAdapter(adapter);
+
+        // actually an InfiniteViewPager
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        viewPager.setAdapter(wrappedAdapter);
+        viewPager.setCurrentItem(Integer.MAX_VALUE/2);
     }
 
 
@@ -99,8 +124,8 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_show_list) {
-            CalendarView.currentDate = Calendar.getInstance();
-            this.cv.updateCalendar();
+            CalendarFragment.currentDate = Calendar.getInstance();
+            ((CalendarInterface)getApplicationContext()).updateCalendar(getApplicationContext());
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -166,7 +191,7 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     }
     @Override
     public void onMethodCallBack() {
-           this.cv.updateCalendar();
+        ((CalendarInterface)getApplicationContext()).updateCalendar(getApplicationContext());
 
 
     }

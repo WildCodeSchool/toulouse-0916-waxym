@@ -115,7 +115,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
 
     }
 private void resetMultiselect(){
-    CalendarView.isMenuCreated = false;
+    CalendarFragment.isMenuCreated = false;
 
 }
 
