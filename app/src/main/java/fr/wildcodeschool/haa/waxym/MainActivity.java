@@ -109,7 +109,7 @@ public class MainActivity extends FragmentActivity implements MultiselectCallBac
         // actually an InfiniteViewPager
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         viewPager.setAdapter(wrappedAdapter);
-        //viewPager.setCurrentItem(Integer.MAX_VALUE/2);
+        viewPager.setCurrentItem(Integer.MAX_VALUE/2);
     }
 
 

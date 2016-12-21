@@ -81,8 +81,8 @@ public class CalendarView extends LinearLayout {
     {
         // layout is inflated, assign local variables to components
         header = (LinearLayout)findViewById(R.id.calendar_header);
-        btnPrev = (ImageView)findViewById(R.id.calendar_prev_button);
-        btnNext = (ImageView)findViewById(R.id.calendar_next_button);
+       // btnPrev = (ImageView)findViewById(R.id.calendar_prev_button);
+        //btnNext = (ImageView)findViewById(R.id.calendar_next_button);
         txtDate = (TextView)findViewById(R.id.calendar_date_display);
     }
 

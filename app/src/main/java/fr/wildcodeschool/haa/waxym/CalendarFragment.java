@@ -91,7 +91,7 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
 
         this.cells = new ArrayList<>();
         final Calendar calendar = (Calendar)currentDate.clone();
-        calendar.add(Calendar.MONTH, position);
+        calendar.add(Calendar.MONTH, position-Integer.MAX_VALUE/2);
         // determine the cell for current month's beginning
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) -2;
