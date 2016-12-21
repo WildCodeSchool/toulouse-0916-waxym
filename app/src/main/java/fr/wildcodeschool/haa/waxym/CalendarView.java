@@ -72,8 +72,8 @@ public class CalendarView extends LinearLayout {
        // loadDateFormat(attrs);
         assignUiElements();
         //assignClickHandlers();
-      /*  if(((Activity)context).getFragmentManager().findFragmentByTag() = null)
-        ((CalendarInterface)context).updateCalendar(context);*/
+       /* if(((Activity)context).getFragmentManager().findFragmentById(R.id.viewPager) == null)
+        ((CalendarInterface)context).clearCalendar(context);*/
     }
 
 
@@ -95,7 +95,7 @@ public class CalendarView extends LinearLayout {
             public void onClick(View v)
             {
                 currentDate.add(Calendar.MONTH, 1);
-                updateCalendar();
+                clearCalendar();
             }
         });
 
@@ -106,7 +106,7 @@ public class CalendarView extends LinearLayout {
             public void onClick(View v)
             {
                 currentDate.add(Calendar.MONTH, -1);
-                updateCalendar();
+                clearCalendar();
             }
         });
 

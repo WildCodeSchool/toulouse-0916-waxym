@@ -30,4 +30,9 @@ public class Constants {
 
     //Id error
     public static int ID_ERROR = 404;
+
+    //other
+    public static final String POSITION_KEY= "Month";
+    public static int historyCount = 60;
+
 }

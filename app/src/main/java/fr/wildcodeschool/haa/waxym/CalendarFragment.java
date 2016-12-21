@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 
 
 /**
@@ -28,11 +30,8 @@ import java.util.Calendar;
 
 public class CalendarFragment extends Fragment implements CalendarInterface {
 
-    public static final String POSITION_KEY = "Month";
     private int position;
     private ArrayList<GridDateModel> cells ;
-    public static boolean isMenuCreated = false;
-    public static boolean isEditMode = false;
     private boolean isDoneOnce = false;
     private MultiSelectMenuFragment fragment;
     private TextView txtDate;
@@ -40,6 +39,7 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
     private float startX = 0;
     private float startY = 0;
     private LinearLayout header;
+    View root;
 
     int[] monthSeason = new int[] {2, 2, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2};
     // seasons' rainbow
@@ -59,10 +59,9 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
     private static final String DATE_FORMAT = "yyyy-MM-dd";
 
     // date format
-    private String dateFormat;
 
     // current displayed month
-    public static Calendar currentDate = Calendar.getInstance();
+    public static Calendar currentDate;
 
 
     public static CalendarFragment newInstance(Bundle args) {
@@ -73,10 +72,10 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        currentDate = Calendar.getInstance();
+        position = getArguments().getInt(Constants.POSITION_KEY);
 
-        position = getArguments().getInt(POSITION_KEY);
-
-        View root = inflater.inflate(R.layout.calendar_layout_fragment, container, false);
+       this.root = inflater.inflate(R.layout.calendar_layout_fragment, container, false);
         grid = (GridView)root.findViewById(R.id.calendar_grid);
         header = (LinearLayout)getActivity().findViewById(R.id.calendar_header);
 
@@ -91,7 +90,7 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
 
         this.cells = new ArrayList<>();
         final Calendar calendar = (Calendar)currentDate.clone();
-        calendar.add(Calendar.MONTH, position-Integer.MAX_VALUE/2);
+        calendar.add(Calendar.MONTH, position-Constants.historyCount/2);
         // determine the cell for current month's beginning
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) -2;
@@ -105,7 +104,8 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
             cells.add(new GridDateModel(calendar.getTime()));
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
-
+        // update currentDate
+        ((MainActivityCallBackInterface)getActivity()).refreshDate(currentDate);
         // update grid
         final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(context,cells);
         grid.setAdapter(calendarAdapter);
@@ -113,7 +113,8 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
         // multiselect
         //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         //on touch
-        if(this.isEditMode) {
+        final CommunicateSingleton communicateSingleton = CommunicateSingleton.getInstance();
+        if(communicateSingleton.isEditMode()) {
 
             grid.setOnTouchListener(new View.OnTouchListener() {
 
@@ -127,10 +128,41 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
                             isDoneOnce = false;
                         }
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                            changeSateAndResetPos(cells.get(i),i,initialX,initialY);
-                            if(!isMenuCreated) {
+                            boolean isAlreadychecked = false;
+                            int checkedPos = 0;
+                            for (int g = 0; g < cells.size();g++){
+                                if (cells.get(g).isState()){
+                                    isAlreadychecked = true;
+                                    checkedPos = g;
+                                    break;
+                                }
+
+                            }
+                            if(isAlreadychecked){
+                                if(i< checkedPos){
+                                for (int j = i; j< checkedPos;j++){
+
+                                    changeSate(cells.get(j),j);
+                                        //cells.get(j).setState(true);
+                                    }
+                                   // viewPager.getAdapter().notifyDataSetChanged();
+
+                                }else {
+                                    for(int j = checkedPos+1;j <i+1;j++){
+                                        //cells.get(j).setState(true);
+                                        changeSate(cells.get(j),j);
+                                    }
+                                    //viewPager.getAdapter().notifyDataSetChanged();
+
+                                }
+                            }else {
+                                changeSate(cells.get(i), i);
+                            }
+
+                            // check if menu is launched if not,  launch it
+                            if(!communicateSingleton.isMenuCreated()) {
                                 launchMultiSelectMenu(context);
-                                isMenuCreated =true;
+                                communicateSingleton.setMenuCreated(true);
                             }
                             if (!isDoneOnce) {
                                 sendDataToFragment(i, cells.get(i));
@@ -138,14 +170,16 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
                             }
 
                             return true;
+/*
 
                             //on swipe
                         }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
                             if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(),grid.getChildAt(i).getHeight())) {
-                                changeSateAndResetPos(cells.get(i),i,initialX,initialY);
+                                changeSate(cells.get(i),i);
                                 sendDataToFragment(i,cells.get(i));
 
                             }
+*/
 
                         }
 
@@ -161,10 +195,9 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
             // à faire ( swipe changer mois
         }
         // update title
-        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
-        txtDate.setText(sdf.format(currentDate.getTime()));
 
-        // set header color according to current season
+
+               // set header color according to current season
         int month = currentDate.get(Calendar.MONTH);
         int season = monthSeason[month];
         int color = rainbow[season];
@@ -185,7 +218,7 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
 
     }
     // change state of cell at position and set associated background and reset start positions
-    public void changeSateAndResetPos(GridDateModel selectedDay, int position, float x, float y){
+    /*public void changeSateAndResetPos(GridDateModel selectedDay, int position, float x, float y){
         startX = x;
         startY = y;
         if (!selectedDay.isState()){
@@ -199,7 +232,20 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
         }
 
     }
+*/
+    public void changeSate(GridDateModel selectedDay, int position) {
+        if (selectedDay.getDate().getDay() != Calendar.SATURDAY || selectedDay.getDate().getDay() != Calendar.SUNDAY) {
+            if (!selectedDay.isState()) {
+                grid.getChildAt(position).setBackgroundResource(R.color.SELECTING_COLOR);
+                selectedDay.setState(true);
 
+            } else {
+                grid.getChildAt(position).setBackgroundResource(0);
+                selectedDay.setState(false);
+
+            }
+        }
+    }
     public void sendDataToFragment(int position, GridDateModel gridDate){
         if(this.fragment != null) {
             if (gridDate.isState()) {
@@ -230,4 +276,13 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
     }
 
 
+    @Override
+    public void clearCalendar() {
+        grid = (GridView)root.findViewById(R.id.calendar_grid);
+
+        for (int i= 0; i <cells.size();i++){
+            cells.get(i).setState(false);
+        }
+        grid.setAdapter(new MonthCalendarAdapter(getContext(),cells));
+    }
 }

@@ -56,7 +56,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
                 try {
                     closeMenu();
 
-                    ((MultiselectCallBackInterface)getView().getContext()
+                    ((MainActivityCallBackInterface)getView().getContext()
                     ).onMethodCallBack();
                 }catch (ClassCastException e){
 
@@ -71,7 +71,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
                 closeMenu();
                 try {
 
-                    ((MultiselectCallBackInterface)getView().getContext()
+                    ((MainActivityCallBackInterface)getView().getContext()
                     ).sendSelectedDays(selectedList);
                 }catch (ClassCastException e){
 
@@ -115,7 +115,8 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
 
     }
 private void resetMultiselect(){
-    CalendarFragment.isMenuCreated = false;
+    CommunicateSingleton communicateSingleton = CommunicateSingleton.getInstance();
+    communicateSingleton.setEditMode(false);
 
 }
 

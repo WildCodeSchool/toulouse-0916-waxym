@@ -3,17 +3,15 @@ package fr.wildcodeschool.haa.waxym;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
@@ -22,21 +20,22 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Locale;
+
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 
-public class MainActivity extends FragmentActivity implements MultiselectCallBackInterface {
+public class MainActivity extends OptionMenuActivity implements MainActivityCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
     CalendarView cv;
-    ViewPager myViewPager;
+    ViewPager viewPager;
+    android.support.v4.app.Fragment calendarFragment;
 
 
     @Override
@@ -64,33 +63,34 @@ public class MainActivity extends FragmentActivity implements MultiselectCallBac
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 cv = ((CalendarView) findViewById(R.id.calendar_view));
+                calendarFragment=  getSupportFragmentManager().findFragmentById(R.id.viewPager);
+                CommunicateSingleton communicateSingleton = CommunicateSingleton.getInstance();
+                if( communicateSingleton.isEditMode()){
+                    communicateSingleton.setEditMode(false);
 
-                if( CalendarFragment.isEditMode){
-                    CalendarFragment.isEditMode = false;
-                    getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
-                    CalendarFragment.isMenuCreated = false;
-                    ((CalendarInterface)getApplicationContext()).updateCalendar(getApplicationContext());
+
+                    getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
+                    communicateSingleton.setMenuCreated(false);
+                    ((CalendarInterface)calendarFragment).clearCalendar();
                     editButton.setBackgroundResource(R.drawable.edit);
+                   // refreshViewPager();
                 }
                 else{
-                    CalendarFragment.isEditMode = true;
-                    ((CalendarInterface)getApplicationContext()).updateCalendar(getApplicationContext());
+                    communicateSingleton.setEditMode(true);
                     editButton.setBackgroundResource(R.drawable.annul);
-
+                    //refreshViewPager();
                 }
             }
         });
 
         // assign event handler
-        this.cv = ((CalendarView) findViewById(R.id.calendar_view));
 
 
         PagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()){
 
             @Override
             public int getCount() {
-                return Integer.MAX_VALUE;
+                return Constants.historyCount;
             }
 
             @Override
@@ -107,9 +107,14 @@ public class MainActivity extends FragmentActivity implements MultiselectCallBac
         PagerAdapter wrappedAdapter = new InfinitePagerAdapter(adapter);
 
         // actually an InfiniteViewPager
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
-        viewPager.setAdapter(wrappedAdapter);
-        viewPager.setCurrentItem(Integer.MAX_VALUE/2);
+        this.viewPager = (ViewPager) findViewById(R.id.viewPager);
+        this.viewPager.setAdapter(wrappedAdapter);
+        this.viewPager.setCurrentItem(Constants.historyCount/2);
+        this.viewPager.getAdapter().notifyDataSetChanged();
+        this.calendarFragment=  getSupportFragmentManager().findFragmentById(R.id.viewPager);
+
+
+
     }
 
 
@@ -124,8 +129,8 @@ public class MainActivity extends FragmentActivity implements MultiselectCallBac
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_show_list) {
-            CalendarFragment.currentDate = Calendar.getInstance();
-            ((CalendarInterface)getApplicationContext()).updateCalendar(getApplicationContext());
+            this.viewPager.setCurrentItem(Constants.historyCount/2);
+            this.viewPager.getAdapter().notifyDataSetChanged();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -191,7 +196,8 @@ public class MainActivity extends FragmentActivity implements MultiselectCallBac
     }
     @Override
     public void onMethodCallBack() {
-        ((CalendarInterface)getApplicationContext()).updateCalendar(getApplicationContext());
+        viewPager.getAdapter().notifyDataSetChanged();
+//        ((CalendarInterface)this.calendarFragment).clearCalendar(getApplicationContext());
 
 
     }
@@ -201,6 +207,21 @@ public class MainActivity extends FragmentActivity implements MultiselectCallBac
         ArrayList<DayStuffModel> dates = new ArrayList<>();
         dates = passedList;
     toggleList();
+    }
+
+    @Override
+    public void refreshDate(Calendar calendar) {
+        String monthFormat = "MMMM";
+        TextView textDate = (TextView)findViewById(R.id.calendar_date_display);
+        SimpleDateFormat sdf = new SimpleDateFormat(monthFormat, Locale.getDefault());
+        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
+        textDate.setText(sdf.format(calendar.get(Calendar.MONTH))+ " " + sdf2.format(calendar.get(Calendar.YEAR)));
+    }
+
+    public void refreshViewPager(){
+        int positionSave = viewPager.getCurrentItem();
+        viewPager.getAdapter().destroyItem(viewPager,viewPager.getCurrentItem(),calendarFragment);
+        viewPager.getAdapter().instantiateItem(viewPager,positionSave);
     }
 
 }

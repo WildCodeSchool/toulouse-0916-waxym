@@ -7,5 +7,5 @@ import android.content.Context;
  */
 
 public interface CalendarInterface {
-    void updateCalendar(Context context);
+    void clearCalendar();
 }
