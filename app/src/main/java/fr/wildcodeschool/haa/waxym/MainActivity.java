@@ -3,7 +3,7 @@ package fr.wildcodeschool.haa.waxym;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.FragmentPagerAdapter;
+
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -14,7 +14,6 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.antonyt.infiniteviewpager.InfinitePagerAdapter;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -36,14 +35,16 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
     CalendarView cv;
     ViewPager viewPager;
     android.support.v4.app.Fragment calendarFragment;
+    TextView textDate;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        textDate = (TextView)findViewById(R.id.calendar_date_display);
 
-        // create  DBHandler
+
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
@@ -63,55 +64,35 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                calendarFragment=  getSupportFragmentManager().findFragmentById(R.id.viewPager);
                 StatusSingleton statusSingleton = StatusSingleton.getInstance();
                 if( statusSingleton.isEditMode()){
                     statusSingleton.setEditMode(false);
 
-
-                    getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
+                   if (statusSingleton.isMenuCreated()) {
+                       getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
+                   }
                     statusSingleton.setMenuCreated(false);
-                    ((CalendarInterface)calendarFragment).clearCalendar();
+
                     editButton.setBackgroundResource(R.drawable.edit);
-                   // refreshViewPager();
+                    viewPager.getAdapter().notifyDataSetChanged();
                 }
                 else{
                     statusSingleton.setEditMode(true);
                     editButton.setBackgroundResource(R.drawable.annul);
-                    //refreshViewPager();
+                    viewPager.getAdapter().notifyDataSetChanged();
+
                 }
             }
         });
 
-        // assign event handler
 
-
-        PagerAdapter adapter = new FragmentPagerAdapter(getSupportFragmentManager()){
-
-            @Override
-            public int getCount() {
-                return Constants.historyCount;
-            }
-
-            @Override
-            public android.support.v4.app.Fragment getItem(int position) {
-
-                Bundle bundle = new Bundle();
-                bundle.putInt("Month",position);
-
-                return CalendarFragment.newInstance(bundle);
-            }
-
-        };
-
-        PagerAdapter wrappedAdapter = new InfinitePagerAdapter(adapter);
-
-        // actually an InfiniteViewPager
+        PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), getApplicationContext());
         this.viewPager = (ViewPager) findViewById(R.id.viewPager);
-        this.viewPager.setAdapter(wrappedAdapter);
+        this.viewPager.setAdapter(adapter);
         this.viewPager.setCurrentItem(Constants.historyCount/2);
-        this.viewPager.getAdapter().notifyDataSetChanged();
-        this.calendarFragment=  getSupportFragmentManager().findFragmentById(R.id.viewPager);
+
+
+//        this.calendarFragment=  getSupportFragmentManager().findFragmentById(R.id.viewPager);
 
 
 
@@ -130,7 +111,7 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
         int id = item.getItemId();
         if (id == R.id.action_show_list) {
             this.viewPager.setCurrentItem(Constants.historyCount/2);
-            this.viewPager.getAdapter().notifyDataSetChanged();
+           // this.viewPager.getAdapter().notifyDataSetChanged();
             return true;
         }
         return super.onOptionsItemSelected(item);
@@ -178,26 +159,11 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
             e.printStackTrace();
             return false;
         }
-   /* @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-       /* if (id == R.id.action_settings)
-        {
-            return true;
-        }*/
-
-        ////  return super.onOptionsItemSelected(item);
-        //}
     }
     @Override
     public void onMethodCallBack() {
         viewPager.getAdapter().notifyDataSetChanged();
-//        ((CalendarInterface)this.calendarFragment).clearCalendar(getApplicationContext());
 
 
     }
@@ -211,17 +177,16 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
 
     @Override
     public void refreshDate(Calendar calendar) {
+
         String monthFormat = "MMMM";
-        TextView textDate = (TextView)findViewById(R.id.calendar_date_display);
-        SimpleDateFormat sdf = new SimpleDateFormat(monthFormat, Locale.getDefault());
+        SimpleDateFormat sdf = new SimpleDateFormat(monthFormat, Locale.FRANCE);
         SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
-        textDate.setText(sdf.format(calendar.get(Calendar.MONTH))+ " " + sdf2.format(calendar.get(Calendar.YEAR)));
+        String currentDate = sdf.format(calendar.getTime());
+                currentDate += " ";
+        currentDate+= sdf2.format(calendar.getTime());
+        textDate.setText(currentDate);
     }
 
-    public void refreshViewPager(){
-        int positionSave = viewPager.getCurrentItem();
-        viewPager.getAdapter().destroyItem(viewPager,viewPager.getCurrentItem(),calendarFragment);
-        viewPager.getAdapter().instantiateItem(viewPager,positionSave);
-    }
+
 
 }

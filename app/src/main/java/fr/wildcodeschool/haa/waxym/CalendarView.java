@@ -77,7 +77,7 @@ public class CalendarView extends LinearLayout {
     }
 
 
-    private void assignUiElements()
+    private  void assignUiElements()
     {
         // layout is inflated, assign local variables to components
         header = (LinearLayout)findViewById(R.id.calendar_header);

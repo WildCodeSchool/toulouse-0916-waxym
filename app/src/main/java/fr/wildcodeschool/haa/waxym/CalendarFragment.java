@@ -22,7 +22,7 @@ import java.util.Calendar;
  * Created by tuffery on 14/12/16.
  */
 
-public class CalendarFragment extends Fragment implements CalendarInterface {
+public class CalendarFragment extends Fragment  {
 
     private int position;
     private ArrayList<GridDateModel> cells ;
@@ -84,9 +84,13 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
 
         this.cells = new ArrayList<>();
         final Calendar calendar = (Calendar)currentDate.clone();
+
         calendar.add(Calendar.MONTH, position-Constants.historyCount/2);
 
-        ((MainActivityCallBackInterface)getActivity()).refreshDate(calendar);
+
+            ((MainActivityCallBackInterface) getActivity()).refreshDate(calendar);
+
+
         // determine the cell for current month's beginning
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) -2;
@@ -101,7 +105,7 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
         // update currentDate
-        ((MainActivityCallBackInterface)getActivity()).refreshDate(currentDate);
+       // ((MainActivityCallBackInterface)getActivity()).refreshDate(currentDate);
         // update grid
         final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(context,cells);
         grid.setAdapter(calendarAdapter);
@@ -157,7 +161,7 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
 
                             // check if menu is launched if not,  launch it
                             if(!statusSingleton.isMenuCreated()) {
-                                launchMultiSelectMenu(context);
+                                launchMultiSelectMenu();
                                 statusSingleton.setMenuCreated(true);
                             }
                             if (!isDoneOnce) {
@@ -259,11 +263,11 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
             }
         }
     }
-    public void launchMultiSelectMenu(Context context){
+    public void launchMultiSelectMenu(){
 
 
-        final Activity activity = (MainActivity)context;
-        FragmentManager fm = activity.getFragmentManager();
+        //final Activity activity = (MainActivity)getActivity();
+        FragmentManager fm = getActivity().getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         this.fragment = new MultiSelectMenuFragment();
         ft.add(R.id.list_fragment_container,fragment).commit();
@@ -272,13 +276,5 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
     }
 
 
-    @Override
-    public void clearCalendar() {
-        grid = (GridView)root.findViewById(R.id.calendar_grid);
 
-        for (int i= 0; i <cells.size();i++){
-            cells.get(i).setState(false);
-        }
-        grid.setAdapter(new MonthCalendarAdapter(getContext(),cells));
-    }
 }

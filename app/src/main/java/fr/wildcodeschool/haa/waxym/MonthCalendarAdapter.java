@@ -48,6 +48,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         int day = date.getDate();
         int month = date.getMonth();
         int year = date.getYear();
+
         mDBHandler = new DBHandler(getContext());
         try {
             eventDays = this.mDBHandler.getEvents(1, date);
