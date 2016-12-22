@@ -4,19 +4,19 @@ package fr.wildcodeschool.haa.waxym;
  * Created by tuffery on 21/12/16.
  */
 
-public class CommunicateSingleton {
-    private static CommunicateSingleton mInstance = null;
+public class StatusSingleton {
+    private static StatusSingleton mInstance = null;
     private  boolean isMenuCreated;
     private  boolean isEditMode;
 
-    private CommunicateSingleton() {
+    private StatusSingleton() {
         isEditMode = false;
         isMenuCreated = false;
     }
-    public static CommunicateSingleton getInstance(){
+    public static StatusSingleton getInstance(){
         if(mInstance == null)
         {
-            mInstance = new CommunicateSingleton();
+            mInstance = new StatusSingleton();
         }
         return mInstance;
     }

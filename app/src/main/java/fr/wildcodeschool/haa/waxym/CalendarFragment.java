@@ -4,11 +4,8 @@ import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -16,12 +13,9 @@ import android.view.ViewGroup;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Locale;
 
 
 /**
@@ -91,6 +85,8 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
         this.cells = new ArrayList<>();
         final Calendar calendar = (Calendar)currentDate.clone();
         calendar.add(Calendar.MONTH, position-Constants.historyCount/2);
+
+        ((MainActivityCallBackInterface)getActivity()).refreshDate(calendar);
         // determine the cell for current month's beginning
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) -2;
@@ -113,8 +109,8 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
         // multiselect
         //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         //on touch
-        final CommunicateSingleton communicateSingleton = CommunicateSingleton.getInstance();
-        if(communicateSingleton.isEditMode()) {
+        final StatusSingleton statusSingleton = StatusSingleton.getInstance();
+        if(statusSingleton.isEditMode()) {
 
             grid.setOnTouchListener(new View.OnTouchListener() {
 
@@ -160,9 +156,9 @@ public class CalendarFragment extends Fragment implements CalendarInterface {
                             }
 
                             // check if menu is launched if not,  launch it
-                            if(!communicateSingleton.isMenuCreated()) {
+                            if(!statusSingleton.isMenuCreated()) {
                                 launchMultiSelectMenu(context);
-                                communicateSingleton.setMenuCreated(true);
+                                statusSingleton.setMenuCreated(true);
                             }
                             if (!isDoneOnce) {
                                 sendDataToFragment(i, cells.get(i));

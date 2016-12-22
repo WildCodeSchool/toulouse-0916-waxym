@@ -115,8 +115,8 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
 
     }
 private void resetMultiselect(){
-    CommunicateSingleton communicateSingleton = CommunicateSingleton.getInstance();
-    communicateSingleton.setEditMode(false);
+    StatusSingleton statusSingleton = StatusSingleton.getInstance();
+    statusSingleton.setEditMode(false);
 
 }
 

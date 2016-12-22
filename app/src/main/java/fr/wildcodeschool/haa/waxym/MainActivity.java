@@ -64,19 +64,19 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
             @Override
             public void onClick(View v) {
                 calendarFragment=  getSupportFragmentManager().findFragmentById(R.id.viewPager);
-                CommunicateSingleton communicateSingleton = CommunicateSingleton.getInstance();
-                if( communicateSingleton.isEditMode()){
-                    communicateSingleton.setEditMode(false);
+                StatusSingleton statusSingleton = StatusSingleton.getInstance();
+                if( statusSingleton.isEditMode()){
+                    statusSingleton.setEditMode(false);
 
 
                     getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
-                    communicateSingleton.setMenuCreated(false);
+                    statusSingleton.setMenuCreated(false);
                     ((CalendarInterface)calendarFragment).clearCalendar();
                     editButton.setBackgroundResource(R.drawable.edit);
                    // refreshViewPager();
                 }
                 else{
-                    communicateSingleton.setEditMode(true);
+                    statusSingleton.setEditMode(true);
                     editButton.setBackgroundResource(R.drawable.annul);
                     //refreshViewPager();
                 }
