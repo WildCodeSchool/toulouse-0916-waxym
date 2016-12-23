@@ -8,10 +8,12 @@ public class StatusSingleton {
     private static StatusSingleton mInstance = null;
     private  boolean isMenuCreated;
     private  boolean isEditMode;
+    private boolean isInMonthView;
 
     private StatusSingleton() {
         isEditMode = false;
         isMenuCreated = false;
+        isInMonthView = true;
     }
     public static StatusSingleton getInstance(){
         if(mInstance == null)
@@ -23,6 +25,14 @@ public class StatusSingleton {
 
     public boolean isMenuCreated() {
         return isMenuCreated;
+    }
+
+    public boolean isInMonthView() {
+        return isInMonthView;
+    }
+
+    public void setInMonthView(boolean inMonthView) {
+        isInMonthView = inMonthView;
     }
 
     public void setMenuCreated(boolean menuCreated) {

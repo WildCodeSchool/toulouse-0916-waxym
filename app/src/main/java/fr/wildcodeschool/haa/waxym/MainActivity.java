@@ -99,7 +99,7 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
             public void run() {
                    showCurrentDate();
             }
-        }, 2);
+        }, 10);
 
         // set OnpageChangeListener to refresh currentDate
         ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {

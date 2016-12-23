@@ -132,7 +132,7 @@ public class CalendarFragment extends Fragment  {
                     if (i >= 0 && i < 42) {
 
                         if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP){
-                            isDoneOnce = false;
+                           // isDoneOnce = false;
                         }
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                             boolean isAlreadychecked = false;
@@ -147,10 +147,11 @@ public class CalendarFragment extends Fragment  {
                                 }
                             }
                                 if (isAlreadychecked){
-                                    for (int g = 0; g < cells.size();g++){
+                                    for (int g = cells.size()-1; g >=0 ;g--){
                                         if (cells.get(g).isState()){
                                             isAlreadyCheckedTwice = true;
                                             checkLastPos = g;
+                                            break;
 
                                         }
                                 }
@@ -158,26 +159,27 @@ public class CalendarFragment extends Fragment  {
                             }
                             if(isAlreadychecked){
                                 if(!isAlreadyCheckedTwice) {
-                                    if (i < checkedPos) {
-                                        for (int j = i; j < checkedPos; j++) {
+                                    if (i <= checkedPos) {
+                                        for (int j = i; j <= checkedPos ; j++) {
 
                                             changeSate(cells.get(j), j);
                                         }
 
                                     } else {
-                                        for (int j = checkedPos + 1; j < i + 1; j++) {
+                                        for (int j = checkedPos +1 ; j < i + 1; j++) {
                                             changeSate(cells.get(j), j);
                                         }
 
                                     }
-                                }else {if (i < checkLastPos) {
-                                    for (int j = i; j < checkLastPos+1; j++) {
+                                }else {
+                                    if (i <= checkLastPos) {
+                                    for (int j = i; j <= checkLastPos; j++) {
 
                                         changeSate(cells.get(j), j);
                                     }
 
                                 } else {
-                                    for (int j = checkLastPos + 1; j < i + 1; j++) {
+                                    for (int j = checkLastPos +1; j < i + 1; j++) {
                                         changeSate(cells.get(j), j);
                                     }
 
@@ -265,7 +267,9 @@ public class CalendarFragment extends Fragment  {
     public void changeSate(GridDateModel selectedDay, int position) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(selectedDay.getDate());
-        if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK )!= Calendar.SUNDAY) {
+        if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
+                && calendar.get(Calendar.DAY_OF_WEEK )!= Calendar.SUNDAY
+                && selectedDay.getDate().getMonth() == cells.get(15).getDate().getMonth()) {
             if (!selectedDay.isState()) {
                 grid.getChildAt(position).setBackgroundResource(R.color.SELECTING_COLOR);
                 selectedDay.setState(true);
@@ -275,19 +279,21 @@ public class CalendarFragment extends Fragment  {
                 selectedDay.setState(false);
 
             }
+            sendDataToFragment(position,selectedDay);
+
         }
     }
     public void sendDataToFragment(int position, GridDateModel gridDate){
         if(this.fragment != null) {
             if (gridDate.isState()) {
                 try {
-                    ((AdapterCallbackInterface) this.fragment).passCheckedDay(cells.get(position).getDate(),position, true);
+                    ((AdapterCallbackInterface) this.fragment).passCheckedDay(cells.get(position).getDate(),position, gridDate.isState());
                 } catch (ClassCastException e) {
 
                 }
             } else {
                 try {
-                    ((AdapterCallbackInterface) this.fragment).passCheckedDay(cells.get(position).getDate(),position, false);
+                    ((AdapterCallbackInterface) this.fragment).passCheckedDay(cells.get(position).getDate(),position, gridDate.isState());
                 } catch (ClassCastException e) {
 
                 }
