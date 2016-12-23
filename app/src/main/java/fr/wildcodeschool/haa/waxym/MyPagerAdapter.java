@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.view.ViewGroup;
 
 /**
  * Created by tuffery on 22/12/16.
@@ -13,14 +14,16 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 public class MyPagerAdapter extends FragmentStatePagerAdapter
 {
     private Context context;
-
+    private CalendarFragment mcalendarFragment;
 
     public MyPagerAdapter(FragmentManager manager, Context context)
     {
         super(manager);
         this.context = context;
     }
-
+public CalendarFragment getCurrentFragment() {
+    return mcalendarFragment;
+}
 
     @Override
     public Fragment getItem(int position)
@@ -44,4 +47,13 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter
         f.updateCalendar(context);
         return super.getItemPosition(object);
     }
+    @Override
+    public void setPrimaryItem(ViewGroup container, int position, Object object) {
+
+        if (getCurrentFragment() != object) {
+            mcalendarFragment = ((CalendarFragment) object);
+        }
+        super.setPrimaryItem(container, position, object);
+    }
 }
+

@@ -53,7 +53,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
 
         mDBHandler = new DBHandler(getContext());
         try {
-            eventDays = this.mDBHandler.getEvents(1, date);
+            eventDays = this.mDBHandler.getTwoMonthEvents(1, date);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -74,17 +74,19 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
 
         if (eventDays != null) {
             for (DayStuffModel eventDate : eventDays) {
-                if (eventDate.getDate().getDate() == day &&
-                        eventDate.getDate().getMonth() == month &&
-                        eventDate.getDate().getYear() == year) {
-                    if (eventDate.getAfternoon() == 1) {
-                        apresMidiView.setText(eventDate.getActivity());
-                        apresMidiView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
-                    } else {
-                        matinView.setText(eventDate.getActivity());
-                        matinView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
+                if (eventDate.getDate().getMonth() == days.get(15).getDate().getMonth()) {
+                    if (eventDate.getDate().getDate() == day &&
+                            eventDate.getDate().getMonth() == month &&
+                            eventDate.getDate().getYear() == year) {
+                        if (eventDate.getAfternoon() == 1) {
+                            apresMidiView.setText(eventDate.getActivity());
+                            apresMidiView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
+                        } else {
+                            matinView.setText(eventDate.getActivity());
+                            matinView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
 
 
+                        }
                     }
                 }
             }

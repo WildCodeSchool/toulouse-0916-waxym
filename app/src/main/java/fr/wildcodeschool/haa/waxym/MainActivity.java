@@ -22,7 +22,9 @@ import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Locale;
+import java.util.logging.Handler;
 
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
@@ -34,7 +36,7 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
     private DBHandler mDBHelper;
     CalendarView cv;
     ViewPager viewPager;
-    android.support.v4.app.Fragment calendarFragment;
+    CalendarFragment calendarFragment;
     TextView textDate;
 
 
@@ -90,9 +92,36 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
         this.viewPager = (ViewPager) findViewById(R.id.viewPager);
         this.viewPager.setAdapter(adapter);
         this.viewPager.setCurrentItem(Constants.historyCount/2);
+        // set postdelayed to let time to viewpager instantiate fragments
+        android.os.Handler handler = new android.os.Handler();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                   showCurrentDate();
+            }
+        }, 2);
+
+        // set OnpageChangeListener to refresh currentDate
+        ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                 showCurrentDate();
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        };
+        viewPager.addOnPageChangeListener(pageChangeListener);
 
 
-//        this.calendarFragment=  getSupportFragmentManager().findFragmentById(R.id.viewPager);
+
 
 
 
@@ -175,18 +204,21 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
     toggleList();
     }
 
-    @Override
-    public void refreshDate(Calendar calendar) {
+    public void showCurrentDate(){
+        MyPagerAdapter adapter1 = (MyPagerAdapter)viewPager.getAdapter();
 
-        String monthFormat = "MMMM";
+        CalendarFragment calendarFragment = (CalendarFragment) adapter1.instantiateItem(viewPager,viewPager.getCurrentItem());
+
+        GridDateModel gridDateModel = calendarFragment.getCurrentDate();
+        String monthFormat = "MMMM yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(monthFormat, Locale.FRANCE);
-        SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
-        String currentDate = sdf.format(calendar.getTime());
-                currentDate += " ";
-        currentDate+= sdf2.format(calendar.getTime());
+       // SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
+        String currentDate = sdf.format(gridDateModel.getDate());
+/*        currentDate += " ";
+        currentDate+= sdf2.format(gridDateModel.getDate());*/
         textDate.setText(currentDate);
-    }
 
+    }
 
 
 }

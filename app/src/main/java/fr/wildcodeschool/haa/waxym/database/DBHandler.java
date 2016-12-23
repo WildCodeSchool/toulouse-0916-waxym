@@ -64,7 +64,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
     }
 
     // get all events of mentioned user from 1 month of the entered date
-    public ArrayList<DayStuffModel> getEvents(int user, Date referenceDate) throws ParseException {
+    public ArrayList<DayStuffModel> getTwoMonthEvents(int user, Date referenceDate) throws ParseException {
         DayStuffModel dayStuff = null;
         ArrayList<DayStuffModel> eventsList = new ArrayList<>();
         Calendar fromDate = Calendar.getInstance();
@@ -96,12 +96,13 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         return eventsList;
     }
 
+
     // set activity event on date and overwrite if already exist
     public void setEventEraser(DayStuffModel dayEvent) throws ParseException {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues valuesActivity = new ContentValues();
         // if date half- day already exists in db for this user
-        if (searchAndCompareDate(getEvents(dayEvent.getUserId(), dayEvent.getDate()), dayEvent)) {
+        if (searchAndCompareDate(getTwoMonthEvents(dayEvent.getUserId(), dayEvent.getDate()), dayEvent)) {
 
 
             // Activity table
@@ -133,7 +134,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues valuesActivity = new ContentValues();
         // if date half- day already exists in db for this user
-        if (!searchAndCompareDate(getEvents(dayEvent.getUserId(), dayEvent.getDate()), dayEvent)) {
+        if (!searchAndCompareDate(getTwoMonthEvents(dayEvent.getUserId(), dayEvent.getDate()), dayEvent)) {
 
             // Activity table
             valuesActivity.put(Constants.NAME_ACTIVITY, dayEvent.getActivity());

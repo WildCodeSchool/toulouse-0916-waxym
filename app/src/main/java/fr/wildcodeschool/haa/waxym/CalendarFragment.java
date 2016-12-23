@@ -35,7 +35,7 @@ public class CalendarFragment extends Fragment  {
     private float startY = 0;
     private LinearLayout header;
     View root;
-
+    Calendar calendar;
     int[] monthSeason = new int[] {2, 2, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2};
     // seasons' rainbow
     int[] rainbow = new int[] {
@@ -82,14 +82,14 @@ public class CalendarFragment extends Fragment  {
 
     public void updateCalendar(final Context context)
     {
+        currentDate = Calendar.getInstance();
 
         this.cells = new ArrayList<>();
-        final Calendar calendar = (Calendar)currentDate.clone();
+        calendar = (Calendar)currentDate.clone();
 
         calendar.add(Calendar.MONTH, position-Constants.historyCount/2);
 
 
-            ((MainActivityCallBackInterface) getActivity()).refreshDate(calendar);
 
 
         // determine the cell for current month's beginning
@@ -280,6 +280,10 @@ public class CalendarFragment extends Fragment  {
         ft.add(R.id.list_fragment_container,fragment).commit();
 
 
+    }
+
+    public GridDateModel getCurrentDate(){
+        return this.cells.get(15);
     }
 
 
