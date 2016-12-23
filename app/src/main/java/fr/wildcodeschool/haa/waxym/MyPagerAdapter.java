@@ -47,13 +47,6 @@ public CalendarFragment getCurrentFragment() {
         f.updateCalendar(context);
         return super.getItemPosition(object);
     }
-    @Override
-    public void setPrimaryItem(ViewGroup container, int position, Object object) {
 
-        if (getCurrentFragment() != object) {
-            mcalendarFragment = ((CalendarFragment) object);
-        }
-        super.setPrimaryItem(container, position, object);
-    }
 }
 
