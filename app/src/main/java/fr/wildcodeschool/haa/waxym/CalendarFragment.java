@@ -127,7 +127,7 @@ public class CalendarFragment extends Fragment  {
 
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    float initialY = motionEvent.getY(), initialX = motionEvent.getX();
+                    //float initialY = motionEvent.getY(), initialX = motionEvent.getX();
                     int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
                     if (i >= 0 && i < 42) {
 
@@ -136,30 +136,52 @@ public class CalendarFragment extends Fragment  {
                         }
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                             boolean isAlreadychecked = false;
+                            boolean isAlreadyCheckedTwice = false;
                             int checkedPos = 0;
-                            for (int g = 0; g < cells.size();g++){
-                                if (cells.get(g).isState()){
+                            int checkLastPos = 0;
+                            for (int g = 0; g < cells.size();g++) {
+                                if (cells.get(g).isState()) {
                                     isAlreadychecked = true;
                                     checkedPos = g;
                                     break;
                                 }
+                            }
+                                if (isAlreadychecked){
+                                    for (int g = 0; g < cells.size();g++){
+                                        if (cells.get(g).isState()){
+                                            isAlreadyCheckedTwice = true;
+                                            checkLastPos = g;
+
+                                        }
+                                }
 
                             }
                             if(isAlreadychecked){
-                                if(i< checkedPos){
-                                for (int j = i; j< checkedPos;j++){
+                                if(!isAlreadyCheckedTwice) {
+                                    if (i < checkedPos) {
+                                        for (int j = i; j < checkedPos; j++) {
 
-                                    changeSate(cells.get(j),j);
-                                        //cells.get(j).setState(true);
-                                    }
-                                   // viewPager.getAdapter().notifyDataSetChanged();
+                                            changeSate(cells.get(j), j);
+                                        }
 
-                                }else {
-                                    for(int j = checkedPos+1;j <i+1;j++){
-                                        //cells.get(j).setState(true);
-                                        changeSate(cells.get(j),j);
+                                    } else {
+                                        for (int j = checkedPos + 1; j < i + 1; j++) {
+                                            changeSate(cells.get(j), j);
+                                        }
+
                                     }
-                                    //viewPager.getAdapter().notifyDataSetChanged();
+                                }else {if (i < checkLastPos) {
+                                    for (int j = i; j < checkLastPos+1; j++) {
+
+                                        changeSate(cells.get(j), j);
+                                    }
+
+                                } else {
+                                    for (int j = checkLastPos + 1; j < i + 1; j++) {
+                                        changeSate(cells.get(j), j);
+                                    }
+
+                                }
 
                                 }
                             }else {
@@ -241,7 +263,9 @@ public class CalendarFragment extends Fragment  {
     }
 */
     public void changeSate(GridDateModel selectedDay, int position) {
-        if (selectedDay.getDate().getDay() != Calendar.SATURDAY || selectedDay.getDate().getDay() != Calendar.SUNDAY) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(selectedDay.getDate());
+        if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && calendar.get(Calendar.DAY_OF_WEEK )!= Calendar.SUNDAY) {
             if (!selectedDay.isState()) {
                 grid.getChildAt(position).setBackgroundResource(R.color.SELECTING_COLOR);
                 selectedDay.setState(true);
