@@ -29,12 +29,14 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
     // for view inflation
     private LayoutInflater inflater;
     private Context context;
+    ArrayList<GridDateModel> days;
 
     public MonthCalendarAdapter(Context context, ArrayList<GridDateModel> days)
     {
         super(context, R.layout.calendar_day2, days);
         this.inflater = LayoutInflater.from(context);
         this.context = context;
+        this.days = days;
 
     }
 
@@ -92,12 +94,16 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         dayDateView.setTypeface(null, Typeface.NORMAL);
         dayDateView.setTextColor(Color.BLACK);
 
-        if (month != today.getMonth() || year != today.getYear())
+        if (month == days.get(15).getDate().getMonth())
         {
+
+            dayDateView.setTextColor(Color.BLACK);
+        }else{
             // if this day is outside current month, grey it out
-            dayDateView.setTextColor(context.getResources().getColor(R.color.greyed_out));
+            dayDateView.setTextColor(Color.parseColor("#00FF0000"));
+
         }
-        else if (day == today.getDate())
+        if (day == today.getDate() && month == today.getMonth())
         {
             // if it is today, set it to blue/bold
             dayDateView.setTypeface(null, Typeface.BOLD);

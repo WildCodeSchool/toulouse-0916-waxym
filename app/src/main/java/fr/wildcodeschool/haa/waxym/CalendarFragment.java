@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -93,9 +94,15 @@ public class CalendarFragment extends Fragment  {
 
         // determine the cell for current month's beginning
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) -2;
+        final int monthBeginningCell;
+        int dateofweek = calendar.get(Calendar.DAY_OF_WEEK);
+        if(calendar.get(Calendar.DAY_OF_WEEK)== Calendar.SUNDAY){
+            monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) +5;
+        }else
+            monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) -2;
 
         // move calendar backwards to the beginning of the week
+
         calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell);
 
         // fill cells
