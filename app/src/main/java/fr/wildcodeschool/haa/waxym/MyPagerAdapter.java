@@ -14,16 +14,12 @@ import android.view.ViewGroup;
 public class MyPagerAdapter extends FragmentStatePagerAdapter
 {
     private Context context;
-    private CalendarFragment mcalendarFragment;
 
     public MyPagerAdapter(FragmentManager manager, Context context)
     {
         super(manager);
         this.context = context;
     }
-public CalendarFragment getCurrentFragment() {
-    return mcalendarFragment;
-}
 
     @Override
     public Fragment getItem(int position)

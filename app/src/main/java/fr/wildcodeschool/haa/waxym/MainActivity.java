@@ -88,7 +88,7 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
         });
 
 
-        PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), getApplicationContext());
+        PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), this);
         this.viewPager = (ViewPager) findViewById(R.id.viewPager);
         this.viewPager.setAdapter(adapter);
         this.viewPager.setCurrentItem(Constants.historyCount/2);
@@ -99,7 +99,7 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
             public void run() {
                    showCurrentDate();
             }
-        }, 10);
+        }, 8);
 
         // set OnpageChangeListener to refresh currentDate
         ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
