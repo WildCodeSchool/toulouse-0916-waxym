@@ -3,6 +3,7 @@
 <TextView android:id="@+id/textSpin"
     android:layout_width="100dp"
     android:layout_height="40dp"
+    android:layout_marginRight="50dp"
     android:text="bajajajaj"
     android:background="#fff"
     android:textSize="18sp"

@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -40,17 +41,21 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     private DBHandler mDBHelper;
     CalendarView cv;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+       // setSupportActionBar(toolbar);
 
         // create  DBHandler
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
         copyDatabase(getApplicationContext());
+
         if (!database.exists()) {
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
@@ -86,14 +91,6 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
 
         // assign event handler
         this.cv = ((CalendarView) findViewById(R.id.calendar_view));
-        this.cv.setEventHandler(new CalendarView.EventHandler() {
-            @Override
-            public void onDayLongPress(GridDateModel date) {
-                // show returned day
-                DateFormat sdf = SimpleDateFormat.getDateInstance();
-                Toast.makeText(MainActivity.this, sdf.format(date.getDate()), Toast.LENGTH_SHORT).show();
-            }
-        });
 
     }
 
@@ -109,6 +106,8 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         //employeah action bar centre
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_title);
+        getSupportActionBar().setIcon(R.drawable.calendar_flat);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         return true;
     }
     public void setupSpinner(Spinner spin){
@@ -191,7 +190,6 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     @Override
     public void onMethodCallBack() {
            this.cv.updateCalendar();
-
 
     }
 

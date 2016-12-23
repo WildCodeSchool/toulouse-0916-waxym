@@ -168,110 +168,103 @@ public class CalendarView extends LinearLayout {
     /**
      * Display dates correctly in grid
      */
-    public void updateCalendar()
-    {
+    public void updateCalendar() {
 
         this.cells = new ArrayList<>();
-        final Calendar calendar = (Calendar)currentDate.clone();
+        final Calendar calendar = (Calendar) currentDate.clone();
 
         // determine the cell for current month's beginning
         calendar.set(Calendar.DAY_OF_MONTH, 1);
 
-        final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) - 2;
+        final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) - 3;
 
         // move calendar backwards to the beginning of the week
         calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell);
 
         // fill cells
         while (cells.size() < DAYS_COUNT) {
-            cells.add(new GridDate(calendar.getTime()));
-        while (cells.size() < DAYS_COUNT)
-        {
             cells.add(new GridDateModel(calendar.getTime()));
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
+            while (cells.size() < DAYS_COUNT) {
+                cells.add(new GridDateModel(calendar.getTime()));
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
 
-        // update grid
-        final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(getContext(),cells);
-        grid.setAdapter(calendarAdapter);
+            // update grid
+            final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(getContext(), cells);
+            grid.setAdapter(calendarAdapter);
 
-        // multiselect
-        //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
-        //on touch
-        if(this.isEditMode) {
+            // multiselect
+            //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
+            //on touch
+            if (this.isEditMode) {
 
-            grid.setOnTouchListener(new OnTouchListener() {
+                grid.setOnTouchListener(new OnTouchListener() {
 
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    float initialY = motionEvent.getY(), initialX = motionEvent.getX();
-                    int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
-                    if (i >= 0 && i < 42) {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        float initialY = motionEvent.getY(), initialX = motionEvent.getX();
+                        int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
+                        if (i >= 0 && i < 42) {
 
-                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
-                            isDoneOnce = false;
-                        }
-                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                            changeSateAndResetPos(cells.get(i), i, initialX, initialY);
-                            if (!isMenuCreated) {
-                                launchMultiSelectMenu();
-                                isMenuCreated = true;
+                            if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
+                                isDoneOnce = false;
                             }
-                            if (!isDoneOnce) {
-                                sendDataToFragment(i, cells.get(i));
-                                isDoneOnce = true;
-                            }
-
-                            return true;
-
-                            //on swipe
-                        } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                            if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(), grid.getChildAt(i).getHeight())) {
+                            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                                 changeSateAndResetPos(cells.get(i), i, initialX, initialY);
-                                sendDataToFragment(i, cells.get(i));
+                                if (!isMenuCreated) {
+                                    launchMultiSelectMenu();
+                                    isMenuCreated = true;
+                                }
+                                if (!isDoneOnce) {
+                                    sendDataToFragment(i, cells.get(i));
+                                    isDoneOnce = true;
+                                }
+
+                                return true;
+
+                                //on swipe
+                            } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                                if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(), grid.getChildAt(i).getHeight())) {
+                                    changeSateAndResetPos(cells.get(i), i, initialX, initialY);
+                                    sendDataToFragment(i, cells.get(i));
+
+                                }
 
                             }
 
                         }
 
+                        return true;
                     }
+                });
+            } else {
+                grid.setOnTouchListener(null);
+                assignClickHandlers();
+                // à faire ( swipe changer mois
+            }
+            // update title
+            SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+            txtDate.setText(sdf.format(currentDate.getTime()));
 
-                    return true;
-                }
-            });
-        } else {
-            grid.setOnTouchListener(null);
-            assignClickHandlers();
-            // à faire ( swipe changer mois
+            // set header color according to current season
+            int month = currentDate.get(Calendar.MONTH);
+            int season = monthSeason[month];
+            int color = rainbow[season];
+
+            header.setBackgroundColor(getResources().getColor(color));
+
         }
-        // update title
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-        txtDate.setText(sdf.format(currentDate.getTime()));
 
-        // set header color according to current season
-        int month = currentDate.get(Calendar.MONTH);
-        int season = monthSeason[month];
-        int color = rainbow[season];
 
-        header.setBackgroundColor(getResources().getColor(color));
+        /**
+         * Assign event handler to be passselectedList = new ArrayList<>();ed needed events
+         */
 
+        /**
+         * This interface defines what events to be reported to
+         * the outside world
+         */
     }
-
-
-
-
-
-    /**
-     * Assign event handler to be passselectedList = new ArrayList<>();ed needed events
-     */
-    public void setEventHandler(EventHandler eventHandler) {
-        this.eventHandler = eventHandler;
-    }
-
-    /**
-     * This interface defines what events to be reported to
-     * the outside world
-     */
     public interface EventHandler
     {
         void onDayLongPress(GridDateModel date);
