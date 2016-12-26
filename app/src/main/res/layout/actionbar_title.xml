@@ -3,23 +3,23 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:orientation="horizontal" >
-    <android.support.v7.widget.Toolbar
-        android:layout_width="match_parent"
-        android:id="@+id/toolbar"
-        android:minHeight="?attr/actionBarSize"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary">
+    android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:text="@string/app_name"
-        android:textColor="#ffffff"
-        android:id="@+id/mytext"
-        android:textStyle="bold"
-        android:textSize="25sp" />
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize">
+
+        <TextView
+            android:id="@+id/mytext"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textColor="#ffffff"
+            android:textSize="25sp"
+            android:textStyle="bold" />
     </android.support.v7.widget.Toolbar>
 
 </LinearLayout>

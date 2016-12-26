@@ -3,6 +3,7 @@ package fr.wildcodeschool.haa.waxym;
 
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
@@ -14,6 +15,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -47,8 +49,6 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-       // Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-       // setSupportActionBar(toolbar);
 
         // create  DBHandler
         this.mDBHelper = new DBHandler(this);
@@ -103,19 +103,35 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         MenuItem mitem = menu.findItem(R.id.item1);
         Spinner spin =(Spinner) mitem.getActionView();
         setupSpinner(spin);
+
         //employeah action bar centre
         getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
         getSupportActionBar().setCustomView(R.layout.actionbar_title);
-        getSupportActionBar().setIcon(R.drawable.calendar_flat);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
         return true;
     }
     public void setupSpinner(Spinner spin){
-        String[] items={"Jour","Semaine","Mois"};
+        String[] items={"Choisissez","Jour","Semaine","Mois"};
         //wrap the items in the Adapter
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.spinner_item,items);
         //assign adapter to the Spinner
         spin.setAdapter(adapter);
+        //click spinner
+        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 1){
+                    Intent intent = new Intent(MainActivity.this, DayActivity.class);
+                    MainActivity.this.startActivity(intent);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
     }
 
     @Override
