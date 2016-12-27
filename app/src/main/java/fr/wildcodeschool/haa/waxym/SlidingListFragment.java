@@ -39,6 +39,8 @@ public class SlidingListFragment extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
+        ArrayList<DayStuffModel> selectedDays =  getArguments().getParcelableArrayList(Constants.SELECTED_DAYS);
         ArrayList<ActivityItemModel> mesContrats;
         View view = inflater.inflate(R.layout.sliding_fragment_layout, container, false);
         DBHandler mHandler = new DBHandler(view.getContext());
@@ -58,7 +60,11 @@ public class SlidingListFragment extends DialogFragment {
 
         return view;
     }
-
+    public static SlidingListFragment newInstance(Bundle args) {
+        SlidingListFragment fragment = new SlidingListFragment();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 
 

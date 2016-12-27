@@ -22,10 +22,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.Locale;
-import java.util.logging.Handler;
 
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
@@ -150,18 +147,21 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
     }
 
     //animation du menu
-    private void toggleList() {
+    private void toggleList(ArrayList<DayStuffModel> selectedDates) {
         Fragment f = getFragmentManager().findFragmentByTag(LIST_FRAGMENT_TAG);
         if (f != null) {
             getFragmentManager().popBackStack();
         } else {
+
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList(Constants.SELECTED_DAYS, selectedDates);
+            f = SlidingListFragment.newInstance(bundle);
             getFragmentManager().beginTransaction()
                     .setCustomAnimations(R.animator.slide_up,
                             R.animator.slide_down,
                             R.animator.slide_up,
                             R.animator.slide_down)
-                    .add(R.id.list_fragment_container, SlidingListFragment
-                                    .instantiate(this, SlidingListFragment.class.getName()),
+                    .add(R.id.list_fragment_container, f,
                             LIST_FRAGMENT_TAG
                     ).addToBackStack(null).commit();
         }
@@ -203,9 +203,7 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
 
     @Override
     public void sendSelectedDays(ArrayList<DayStuffModel> passedList) {
-        ArrayList<DayStuffModel> dates = new ArrayList<>();
-        dates = passedList;
-    toggleList();
+        toggleList(passedList);
     }
 
     public void showCurrentDate(){

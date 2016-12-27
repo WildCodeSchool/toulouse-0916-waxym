@@ -236,7 +236,7 @@ public class CalendarFragment extends Fragment  {
         header.setBackgroundColor(getResources().getColor(color));
 
     }
-    public boolean checkDistance(float x, float y, float deltaX, float deltaY, int width, int height) {
+  /*  public boolean checkDistance(float x, float y, float deltaX, float deltaY, int width, int height) {
         float diffX = 0;
         float diffY = 0;
         diffX = Math.abs(deltaX - x );
@@ -247,7 +247,7 @@ public class CalendarFragment extends Fragment  {
             return false;
 
 
-    }
+    }*/
     // change state of cell at position and set associated background and reset start positions
     /*public void changeSateAndResetPos(GridDateModel selectedDay, int position, float x, float y){
         startX = x;
