@@ -40,7 +40,7 @@ public class SlidingListFragment extends DialogFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        ArrayList<DayStuffModel> selectedDays =  getArguments().getParcelableArrayList(Constants.SELECTED_DAYS);
+        ArrayList<DayStuffModel> selectedDays = getArguments().getParcelableArrayList(Constants.SELECTED_DAYS);
         ArrayList<ActivityItemModel> mesContrats;
         View view = inflater.inflate(R.layout.sliding_fragment_layout, container, false);
         DBHandler mHandler = new DBHandler(view.getContext());

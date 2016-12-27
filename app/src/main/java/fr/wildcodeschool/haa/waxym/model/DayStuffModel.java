@@ -1,12 +1,16 @@
 package fr.wildcodeschool.haa.waxym.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by tuffery on 23/11/16.
  */
 
-public class DayStuffModel {
+public class DayStuffModel implements Parcelable{
     private Date date;
     private String activity;
     private int morning;
@@ -29,6 +33,28 @@ public class DayStuffModel {
 
     public DayStuffModel() {
     }
+
+    protected DayStuffModel(Parcel in) {
+        activity = in.readString();
+        morning = in.readInt();
+        afternoon = in.readInt();
+        contractNumber = in.readString();
+        userName = in.readString();
+        userId = in.readInt();
+        activityColor = in.readString();
+    }
+
+    public static final Creator<DayStuffModel> CREATOR = new Creator<DayStuffModel>() {
+        @Override
+        public DayStuffModel createFromParcel(Parcel in) {
+            return new DayStuffModel(in);
+        }
+
+        @Override
+        public DayStuffModel[] newArray(int size) {
+            return new DayStuffModel[size];
+        }
+    };
 
     public int getUserId() {
         return userId;
@@ -92,5 +118,21 @@ public class DayStuffModel {
 
     public void setActivityColor(String activityColor) {
         this.activityColor = activityColor;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(activity);
+        dest.writeInt(morning);
+        dest.writeInt(afternoon);
+        dest.writeString(contractNumber);
+        dest.writeString(userName);
+        dest.writeInt(userId);
+        dest.writeString(activityColor);
     }
 }

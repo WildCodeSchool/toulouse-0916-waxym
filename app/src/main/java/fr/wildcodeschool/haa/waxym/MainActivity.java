@@ -1,6 +1,8 @@
 package fr.wildcodeschool.haa.waxym;
 
 import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
 
@@ -22,6 +24,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Locale;
 
 
@@ -152,18 +155,22 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
         if (f != null) {
             getFragmentManager().popBackStack();
         } else {
-
+            // need to create new Arraylist because data is lost if not
+            ArrayList<DayStuffModel> selectedDatesAgain = new ArrayList<>();
+            selectedDatesAgain.addAll(selectedDates);
             Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList(Constants.SELECTED_DAYS, selectedDates);
-            f = SlidingListFragment.newInstance(bundle);
-            getFragmentManager().beginTransaction()
+            bundle.putParcelableArrayList(Constants.SELECTED_DAYS, selectedDatesAgain);
+            Fragment g = new SlidingListFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction()
                     .setCustomAnimations(R.animator.slide_up,
                             R.animator.slide_down,
                             R.animator.slide_up,
                             R.animator.slide_down)
-                    .add(R.id.list_fragment_container, f,
+                    .add(R.id.list_fragment_container, g,
                             LIST_FRAGMENT_TAG
-                    ).addToBackStack(null).commit();
+                    ).addToBackStack(null);
+            g.setArguments(bundle);
+            ft.commit();
         }
     }
 
