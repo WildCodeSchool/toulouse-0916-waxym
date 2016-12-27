@@ -51,7 +51,13 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
-        copyDatabase(getApplicationContext());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                copyDatabase(getApplicationContext());
+            }
+        });
+
         if (!database.exists()) {
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
@@ -90,39 +96,44 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
             }
         });
 
+    runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+            PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), getApplicationContext());
+            viewPager = (ViewPager) findViewById(R.id.viewPager);
+            viewPager.setAdapter(adapter);
+            viewPager.setCurrentItem(Constants.historyCount/2);
+            // set postdelayed to let time to viewpager instantiate fragments
+            android.os.Handler handler = new android.os.Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showCurrentDate();
+                }
+            }, 8);
 
-        PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), this);
-        this.viewPager = (ViewPager) findViewById(R.id.viewPager);
-        this.viewPager.setAdapter(adapter);
-        this.viewPager.setCurrentItem(Constants.historyCount/2);
-        // set postdelayed to let time to viewpager instantiate fragments
-        android.os.Handler handler = new android.os.Handler();
-        handler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                   showCurrentDate();
-            }
-        }, 8);
+            // set OnpageChangeListener to refresh currentDate
+            ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-        // set OnpageChangeListener to refresh currentDate
-        ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                }
 
-            }
+                @Override
+                public void onPageSelected(int position) {
+                    showCurrentDate();
+                }
 
-            @Override
-            public void onPageSelected(int position) {
-                 showCurrentDate();
-            }
+                @Override
+                public void onPageScrollStateChanged(int state) {
 
-            @Override
-            public void onPageScrollStateChanged(int state) {
+                }
+            };
+            viewPager.addOnPageChangeListener(pageChangeListener);
 
-            }
-        };
-        viewPager.addOnPageChangeListener(pageChangeListener);
 
+        }
+    });
 
 
 
