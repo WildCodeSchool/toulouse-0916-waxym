@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -76,12 +77,14 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
                     statusSingleton.setMenuCreated(false);
 
                     editButton.setBackgroundResource(R.drawable.edit);
-                    viewPager.getAdapter().notifyDataSetChanged();
+                    updateCurrentViewPagerFragment();
+                   // viewPager.getAdapter().notifyDataSetChanged();
                 }
                 else{
                     statusSingleton.setEditMode(true);
                     editButton.setBackgroundResource(R.drawable.annul);
-                    viewPager.getAdapter().notifyDataSetChanged();
+                    updateCurrentViewPagerFragment();
+                    //viewPager.getAdapter().notifyDataSetChanged();
 
                 }
             }
@@ -192,7 +195,8 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
     }
     @Override
     public void onMethodCallBack() {
-        viewPager.getAdapter().notifyDataSetChanged();
+        updateCurrentViewPagerFragment();
+       // viewPager.getAdapter().notifyDataSetChanged();
 
 
     }
@@ -218,6 +222,12 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
         currentDate+= sdf2.format(gridDateModel.getDate());*/
         textDate.setText(currentDate);
 
+    }
+
+    public void updateCurrentViewPagerFragment(){
+        FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter)viewPager.getAdapter();
+        CalendarFragment calendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager,viewPager.getCurrentItem());
+        calendarFragment.updateCalendar(getApplicationContext());
     }
 
 
