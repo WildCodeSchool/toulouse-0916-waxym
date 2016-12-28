@@ -111,8 +111,9 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             valuesActivity.put(Constants.ACTIVITY_COLOR, dayEvent.getActivityColor());
             valuesActivity.put(Constants.ID_ACTIVITY_TYPE, determineActyvityTypeID(dayEvent));
 
-            String SQLActivity = Constants.DATE + " = " + this.sdf.format(dayEvent.getDate()) + " AND " + "id_user" + " = " + dayEvent.getUserId();
+            String SQLActivity = Constants.DATE + " = '" + this.sdf.format(dayEvent.getDate()) + "' AND " + "id_user" + " = '" + dayEvent.getUserId() +"'";
             db.update(Constants.ACTIVITY, valuesActivity, SQLActivity, null);
+
 
         } else {
             // Activity table
@@ -176,7 +177,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             if(contractNumber == null){
                 contractNumber = "";
             }
-            activitiesList.add(new ActivityItemModel(contractNumber+" "+ activity,activityColor));
+            activitiesList.add(new ActivityItemModel(contractNumber, activity,activityColor));
             cursor.moveToNext();
         }
         cursor.close();

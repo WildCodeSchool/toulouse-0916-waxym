@@ -96,16 +96,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
     }
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
 
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
 
     @Override
     public void passCheckedDay(Date date,int position, boolean isChecked) {

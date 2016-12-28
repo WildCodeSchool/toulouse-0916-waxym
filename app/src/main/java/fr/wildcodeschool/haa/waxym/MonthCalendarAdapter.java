@@ -70,7 +70,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
 
 
 
-        // if this day has an event, specify event image
+        // if this day has an event, specify event view
 
         if (eventDays != null) {
             for (DayStuffModel eventDate : eventDays) {
@@ -78,10 +78,15 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
                     if (eventDate.getDate().getDate() == day &&
                             eventDate.getDate().getMonth() == month &&
                             eventDate.getDate().getYear() == year) {
+
                         if (eventDate.getAfternoon() == 1) {
+                            apresMidiView.setTypeface(null,Typeface.NORMAL);
+                            apresMidiView.setTextColor(Color.BLACK);
                             apresMidiView.setText(eventDate.getActivity());
                             apresMidiView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
                         } else {
+                            matinView.setTypeface(null,Typeface.NORMAL);
+                            matinView.setTextColor(Color.BLACK);
                             matinView.setText(eventDate.getActivity());
                             matinView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
 
@@ -98,19 +103,20 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
 
         if (month == days.get(15).getDate().getMonth())
         {
-
             dayDateView.setTextColor(Color.BLACK);
+            if (day == today.getDate() && month == today.getMonth())
+            {
+                // if it is today, set it to blue/bold
+                dayDateView.setTypeface(null, Typeface.BOLD);
+                dayDateView.setTextColor(context.getResources().getColor(R.color.today));
+            }
         }else{
             // if this day is outside current month, grey it out
             dayDateView.setTextColor(Color.parseColor("#00FF0000"));
+            // today in blue
 
         }
-        if (day == today.getDate() && month == today.getMonth())
-        {
-            // if it is today, set it to blue/bold
-            dayDateView.setTypeface(null, Typeface.BOLD);
-            dayDateView.setTextColor(context.getResources().getColor(R.color.today));
-        }
+
 
         // set text
         dayDateView.setText(String.valueOf(date.getDate()));

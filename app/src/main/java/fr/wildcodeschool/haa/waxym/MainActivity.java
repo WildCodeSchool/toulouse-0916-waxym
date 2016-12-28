@@ -51,12 +51,12 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
-        runOnUiThread(new Runnable() {
+      /*  runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 copyDatabase(getApplicationContext());
             }
-        });
+        });*/
 
         if (!database.exists()) {
             this.mDBHelper.getReadableDatabase();
@@ -79,8 +79,8 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
 
                    if (statusSingleton.isMenuCreated()) {
                        getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
+                       statusSingleton.setMenuCreated(false);
                    }
-                    statusSingleton.setMenuCreated(false);
 
                     editButton.setBackgroundResource(R.drawable.edit);
                     updateCurrentViewPagerFragment();
@@ -110,7 +110,7 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
                 public void run() {
                     showCurrentDate();
                 }
-            }, 8);
+            }, 18);
 
             // set OnpageChangeListener to refresh currentDate
             ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -163,9 +163,7 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
     //animation du menu
     private void toggleList(ArrayList<DayStuffModel> selectedDates) {
         Fragment f = getFragmentManager().findFragmentByTag(LIST_FRAGMENT_TAG);
-        if (f != null) {
-            getFragmentManager().popBackStack();
-        } else {
+
             // need to create new Arraylist because data is lost if not
             ArrayList<DayStuffModel> selectedDatesAgain = new ArrayList<>();
             selectedDatesAgain.addAll(selectedDates);
@@ -183,7 +181,7 @@ public class MainActivity extends OptionMenuActivity implements MainActivityCall
             g.setArguments(bundle);
             ft.commit();
         }
-    }
+
 
     //copying database from assets to database folder
     private boolean copyDatabase(Context context) {
