@@ -6,13 +6,14 @@
 
     <item android:id="@+id/item1"
         android:title="jours"
-        android:visible="true"
-        fr.wildcodeschool.haa.waxym:showAsAction="ifRoom"
+        android:orderInCategory="0"
+        fr.wildcodeschool.haa.waxym:showAsAction="always"
         fr.wildcodeschool.haa.waxym:actionViewClass="android.widget.Spinner" />
 
     <item android:id="@+id/action_show_list"
         android:title="click ici"
         android:icon="@drawable/calendar_flat"
-        fr.wildcodeschool.haa.waxym:showAsAction="ifRoom"/>
+        android:orderInCategory="1"
+        fr.wildcodeschool.haa.waxym:showAsAction="always"/>
 
 </menu>

@@ -2,6 +2,7 @@ package fr.wildcodeschool.haa.waxym;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -40,21 +41,13 @@ public class DayActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        // Spinner action bar
-        MenuItem mitem = menu.findItem(R.id.item1);
-        Spinner spin =(Spinner) mitem.getActionView();
-        setupSpinner(spin);
 
-        //employeah action bar centre
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_title);
-        return true;
-    }
-    public void setupSpinner(Spinner spin){
-        String[] items={"Choisissez","Jour","Semaine","Mois"};
-        //wrap the items in the Adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.spinner_item,items);
-        //assign adapter to the Spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.spinner_list,R.layout.spinner_item);
+
+        MenuItem mitem = menu.findItem(R.id.item1);
+
+        Spinner spin =(Spinner) MenuItemCompat.getActionView(mitem);
+
         spin.setAdapter(adapter);
         //click spinner
         spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
@@ -73,5 +66,9 @@ public class DayActivity extends AppCompatActivity {
 
             }
         });
+
+        return true;
+
     }
+
 }

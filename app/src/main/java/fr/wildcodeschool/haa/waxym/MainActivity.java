@@ -16,6 +16,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
@@ -48,6 +49,7 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
 
 
         // create  DBHandler
@@ -99,24 +101,18 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
-        // Spinner action bar
-        MenuItem mitem = menu.findItem(R.id.item1);
-        Spinner spin =(Spinner) mitem.getActionView();
-        setupSpinner(spin);
 
-        //employeah action bar centre
-        getSupportActionBar().setDisplayOptions(ActionBar.DISPLAY_SHOW_CUSTOM);
-        getSupportActionBar().setCustomView(R.layout.actionbar_title);
-        return true;
-    }
-    public void setupSpinner(Spinner spin){
-        String[] items={"Choisissez","Jour","Semaine","Mois"};
-        //wrap the items in the Adapter
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,R.layout.spinner_item,items);
-        //assign adapter to the Spinner
+        //String[] items={"Choisissez","Jour","Semaine","Mois"};
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.spinner_list,R.layout.spinner_item);
+        //adapter.setDropDownViewResource(R.layout.spinner_item);
+        MenuItem mitem = menu.findItem(R.id.item1);
+
+        Spinner spin =(Spinner) MenuItemCompat.getActionView(mitem);
+
         spin.setAdapter(adapter);
         //click spinner
-        spin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+        spin.setOnItemSelectedListener(new OnItemSelectedListener(){
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -132,6 +128,9 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
 
             }
         });
+
+        return true;
+
     }
 
     @Override
