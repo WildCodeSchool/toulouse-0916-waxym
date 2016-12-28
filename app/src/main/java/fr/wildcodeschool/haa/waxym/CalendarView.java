@@ -1,25 +1,14 @@
 package fr.wildcodeschool.haa.waxym;
 
-import android.app.Activity;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
-import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
-
-import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
+import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 
 /**
  * Created by a7med on 28/06/2015.

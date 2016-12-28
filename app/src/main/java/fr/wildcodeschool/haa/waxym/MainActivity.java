@@ -1,7 +1,6 @@
 package fr.wildcodeschool.haa.waxym;
 
 import android.app.Fragment;
-import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.Bundle;
@@ -24,12 +23,12 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.Locale;
 
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
+import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 
 
 public class MainActivity extends OptionMenuActivity implements MainActivityCallBackInterface {

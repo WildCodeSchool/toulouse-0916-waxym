@@ -1,6 +1,5 @@
 package fr.wildcodeschool.haa.waxym;
 
-import android.app.Activity;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
@@ -16,7 +15,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
+
+import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 
 
 /**

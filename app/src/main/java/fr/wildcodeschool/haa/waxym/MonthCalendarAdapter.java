@@ -16,6 +16,7 @@ import java.util.Date;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
+import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 
 /**
  *
