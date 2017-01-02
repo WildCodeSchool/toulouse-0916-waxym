@@ -93,6 +93,7 @@ public class CalendarFragment extends Fragment  {
             } else
                 this.monthBeginningCell = this.calendar.get(Calendar.DAY_OF_WEEK) - 2;
         } else if (status.isInDayView()) {
+            calendar.add(Calendar.DAY_OF_MONTH, position - Constants.TOTAL_SLIDES/2);
             if (this.calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY) {
                 this.calendar.add(Calendar.DAY_OF_MONTH, 1);
             } else if (this.calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SATURDAY) {
@@ -112,6 +113,7 @@ public class CalendarFragment extends Fragment  {
 
             // create and set adapter on gridView
             final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(context, cells);
+            grid.setNumColumns(7);
             grid.setAdapter(calendarAdapter);
         }
 
@@ -136,17 +138,17 @@ public class CalendarFragment extends Fragment  {
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                             boolean isAlreadychecked = false;
                             boolean isAlreadyCheckedTwice = false;
-                            int checkedPos = 0;
+                            int checkedFirstPos = 0;
                             int checkLastPos = 0;
                             for (int g = 0; g < cells.size();g++) {
                                 if (cells.get(g).isState()) {
                                     isAlreadychecked = true;
-                                    checkedPos = g;
+                                    checkedFirstPos = g;
                                     break;
                                 }
                             }
                                 if (isAlreadychecked){
-                                    for (int g = cells.size()-1; g >=0 ;g--){
+                                    for (int g = cells.size()-1; g >= checkedFirstPos + 1 ;g--){
                                         if (cells.get(g).isState()){
                                             isAlreadyCheckedTwice = true;
                                             checkLastPos = g;
@@ -158,35 +160,57 @@ public class CalendarFragment extends Fragment  {
                             }
                             if(isAlreadychecked){
                                 if(!isAlreadyCheckedTwice) {
-                                    if (touchedPosition <= checkedPos) {
-                                        for (int j = touchedPosition; j <= checkedPos ; j++) {
+                                    if (touchedPosition == checkedFirstPos){
+                                        changeSate(cells.get(touchedPosition),touchedPosition);
+                                    }
+                                    else if (touchedPosition <= checkedFirstPos) {
+                                        for (int j = touchedPosition; j <= checkedFirstPos -1 ; j++) {
 
                                             changeSate(cells.get(j), j);
                                         }
 
                                     } else {
-                                        for (int j = checkedPos +1 ; j < touchedPosition + 1; j++) {
+                                        for (int j = checkedFirstPos +1 ; j < touchedPosition + 1; j++) {
                                             changeSate(cells.get(j), j);
                                         }
 
                                     }
                                 }else {
-                                    if (touchedPosition <= checkLastPos) {
-                                    for (int j = touchedPosition; j <= checkLastPos; j++) {
+                                    if(!cells.get(touchedPosition).isState()) {
 
-                                        changeSate(cells.get(j), j);
+                                        if (touchedPosition <= checkLastPos) {
+                                            for (int j = touchedPosition; j <= checkedFirstPos - 1; j++) {
+
+                                                changeSate(cells.get(j), j);
+                                            }
+
+                                        } else {
+                                            for (int j = checkLastPos + 1; j < touchedPosition + 1; j++) {
+                                                changeSate(cells.get(j), j);
+                                            }
+
+                                        }
+                                    }else {
+                                        if(touchedPosition == checkedFirstPos){
+                                            changeSate(cells.get(touchedPosition),touchedPosition);
+                                        }else if (touchedPosition <= checkLastPos) {
+                                            for (int j = touchedPosition; j <= checkLastPos; j++) {
+
+                                                changeSate(cells.get(j), j);
+                                            }
+
+                                        } else {
+                                            for (int j = checkLastPos + 1; j < touchedPosition + 1; j++) {
+                                                changeSate(cells.get(j), j);
+                                            }
+
+                                        }
+
                                     }
-
-                                } else {
-                                    for (int j = checkLastPos +1; j < touchedPosition + 1; j++) {
-                                        changeSate(cells.get(j), j);
-                                    }
-
-                                }
-
                                 }
                             }else {
                                 changeSate(cells.get(touchedPosition), touchedPosition);
+                                sendDataToFragment(touchedPosition,cells.get(touchedPosition) );
                             }
 
                             // check if menu is launched if not,  launch it
@@ -194,10 +218,10 @@ public class CalendarFragment extends Fragment  {
                                 launchMultiSelectMenu();
                                 statusSingleton.setMenuCreated(true);
                             }
-                         /*   if (!isDoneOnce) {
+                            if (!isDoneOnce) {
                                 sendDataToFragment(touchedPosition, cells.get(touchedPosition));
                                 isDoneOnce = true;
-                            }*/
+                            }
 
                             return true;
 

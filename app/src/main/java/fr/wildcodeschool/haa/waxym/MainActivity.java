@@ -115,8 +115,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
                     @Override
                     public void onPageSelected(int position) {
-                        showCurrentDate();
                         updateCurrentViewPagerFragment();
+                        showCurrentDate();
+
                     }
 
                     @Override
@@ -164,6 +165,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                     status.setInMonthView(true);
                     updateCurrentViewPagerFragment();
                 }
+                showCurrentDate();
 
             }
 
@@ -252,13 +254,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     }
     // get current Date of currentCalendarFragment and show it on top
     public void showCurrentDate() {
+        StatusSingleton status = StatusSingleton.getInstance();
         MyPagerAdapter adapter1 = (MyPagerAdapter) viewPager.getAdapter();
 
         CalendarFragment calendarFragment = (CalendarFragment) adapter1.instantiateItem(viewPager, viewPager.getCurrentItem());
 
         GridDateModel gridDateModel = calendarFragment.getCurrentDate();
-        String monthFormat = "MMMM yyyy";
-        SimpleDateFormat sdf = new SimpleDateFormat(monthFormat, Locale.FRANCE);
+        String dateFormat;
+        if(status.isInMonthView())
+           dateFormat= "MMMM yyyy";
+        else if (status.isInDayView())
+            dateFormat = "dd MMMM";
+        else
+            dateFormat = "MMMM yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.FRANCE);
         // SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
         String currentDate = sdf.format(gridDateModel.getDate());
 /*        currentDate += " ";
