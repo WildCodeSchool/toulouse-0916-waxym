@@ -1,15 +1,27 @@
 package fr.wildcodeschool.haa.waxym;
 
+
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.Spinner;
+import android.widget.SpinnerAdapter;
 import android.widget.Toast;
 
 import java.io.File;
@@ -26,6 +38,7 @@ import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 
+
 public class MainActivity extends AppCompatActivity implements MultiselectCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
@@ -37,11 +50,14 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+
+
         // create  DBHandler
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
         copyDatabase(getApplicationContext());
+
         if (!database.exists()) {
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
@@ -77,14 +93,7 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
 
         // assign event handler
         this.cv = ((CalendarView) findViewById(R.id.calendar_view));
-        this.cv.setEventHandler(new CalendarView.EventHandler() {
-            @Override
-            public void onDayLongPress(GridDateModel date) {
-                // show returned day
-                DateFormat sdf = SimpleDateFormat.getDateInstance();
-                Toast.makeText(MainActivity.this, sdf.format(date.getDate()), Toast.LENGTH_SHORT).show();
-            }
-        });
+
     }
 
 
@@ -92,7 +101,36 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+
+        //String[] items={"Choisissez","Jour","Semaine","Mois"};
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.spinner_list,R.layout.spinner_item);
+        //adapter.setDropDownViewResource(R.layout.spinner_item);
+        MenuItem mitem = menu.findItem(R.id.item1);
+
+        Spinner spin =(Spinner) MenuItemCompat.getActionView(mitem);
+
+        spin.setAdapter(adapter);
+        //click spinner
+        spin.setOnItemSelectedListener(new OnItemSelectedListener(){
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                if (position == 1){
+                    Intent intent = new Intent(MainActivity.this, DayActivity.class);
+                    MainActivity.this.startActivity(intent);
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
         return true;
+
     }
 
     @Override
@@ -168,14 +206,13 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
     public void onMethodCallBack() {
            this.cv.updateCalendar();
 
-
     }
 
     @Override
     public void sendSelectedDays(ArrayList<DayStuffModel> passedList) {
         ArrayList<DayStuffModel> dates = new ArrayList<>();
         dates = passedList;
-    toggleList();
+        toggleList();
     }
 
 }
