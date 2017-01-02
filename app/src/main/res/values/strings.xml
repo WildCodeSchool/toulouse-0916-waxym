@@ -14,12 +14,10 @@
         <item>Uranus</item>
         <item>Neptune</item>
     </string-array>
-
-    <string-array name="numMission">
-        <item>N° mission</item>
-        <item>790543</item>
-        <item>032156</item>
-        <item>67890</item>
-        <item>J6543</item>
+    <string-array name="spinner_list">
+        <item>Choisissez</item>
+        <item>Jour</item>
+        <item>Semaine</item>
+        <item>Mois</item>
     </string-array>
 </resources>
