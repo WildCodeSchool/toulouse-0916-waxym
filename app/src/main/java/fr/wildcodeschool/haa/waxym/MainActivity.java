@@ -1,7 +1,7 @@
 package fr.wildcodeschool.haa.waxym;
 
-
 import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -10,6 +10,10 @@ import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -22,42 +26,44 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Spinner;
 import android.widget.SpinnerAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.util.Locale;
+
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
+import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 
 
 
-public class MainActivity extends AppCompatActivity implements MultiselectCallBackInterface {
+public class MainActivity extends AppCompatActivity implements MainActivityCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
     CalendarView cv;
+    ViewPager viewPager;
+    CalendarFragment calendarFragment;
+    TextView textDate;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        textDate = (TextView)findViewById(R.id.calendar_date_display);
 
 
-
-        // create  DBHandler
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
-        copyDatabase(getApplicationContext());
-
+        //copyDatabase(getApplicationContext());
         if (!database.exists()) {
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
@@ -73,26 +79,71 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                 cv = ((CalendarView) findViewById(R.id.calendar_view));
+                StatusSingleton statusSingleton = StatusSingleton.getInstance();
+                if( statusSingleton.isEditMode()){
+                    statusSingleton.setEditMode(false);
 
-                if( CalendarView.isEditMode){
-                    CalendarView.isEditMode = false;
-                    getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
-                    CalendarView.isMenuCreated = false;
-                    cv.updateCalendar();
+                   if (statusSingleton.isMenuCreated()) {
+                       getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
+                       statusSingleton.setMenuCreated(false);
+                   }
+
                     editButton.setBackgroundResource(R.drawable.edit);
+                    updateCurrentViewPagerFragment();
+                   // viewPager.getAdapter().notifyDataSetChanged();
                 }
                 else{
-                    CalendarView.isEditMode = true;
-                    cv.updateCalendar();
+                    statusSingleton.setEditMode(true);
                     editButton.setBackgroundResource(R.drawable.annul);
+                    updateCurrentViewPagerFragment();
+                    //viewPager.getAdapter().notifyDataSetChanged();
 
                 }
             }
         });
 
-        // assign event handler
-        this.cv = ((CalendarView) findViewById(R.id.calendar_view));
+    runOnUiThread(new Runnable() {
+        @Override
+        public void run() {
+            PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), getApplicationContext());
+            viewPager = (ViewPager) findViewById(R.id.viewPager);
+            viewPager.setAdapter(adapter);
+            viewPager.setCurrentItem(Constants.historyCount/2);
+            // set postdelayed to let time to viewpager instantiate fragments
+            android.os.Handler handler = new android.os.Handler();
+            handler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    showCurrentDate();
+                }
+            }, 18);
+
+            // set OnpageChangeListener to refresh currentDate
+            ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+                @Override
+                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+                }
+
+                @Override
+                public void onPageSelected(int position) {
+                    showCurrentDate();
+                }
+
+                @Override
+                public void onPageScrollStateChanged(int state) {
+
+                }
+            };
+            viewPager.addOnPageChangeListener(pageChangeListener);
+
+
+        }
+    });
+
+
+
+
 
     }
 
@@ -130,37 +181,41 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         });
 
         return true;
-
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_show_list) {
-            CalendarView.currentDate = Calendar.getInstance();
-            this.cv.updateCalendar();
+            this.viewPager.setCurrentItem(Constants.historyCount/2);
+           // this.viewPager.getAdapter().notifyDataSetChanged();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
     //animation du menu
-    private void toggleList() {
+    private void toggleList(ArrayList<DayStuffModel> selectedDates) {
         Fragment f = getFragmentManager().findFragmentByTag(LIST_FRAGMENT_TAG);
-        if (f != null) {
-            getFragmentManager().popBackStack();
-        } else {
-            getFragmentManager().beginTransaction()
+
+            // need to create new Arraylist because data is lost if not
+            ArrayList<DayStuffModel> selectedDatesAgain = new ArrayList<>();
+            selectedDatesAgain.addAll(selectedDates);
+            Bundle bundle = new Bundle();
+            bundle.putParcelableArrayList(Constants.SELECTED_DAYS, selectedDatesAgain);
+            Fragment g = new SlidingListFragment();
+            FragmentTransaction ft = getFragmentManager().beginTransaction()
                     .setCustomAnimations(R.animator.slide_up,
                             R.animator.slide_down,
                             R.animator.slide_up,
                             R.animator.slide_down)
-                    .add(R.id.list_fragment_container, SlidingListFragment
-                                    .instantiate(this, SlidingListFragment.class.getName()),
+                    .add(R.id.list_fragment_container, g,
                             LIST_FRAGMENT_TAG
-                    ).addToBackStack(null).commit();
+                    ).addToBackStack(null);
+            g.setArguments(bundle);
+            ft.commit();
         }
-    }
+
 
     //copying database from assets to database folder
     private boolean copyDatabase(Context context) {
@@ -186,33 +241,41 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
             e.printStackTrace();
             return false;
         }
-   /* @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-       /* if (id == R.id.action_settings)
-        {
-            return true;
-        }*/
-
-        ////  return super.onOptionsItemSelected(item);
-        //}
     }
     @Override
     public void onMethodCallBack() {
-           this.cv.updateCalendar();
+        updateCurrentViewPagerFragment();
+       // viewPager.getAdapter().notifyDataSetChanged();
 
     }
 
     @Override
     public void sendSelectedDays(ArrayList<DayStuffModel> passedList) {
-        ArrayList<DayStuffModel> dates = new ArrayList<>();
-        dates = passedList;
-        toggleList();
+        toggleList(passedList);
     }
+
+    public void showCurrentDate(){
+        MyPagerAdapter adapter1 = (MyPagerAdapter)viewPager.getAdapter();
+
+        CalendarFragment calendarFragment = (CalendarFragment) adapter1.instantiateItem(viewPager,viewPager.getCurrentItem());
+
+        GridDateModel gridDateModel = calendarFragment.getCurrentDate();
+        String monthFormat = "MMMM yyyy";
+        SimpleDateFormat sdf = new SimpleDateFormat(monthFormat, Locale.FRANCE);
+       // SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
+        String currentDate = sdf.format(gridDateModel.getDate());
+/*        currentDate += " ";
+        currentDate+= sdf2.format(gridDateModel.getDate());*/
+        textDate.setText(currentDate);
+
+    }
+
+    public void updateCurrentViewPagerFragment(){
+        FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter)viewPager.getAdapter();
+        CalendarFragment calendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager,viewPager.getCurrentItem());
+        calendarFragment.updateCalendar(getApplicationContext());
+    }
+
 
 }

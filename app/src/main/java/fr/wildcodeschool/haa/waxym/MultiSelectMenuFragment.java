@@ -9,7 +9,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
@@ -23,7 +25,8 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
  */
 public class MultiSelectMenuFragment extends Fragment implements AdapterCallbackInterface {
 
-    ArrayList<DayStuffModel> selectedList = new ArrayList<>() ;
+    /*private static ArrayList<DayStuffModel> selectedList =*/
+    ArrayList<DayStuffModel> selectedList =new ArrayList<>() ;
     public MultiSelectMenuFragment() {
         // Required empty public constructor
     }
@@ -53,14 +56,17 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
             @Override
             public void onClick(View v) {
                 getActivity().getFragmentManager().beginTransaction().remove(MultiSelectMenuFragment.this).commit();
+
                 try {
+
                     closeMenu();
 
-                    ((MultiselectCallBackInterface)getView().getContext()
+                    ((MainActivityCallBackInterface)getView().getContext()
                     ).onMethodCallBack();
                 }catch (ClassCastException e){
 
                 }
+                selectedList.clear();
                 resetMultiselect();
             }
         });
@@ -69,13 +75,15 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
             @Override
             public void onClick(View v) {
                 closeMenu();
+
                 try {
 
-                    ((MultiselectCallBackInterface)getView().getContext()
+                    ((MainActivityCallBackInterface)getView().getContext()
                     ).sendSelectedDays(selectedList);
                 }catch (ClassCastException e){
 
                 }
+                selectedList.clear();
                 resetMultiselect();
             }
         });
@@ -88,34 +96,55 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
     }
 
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
 
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-    }
 
     @Override
     public void passCheckedDay(Date date,int position, boolean isChecked) {
         DayStuffModel passedDay = new DayStuffModel();
+        StatusSingleton statusSingleton = StatusSingleton.getInstance();
         if (isChecked) {
             passedDay.setDate(date);
-            if (position % 2 == 0) {
+            if(statusSingleton.isInMonthView()) {
+                passedDay.setAfternoon(0);
                 passedDay.setMorning(1);
-            } else
-                passedDay.setAfternoon(1);
+                this.selectedList.add(passedDay);
+                DayStuffModel passedDay2 = new DayStuffModel();
+                passedDay2.setDate(date);
+                passedDay2.setMorning(0);
+                passedDay2.setAfternoon(1);
+                this.selectedList.add(passedDay2);
+            }
+        }  else {
 
-            this.selectedList.add(passedDay);
-        }  else
-            this.selectedList.remove(date);
+            if (statusSingleton.isInMonthView()) {
+                Iterator iterator = selectedList.iterator();
+                while (iterator.hasNext()) {
+                    DayStuffModel passedDay2 = (DayStuffModel) iterator.next();
+                    Calendar passedDate = Calendar.getInstance();
+                    passedDate.setTime(passedDay2.getDate());
+                    Calendar evaluateDate = Calendar.getInstance();
+                    evaluateDate.setTime(date);
+                    if (passedDate.get(Calendar.DAY_OF_MONTH) == evaluateDate.get(Calendar.DAY_OF_MONTH))
+                        iterator.remove();
+                }
 
+               /* Iterator iterator = selectedList.iterator();
+                while (iterator.hasNext()){
+                    passedDay = (DayStuffModel)iterator.next();
+                    int passedDate = passedDay.getDate().getDay();
+                    int evaluateDate = date.getDay();
+                    if(passedDay.getDate().getDay() == date.getDay())
+                        iterator.remove();
+
+
+                }*/
+            }
+              //  this.selectedList.remove(date);
+        }
     }
 private void resetMultiselect(){
-    CalendarView.isMenuCreated = false;
+    StatusSingleton statusSingleton = StatusSingleton.getInstance();
+    statusSingleton.setMenuCreated(false);
 
 }
 

@@ -71,7 +71,7 @@ public class LogActivity extends AppCompatActivity {
                         // onLoginFailed();
                         progressDialog.dismiss();
                     }
-                }, 3000);
+                }, 1);
     }
 
 

@@ -2,6 +2,7 @@ package fr.wildcodeschool.haa.waxym;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorInt;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,7 +54,14 @@ public class CustomAdapter extends BaseAdapter {
         customView = inflater.inflate(R.layout.list_view_item, parent, false);
         TextView text = (TextView) customView.findViewById(R.id.list);
 
-            text.setText(listContrat.get(position).getActivityName());
+            text.setText(listContrat.get(position).getActivityNumber()+ " " + listContrat.get(position).getActivityName());
+            if (listContrat.get(position).isSelected()){
+                GradientDrawable gd = new GradientDrawable();
+                gd.setColor(Color.parseColor(listContrat.get(position).getActivityColor())); // Changes this drawbale to use a single color instead of a gradient
+                gd.setCornerRadius(5);
+                gd.setStroke(5, Color.parseColor("#0000E5"));
+                text.setBackgroundDrawable(gd);
+            }else
             text.setBackgroundColor(Color.parseColor(this.listContrat.get(position).getActivityColor()));
 
         return customView;
