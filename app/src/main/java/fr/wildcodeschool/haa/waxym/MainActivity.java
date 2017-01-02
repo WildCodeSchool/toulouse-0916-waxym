@@ -44,7 +44,7 @@ import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 
 
 
-public class MainActivity extends AppCompatActivity implements MultiselectCallBackInterface {
+public class MainActivity extends AppCompatActivity implements MainActivityCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
     CalendarView cv;
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements MultiselectCallBa
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
-        // copyDatabase(getApplicationContext());
+        //copyDatabase(getApplicationContext());
         if (!database.exists()) {
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
