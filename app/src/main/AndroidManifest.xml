@@ -20,7 +20,6 @@
             android:screenOrientation="portrait">
 
         </activity>
-        <activity android:name=".DayActivity"></activity>
     </application>
 
 </manifest>
