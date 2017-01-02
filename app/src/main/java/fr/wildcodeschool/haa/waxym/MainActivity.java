@@ -4,18 +4,13 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -23,9 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.Spinner;
-import android.widget.SpinnerAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,19 +30,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
-
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 
 
-
 public class MainActivity extends AppCompatActivity implements MainActivityCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
-    CalendarView cv;
     ViewPager viewPager;
-    CalendarFragment calendarFragment;
     TextView textDate;
 
 
@@ -57,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        textDate = (TextView)findViewById(R.id.calendar_date_display);
+        textDate = (TextView) findViewById(R.id.calendar_date_display);
 
 
         this.mDBHelper = new DBHandler(this);
@@ -80,19 +69,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
             @Override
             public void onClick(View v) {
                 StatusSingleton statusSingleton = StatusSingleton.getInstance();
-                if( statusSingleton.isEditMode()){
+                if (statusSingleton.isEditMode()) {
                     statusSingleton.setEditMode(false);
 
-                   if (statusSingleton.isMenuCreated()) {
-                       getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
-                       statusSingleton.setMenuCreated(false);
-                   }
+                    if (statusSingleton.isMenuCreated()) {
+                        getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
+                        statusSingleton.setMenuCreated(false);
+                    }
 
                     editButton.setBackgroundResource(R.drawable.edit);
                     updateCurrentViewPagerFragment();
-                   // viewPager.getAdapter().notifyDataSetChanged();
-                }
-                else{
+                    // viewPager.getAdapter().notifyDataSetChanged();
+                } else {
                     statusSingleton.setEditMode(true);
                     editButton.setBackgroundResource(R.drawable.annul);
                     updateCurrentViewPagerFragment();
@@ -102,47 +90,45 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
             }
         });
 
-    runOnUiThread(new Runnable() {
-        @Override
-        public void run() {
-            PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), getApplicationContext());
-            viewPager = (ViewPager) findViewById(R.id.viewPager);
-            viewPager.setAdapter(adapter);
-            viewPager.setCurrentItem(Constants.historyCount/2);
-            // set postdelayed to let time to viewpager instantiate fragments
-            android.os.Handler handler = new android.os.Handler();
-            handler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showCurrentDate();
-                }
-            }, 18);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), getApplicationContext());
+                viewPager = (ViewPager) findViewById(R.id.viewPager);
+                viewPager.setAdapter(adapter);
+                viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
+                // set postdelayed to let time to viewpager instantiate fragments
+                android.os.Handler handler = new android.os.Handler();
+                handler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        showCurrentDate();
+                    }
+                }, 18);
 
-            // set OnpageChangeListener to refresh currentDate
-            ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                // set OnpageChangeListener to refresh currentDate
+                ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
-                }
+                    }
 
-                @Override
-                public void onPageSelected(int position) {
-                    showCurrentDate();
-                }
+                    @Override
+                    public void onPageSelected(int position) {
+                        showCurrentDate();
+                        updateCurrentViewPagerFragment();
+                    }
 
-                @Override
-                public void onPageScrollStateChanged(int state) {
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
 
-                }
-            };
-            viewPager.addOnPageChangeListener(pageChangeListener);
-
-
-        }
-    });
+                    }
+                };
+                viewPager.addOnPageChangeListener(pageChangeListener);
 
 
-
+            }
+        });
 
 
     }
@@ -155,19 +141,19 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
         //String[] items={"Choisissez","Jour","Semaine","Mois"};
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.spinner_list,R.layout.spinner_item);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spinner_list, R.layout.spinner_item);
         //adapter.setDropDownViewResource(R.layout.spinner_item);
         MenuItem mitem = menu.findItem(R.id.item1);
 
-        Spinner spin =(Spinner) MenuItemCompat.getActionView(mitem);
+        Spinner spin = (Spinner) MenuItemCompat.getActionView(mitem);
 
         spin.setAdapter(adapter);
         //click spinner
-        spin.setOnItemSelectedListener(new OnItemSelectedListener(){
+        spin.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 1){
+                if (position == 1) {
                     Intent intent = new Intent(MainActivity.this, DayActivity.class);
                     MainActivity.this.startActivity(intent);
                 }
@@ -187,34 +173,37 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_show_list) {
-            this.viewPager.setCurrentItem(Constants.historyCount/2);
-           // this.viewPager.getAdapter().notifyDataSetChanged();
+            this.viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
+            // this.viewPager.getAdapter().notifyDataSetChanged();
             return true;
         }
         return super.onOptionsItemSelected(item);
     }
 
-    //animation du menu
-    private void toggleList(ArrayList<DayStuffModel> selectedDates) {
-        Fragment f = getFragmentManager().findFragmentByTag(LIST_FRAGMENT_TAG);
+    //launch Pop-up
+    private void launchPopup(ArrayList<DayStuffModel> selectedDates) {
+        // need to create new Arraylist because data is lost if not
+        ArrayList<DayStuffModel> selectedDatesAgain = new ArrayList<>();
+        selectedDatesAgain.addAll(selectedDates);
+        //initiate argument
+        Bundle bundle = new Bundle();
+        bundle.putParcelableArrayList(Constants.SELECTED_DAYS, selectedDatesAgain);
 
-            // need to create new Arraylist because data is lost if not
-            ArrayList<DayStuffModel> selectedDatesAgain = new ArrayList<>();
-            selectedDatesAgain.addAll(selectedDates);
-            Bundle bundle = new Bundle();
-            bundle.putParcelableArrayList(Constants.SELECTED_DAYS, selectedDatesAgain);
-            Fragment g = new SlidingListFragment();
-            FragmentTransaction ft = getFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.animator.slide_up,
-                            R.animator.slide_down,
-                            R.animator.slide_up,
-                            R.animator.slide_down)
-                    .add(R.id.list_fragment_container, g,
-                            LIST_FRAGMENT_TAG
-                    ).addToBackStack(null);
-            g.setArguments(bundle);
-            ft.commit();
-        }
+        Fragment slidingListFragment = new SlidingListFragment();
+        //configure fragment
+        FragmentTransaction ft = getFragmentManager().beginTransaction()
+                .setCustomAnimations(R.animator.slide_up,
+                        R.animator.slide_down,
+                        R.animator.slide_up,
+                        R.animator.slide_down)
+                .add(R.id.list_fragment_container, slidingListFragment,
+                        LIST_FRAGMENT_TAG
+                ).addToBackStack(null);
+        //set argument
+        slidingListFragment.setArguments(bundle);
+        // launch
+        ft.commit();
+    }
 
 
     //copying database from assets to database folder
@@ -243,27 +232,27 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         }
 
     }
+
     @Override
     public void onMethodCallBack() {
+        // update current viewed fragment
         updateCurrentViewPagerFragment();
-       // viewPager.getAdapter().notifyDataSetChanged();
-
     }
 
     @Override
     public void sendSelectedDays(ArrayList<DayStuffModel> passedList) {
-        toggleList(passedList);
+        launchPopup(passedList);
     }
+    // get current Date of currentCalendarFragment and show it on top
+    public void showCurrentDate() {
+        MyPagerAdapter adapter1 = (MyPagerAdapter) viewPager.getAdapter();
 
-    public void showCurrentDate(){
-        MyPagerAdapter adapter1 = (MyPagerAdapter)viewPager.getAdapter();
-
-        CalendarFragment calendarFragment = (CalendarFragment) adapter1.instantiateItem(viewPager,viewPager.getCurrentItem());
+        CalendarFragment calendarFragment = (CalendarFragment) adapter1.instantiateItem(viewPager, viewPager.getCurrentItem());
 
         GridDateModel gridDateModel = calendarFragment.getCurrentDate();
         String monthFormat = "MMMM yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(monthFormat, Locale.FRANCE);
-       // SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
+        // SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
         String currentDate = sdf.format(gridDateModel.getDate());
 /*        currentDate += " ";
         currentDate+= sdf2.format(gridDateModel.getDate());*/
@@ -271,9 +260,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
     }
 
-    public void updateCurrentViewPagerFragment(){
-        FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter)viewPager.getAdapter();
-        CalendarFragment calendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager,viewPager.getCurrentItem());
+    public void updateCurrentViewPagerFragment() {
+        FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter) viewPager.getAdapter();
+        CalendarFragment calendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem());
         calendarFragment.updateCalendar(getApplicationContext());
     }
 

@@ -20,29 +20,14 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
  * to handle interaction events.
- * Use the {@link MultiSelectMenuFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
 public class MultiSelectMenuFragment extends Fragment implements AdapterCallbackInterface {
 
-    /*private static ArrayList<DayStuffModel> selectedList =*/
     ArrayList<DayStuffModel> selectedList =new ArrayList<>() ;
+
     public MultiSelectMenuFragment() {
         // Required empty public constructor
-    }
-
-    public static MultiSelectMenuFragment newInstance() {
-        MultiSelectMenuFragment fragment = new MultiSelectMenuFragment();
-        Bundle args = new Bundle();
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-
     }
 
     @Override
@@ -51,16 +36,16 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_multi_select_menu, container, false);
+        //On cancel
         final Button cancel = (Button)view.findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().getFragmentManager().beginTransaction().remove(MultiSelectMenuFragment.this).commit();
-
+                closeMenu();
                 try {
 
                     closeMenu();
-
+                    // refresh current CalendarFragment
                     ((MainActivityCallBackInterface)getView().getContext()
                     ).onMethodCallBack();
                 }catch (ClassCastException e){
@@ -70,6 +55,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
                 resetMultiselect();
             }
         });
+        // on validate
         final Button valid = (Button)view.findViewById(R.id.valid);
         valid.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,7 +83,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
 
 
 
-
+    //get days selected
     @Override
     public void passCheckedDay(Date date,int position, boolean isChecked) {
         DayStuffModel passedDay = new DayStuffModel();
@@ -105,6 +91,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
         if (isChecked) {
             passedDay.setDate(date);
             if(statusSingleton.isInMonthView()) {
+                // add Morning and afternoon of passed dates in passedList
                 passedDay.setAfternoon(0);
                 passedDay.setMorning(1);
                 this.selectedList.add(passedDay);
@@ -117,6 +104,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
         }  else {
 
             if (statusSingleton.isInMonthView()) {
+                // search and delete passed days from selectedList
                 Iterator iterator = selectedList.iterator();
                 while (iterator.hasNext()) {
                     DayStuffModel passedDay2 = (DayStuffModel) iterator.next();
@@ -128,18 +116,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
                         iterator.remove();
                 }
 
-               /* Iterator iterator = selectedList.iterator();
-                while (iterator.hasNext()){
-                    passedDay = (DayStuffModel)iterator.next();
-                    int passedDate = passedDay.getDate().getDay();
-                    int evaluateDate = date.getDay();
-                    if(passedDay.getDate().getDay() == date.getDay())
-                        iterator.remove();
-
-
-                }*/
             }
-              //  this.selectedList.remove(date);
         }
     }
 private void resetMultiselect(){
@@ -148,7 +125,4 @@ private void resetMultiselect(){
 
 }
 
-    /*public interface OnFragmentInteractionListener {
-        public void onButtonCancel(boolean bool);
-    }*/
 }

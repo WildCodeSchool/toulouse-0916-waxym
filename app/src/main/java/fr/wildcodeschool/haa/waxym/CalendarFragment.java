@@ -31,8 +31,6 @@ public class CalendarFragment extends Fragment  {
     private MultiSelectMenuFragment fragment;
     private TextView txtDate;
     private GridView grid;
-    private float startX = 0;
-    private float startY = 0;
     private LinearLayout header;
     View root;
     Calendar calendar;
@@ -44,16 +42,9 @@ public class CalendarFragment extends Fragment  {
             R.color.winter,
             R.color.spring
     };
-    // for logging
-    private static final String LOGTAG = "Calendar View";
 
     // how many days to show, defaults to six weeks, 42 days
     private static final int DAYS_COUNT = 42;
-
-    // default date format
-    private static final String DATE_FORMAT = "yyyy-MM-dd";
-
-    // date format
 
     // current displayed month
     public static Calendar currentDate;
@@ -74,8 +65,6 @@ public class CalendarFragment extends Fragment  {
         grid = (GridView)root.findViewById(R.id.calendar_grid);
         header = (LinearLayout)getActivity().findViewById(R.id.calendar_header);
 
-        txtDate = (TextView)getActivity().findViewById(R.id.calendar_date_display);
-
         updateCalendar(root.getContext());
         return root;
     }
@@ -86,16 +75,11 @@ public class CalendarFragment extends Fragment  {
 
         this.cells = new ArrayList<>();
         calendar = (Calendar)currentDate.clone();
-
-        calendar.add(Calendar.MONTH, position-Constants.historyCount/2);
-
-
-
+        calendar.add(Calendar.MONTH, position-Constants.TOTAL_SLIDES /2);
 
         // determine the cell for current month's beginning
         calendar.set(Calendar.DAY_OF_MONTH, 1);
         final int monthBeginningCell;
-        int dateofweek = calendar.get(Calendar.DAY_OF_WEEK);
         if(calendar.get(Calendar.DAY_OF_WEEK)== Calendar.SUNDAY){
             monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) +5;
         }else
@@ -111,14 +95,11 @@ public class CalendarFragment extends Fragment  {
             cells.add(new GridDateModel(calendar.getTime()));
             calendar.add(Calendar.DAY_OF_MONTH, 1);
         }
-        // update currentDate
-       // ((MainActivityCallBackInterface)getActivity()).refreshDate(currentDate);
-        // update grid
+        // create and set adapter on gridView
         final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(context,cells);
         grid.setAdapter(calendarAdapter);
 
         // multiselect
-        //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
         //on touch
         final StatusSingleton statusSingleton = StatusSingleton.getInstance();
         if(statusSingleton.isEditMode()) {
@@ -127,13 +108,9 @@ public class CalendarFragment extends Fragment  {
 
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                    //float initialY = motionEvent.getY(), initialX = motionEvent.getX();
-                    int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
-                    if (i >= 0 && i < 42) {
+                    int touchedPosition = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
+                    if (touchedPosition >= 0 && touchedPosition < 42) {
 
-                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP){
-                           // isDoneOnce = false;
-                        }
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                             boolean isAlreadychecked = false;
                             boolean isAlreadyCheckedTwice = false;
@@ -159,27 +136,27 @@ public class CalendarFragment extends Fragment  {
                             }
                             if(isAlreadychecked){
                                 if(!isAlreadyCheckedTwice) {
-                                    if (i <= checkedPos) {
-                                        for (int j = i; j <= checkedPos ; j++) {
+                                    if (touchedPosition <= checkedPos) {
+                                        for (int j = touchedPosition; j <= checkedPos ; j++) {
 
                                             changeSate(cells.get(j), j);
                                         }
 
                                     } else {
-                                        for (int j = checkedPos +1 ; j < i + 1; j++) {
+                                        for (int j = checkedPos +1 ; j < touchedPosition + 1; j++) {
                                             changeSate(cells.get(j), j);
                                         }
 
                                     }
                                 }else {
-                                    if (i <= checkLastPos) {
-                                    for (int j = i; j <= checkLastPos; j++) {
+                                    if (touchedPosition <= checkLastPos) {
+                                    for (int j = touchedPosition; j <= checkLastPos; j++) {
 
                                         changeSate(cells.get(j), j);
                                     }
 
                                 } else {
-                                    for (int j = checkLastPos +1; j < i + 1; j++) {
+                                    for (int j = checkLastPos +1; j < touchedPosition + 1; j++) {
                                         changeSate(cells.get(j), j);
                                     }
 
@@ -187,7 +164,7 @@ public class CalendarFragment extends Fragment  {
 
                                 }
                             }else {
-                                changeSate(cells.get(i), i);
+                                changeSate(cells.get(touchedPosition), touchedPosition);
                             }
 
                             // check if menu is launched if not,  launch it
@@ -195,22 +172,12 @@ public class CalendarFragment extends Fragment  {
                                 launchMultiSelectMenu();
                                 statusSingleton.setMenuCreated(true);
                             }
-                            if (!isDoneOnce) {
-                                sendDataToFragment(i, cells.get(i));
+                         /*   if (!isDoneOnce) {
+                                sendDataToFragment(touchedPosition, cells.get(touchedPosition));
                                 isDoneOnce = true;
-                            }
+                            }*/
 
                             return true;
-/*
-
-                            //on swipe
-                        }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                            if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(),grid.getChildAt(i).getHeight())) {
-                                changeSate(cells.get(i),i);
-                                sendDataToFragment(i,cells.get(i));
-
-                            }
-*/
 
                         }
 
@@ -223,12 +190,10 @@ public class CalendarFragment extends Fragment  {
         else{
             grid.setOnTouchListener(null);
 
-            // à faire ( swipe changer mois
+
         }
-        // update title
 
-
-               // set header color according to current season
+        // set header color according to current season
         int month = currentDate.get(Calendar.MONTH);
         int season = monthSeason[month];
         int color = rainbow[season];
@@ -236,34 +201,7 @@ public class CalendarFragment extends Fragment  {
         header.setBackgroundColor(getResources().getColor(color));
 
     }
-  /*  public boolean checkDistance(float x, float y, float deltaX, float deltaY, int width, int height) {
-        float diffX = 0;
-        float diffY = 0;
-        diffX = Math.abs(deltaX - x );
-        diffY = Math.abs(deltaY - y);
-        if(diffX>width-width*0.1 || diffY >height-height *0.1)
-            return true;
-        else
-            return false;
-
-
-    }*/
-    // change state of cell at position and set associated background and reset start positions
-    /*public void changeSateAndResetPos(GridDateModel selectedDay, int position, float x, float y){
-        startX = x;
-        startY = y;
-        if (!selectedDay.isState()){
-            grid.getChildAt(position).setBackgroundResource(R.color.SELECTING_COLOR);
-            selectedDay.setState(true);
-
-        }else {
-            grid.getChildAt(position).setBackgroundResource(0);
-            selectedDay.setState(false);
-
-        }
-
-    }
-*/
+    // change state of GridDateModel selected and set right color on gridview
     public void changeSate(GridDateModel selectedDay, int position) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(selectedDay.getDate());
@@ -311,7 +249,7 @@ public class CalendarFragment extends Fragment  {
 
 
     }
-
+    // get date to show on top
     public GridDateModel getCurrentDate(){
         return this.cells.get(15);
     }

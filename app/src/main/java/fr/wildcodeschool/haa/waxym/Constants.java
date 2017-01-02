@@ -34,6 +34,6 @@ public class Constants {
     //other
     public static final String POSITION_KEY= "Month";
     public static String SELECTED_DAYS = "selected";
-    public static int historyCount = 60;
+    public static int TOTAL_SLIDES = 60;
 
 }

@@ -48,7 +48,6 @@ public class CustomAdapter extends BaseAdapter {
 
     public View getView(int position, View convertView, ViewGroup parent) {
         inflater = (LayoutInflater) this.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                //(LayoutInflater.from(getContext()));
         View customView;
 
         customView = inflater.inflate(R.layout.list_view_item, parent, false);

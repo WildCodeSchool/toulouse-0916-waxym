@@ -112,7 +112,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
                 dayDateView.setTextColor(context.getResources().getColor(R.color.today));
             }
         }else{
-            // if this day is outside current month, grey it out
+            // if this day is outside current month, hide it
             dayDateView.setTextColor(Color.parseColor("#00FF0000"));
             // today in blue
 

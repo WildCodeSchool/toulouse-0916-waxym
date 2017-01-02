@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.view.ViewGroup;
 
 /**
  * Created by tuffery on 22/12/16.
@@ -35,7 +34,7 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter
     @Override
     public int getCount()
     {
-       return Constants.historyCount ;
+       return Constants.TOTAL_SLIDES;
     }
     @Override
     public int getItemPosition(Object object) {
