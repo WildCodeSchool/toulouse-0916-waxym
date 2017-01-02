@@ -9,11 +9,13 @@ public class StatusSingleton {
     private  boolean isMenuCreated;
     private  boolean isEditMode;
     private boolean isInMonthView;
+    private boolean isInDayView;
 
     private StatusSingleton() {
         isEditMode = false;
         isMenuCreated = false;
         isInMonthView = true;
+        isInDayView = false;
     }
     public static StatusSingleton getInstance(){
         if(mInstance == null)
@@ -45,5 +47,13 @@ public class StatusSingleton {
 
     public void setEditMode(boolean editMode) {
         isEditMode = editMode;
+    }
+
+    public boolean isInDayView() {
+        return isInDayView;
+    }
+
+    public void setInDayView(boolean inDayView) {
+        isInDayView = inDayView;
     }
 }

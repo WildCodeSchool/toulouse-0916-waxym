@@ -13,6 +13,7 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -32,6 +33,8 @@ public class CalendarFragment extends Fragment  {
     private TextView txtDate;
     private GridView grid;
     private LinearLayout header;
+    private int monthBeginningCell;
+
     View root;
     Calendar calendar;
     int[] monthSeason = new int[] {2, 2, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2};
@@ -69,36 +72,55 @@ public class CalendarFragment extends Fragment  {
         return root;
     }
 
-    public void updateCalendar(final Context context)
-    {
+    public void updateCalendar(final Context context) {
+
+        StatusSingleton status = StatusSingleton.getInstance();
         currentDate = Calendar.getInstance();
 
         this.cells = new ArrayList<>();
-        calendar = (Calendar)currentDate.clone();
-        calendar.add(Calendar.MONTH, position-Constants.TOTAL_SLIDES /2);
+        this.calendar = (Calendar) currentDate.clone();
+        if (status.isInMonthView()) {
+            this.calendar.add(Calendar.MONTH, position - Constants.TOTAL_SLIDES / 2);
+        } else if (status.isInDayView()) {
+            this.calendar.add(Calendar.DAY_OF_MONTH, position - Constants.TOTAL_SLIDES / 2);
+        }
 
         // determine the cell for current month's beginning
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        final int monthBeginningCell;
-        if(calendar.get(Calendar.DAY_OF_WEEK)== Calendar.SUNDAY){
-            monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) +5;
-        }else
-            monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) -2;
+        this.calendar.set(Calendar.DAY_OF_MONTH, 1);
+        if (status.isInMonthView()) {
+            if (this.calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                this.monthBeginningCell = this.calendar.get(Calendar.DAY_OF_WEEK) + 5;
+            } else
+                this.monthBeginningCell = this.calendar.get(Calendar.DAY_OF_WEEK) - 2;
+        } else if (status.isInDayView()) {
+            if (this.calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY) {
+                this.calendar.add(Calendar.DAY_OF_MONTH, 1);
+            } else if (this.calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SATURDAY) {
+                this.calendar.add(Calendar.DAY_OF_MONTH, 2);
+            }
+        }
 
         // move calendar backwards to the beginning of the week
+        if (status.isInMonthView()) {
+            this.calendar.add(Calendar.DAY_OF_MONTH, -this.monthBeginningCell);
 
-        calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell);
+            // fill cells
+            while (cells.size() < DAYS_COUNT) {
+                cells.add(new GridDateModel(this.calendar.getTime()));
+                this.calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
 
-        // fill cells
-        while (cells.size() < DAYS_COUNT)
-        {
-            cells.add(new GridDateModel(calendar.getTime()));
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            // create and set adapter on gridView
+            final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(context, cells);
+            grid.setAdapter(calendarAdapter);
         }
-        // create and set adapter on gridView
-        final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(context,cells);
-        grid.setAdapter(calendarAdapter);
 
+        else if (status.isInDayView()){
+            cells.add(new GridDateModel(calendar.getTime()));
+            cells.add(new GridDateModel(calendar.getTime()));
+            grid.setNumColumns(1);
+            grid.setAdapter(new CustomDayAdapter(context, cells));
+        }
         // multiselect
         //on touch
         final StatusSingleton statusSingleton = StatusSingleton.getInstance();
@@ -205,10 +227,20 @@ public class CalendarFragment extends Fragment  {
     public void changeSate(GridDateModel selectedDay, int position) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(selectedDay.getDate());
+        int cellPosition;
+        StatusSingleton status = StatusSingleton.getInstance();
+        if(status.isInDayView()){
+            cellPosition = 0;
+        }
+        else if (status.isInMonthView()){
+            cellPosition = 15;
+        }
+        else cellPosition = 02;
         if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
                 && calendar.get(Calendar.DAY_OF_WEEK )!= Calendar.SUNDAY
-                && selectedDay.getDate().getMonth() == cells.get(15).getDate().getMonth()) {
+                && selectedDay.getDate().getMonth() == cells.get(cellPosition).getDate().getMonth()) {
             if (!selectedDay.isState()) {
+
                 grid.getChildAt(position).setBackgroundResource(R.color.SELECTING_COLOR);
                 selectedDay.setState(true);
 
@@ -251,8 +283,18 @@ public class CalendarFragment extends Fragment  {
     }
     // get date to show on top
     public GridDateModel getCurrentDate(){
-        return this.cells.get(15);
+        StatusSingleton status = StatusSingleton.getInstance();
+        if(status.isInMonthView()) {
+            return this.cells.get(15);
+        }
+        else if(status.isInDayView()){
+            return new GridDateModel(calendar.getTime());
+        }
+        // Week place
+        else return null;
     }
+
+
 
 
 

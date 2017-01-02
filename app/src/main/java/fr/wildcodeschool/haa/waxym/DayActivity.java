@@ -32,7 +32,7 @@ public class DayActivity extends AppCompatActivity {
 
        // BaseAdapter customDay = new CustomDayAdapter(gridView.getContext(),days);
         gridView = (GridView) findViewById(R.id.activity_day);
-        gridView.setAdapter(new CustomDayAdapter(this, days));
+       // gridView.setAdapter(new CustomDayAdapter(this, days));
 
         return;
     }
@@ -55,6 +55,8 @@ public class DayActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 if (position == 3){
+                    StatusSingleton.getInstance().setInDayView(false);
+                    StatusSingleton.getInstance().setInMonthView(true);
                     Intent intent = new Intent(DayActivity.this, MainActivity.class);
                     DayActivity.this.startActivity(intent);
                 }

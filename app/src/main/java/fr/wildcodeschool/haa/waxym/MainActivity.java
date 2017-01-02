@@ -153,9 +153,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                StatusSingleton status = StatusSingleton.getInstance();
                 if (position == 1) {
-                    Intent intent = new Intent(MainActivity.this, DayActivity.class);
-                    MainActivity.this.startActivity(intent);
+                    status.setInDayView(true);
+                    status.setInMonthView(false);
+                    updateCurrentViewPagerFragment();
+                }
+                else if (position == 3){
+                    status.setInDayView(false);
+                    status.setInMonthView(true);
+                    updateCurrentViewPagerFragment();
                 }
 
             }
