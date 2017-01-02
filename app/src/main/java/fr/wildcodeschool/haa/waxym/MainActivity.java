@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     private DBHandler mDBHelper;
     ViewPager viewPager;
     TextView textDate;
+    LinearLayout header;
+
 
 
     @Override
@@ -131,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
             }
         });
 
-
+        header = (LinearLayout)findViewById(R.id.calendar_header);
     }
 
 
@@ -159,11 +162,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                     status.setInDayView(true);
                     status.setInMonthView(false);
                     updateCurrentViewPagerFragment();
+                    updateBorderViewPagerFragment();
                 }
                 else if (position == 3){
                     status.setInDayView(false);
                     status.setInMonthView(true);
                     updateCurrentViewPagerFragment();
+                    updateBorderViewPagerFragment();
                 }
                 showCurrentDate();
 
@@ -261,10 +266,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
         GridDateModel gridDateModel = calendarFragment.getCurrentDate();
         String dateFormat;
-        if(status.isInMonthView())
-           dateFormat= "MMMM yyyy";
-        else if (status.isInDayView())
+        if(status.isInMonthView()) {
+            header.setVisibility(View.VISIBLE);
+            dateFormat = "MMMM yyyy";
+        }
+        else if (status.isInDayView()) {
+            header.setVisibility(View.INVISIBLE);
             dateFormat = "dd MMMM";
+        }
         else
             dateFormat = "MMMM yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.FRANCE);
@@ -280,6 +289,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter) viewPager.getAdapter();
         CalendarFragment calendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem());
         calendarFragment.updateCalendar(getApplicationContext());
+    }
+
+    public void updateBorderViewPagerFragment() {
+        FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter) viewPager.getAdapter();
+        CalendarFragment rightCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem()+1);
+        rightCalendarFragment.updateCalendar(getApplicationContext());
+        CalendarFragment leftCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem()-1);
+        leftCalendarFragment.updateCalendar(getApplicationContext());
     }
 
 
