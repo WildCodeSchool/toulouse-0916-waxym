@@ -1,11 +1,13 @@
 package fr.wildcodeschool.haa.waxym;
 
+import android.app.ActionBar;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.content.Intent;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -20,7 +22,10 @@ public class LogActivity extends AppCompatActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        //no action bar
+        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
+        getSupportActionBar().hide();
         setContentView(R.layout.activity_log);
         this.btn_login = (Button)findViewById(R.id.btn_login);
         this.textEmailAddress = (EditText)findViewById(R.id.input_email);
@@ -33,6 +38,7 @@ public class LogActivity extends AppCompatActivity {
                 login();
             }
         });
+
 
     }
 

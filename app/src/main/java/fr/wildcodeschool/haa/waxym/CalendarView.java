@@ -59,7 +59,7 @@ public class CalendarView extends LinearLayout {
     private GridView grid;
 
     // seasons' rainbow
-    int[] rainbow = new int[] {
+    int[] rainbow = new int[]{
             R.color.summer,
             R.color.fall,
             R.color.winter,
@@ -67,21 +67,18 @@ public class CalendarView extends LinearLayout {
     };
 
     // month-season association (northern hemisphere, sorry australia :)
-    int[] monthSeason = new int[] {2, 2, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2};
+    int[] monthSeason = new int[]{2, 2, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2};
 
-    public CalendarView(Context context)
-    {
+    public CalendarView(Context context) {
         super(context);
     }
 
-    public CalendarView(Context context, AttributeSet attrs)
-    {
+    public CalendarView(Context context, AttributeSet attrs) {
         super(context, attrs);
         initControl(context, attrs);
     }
 
-    public CalendarView(Context context, AttributeSet attrs, int defStyleAttr)
-    {
+    public CalendarView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         initControl(context, attrs);
     }
@@ -89,8 +86,7 @@ public class CalendarView extends LinearLayout {
     /**
      * Load control xml layout
      */
-    private void initControl(Context context, AttributeSet attrs)
-    {
+    private void initControl(Context context, AttributeSet attrs) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         inflater.inflate(R.layout.control_calendar, this);
 
@@ -101,63 +97,52 @@ public class CalendarView extends LinearLayout {
         updateCalendar();
     }
 
-    private void loadDateFormat(AttributeSet attrs)
-    {
+    private void loadDateFormat(AttributeSet attrs) {
         TypedArray ta = getContext().obtainStyledAttributes(attrs, R.styleable.CalendarView);
 
-        try
-        {
+        try {
             // try to load provided date format, and fallback to default otherwise
             dateFormat = ta.getString(R.styleable.CalendarView_dateFormat);
             if (dateFormat == null)
                 dateFormat = DATE_FORMAT;
-        }
-        finally
-        {
+        } finally {
             ta.recycle();
         }
     }
-    private void assignUiElements()
-    {
+
+    private void assignUiElements() {
         // layout is inflated, assign local variables to components
-        header = (LinearLayout)findViewById(R.id.calendar_header);
-        btnPrev = (ImageView)findViewById(R.id.calendar_prev_button);
-        btnNext = (ImageView)findViewById(R.id.calendar_next_button);
-        txtDate = (TextView)findViewById(R.id.calendar_date_display);
-        grid = (GridView)findViewById(R.id.calendar_grid);
+        header = (LinearLayout) findViewById(R.id.calendar_header);
+        btnPrev = (ImageView) findViewById(R.id.calendar_prev_button);
+        btnNext = (ImageView) findViewById(R.id.calendar_next_button);
+        txtDate = (TextView) findViewById(R.id.calendar_date_display);
+        grid = (GridView) findViewById(R.id.calendar_grid);
     }
 
-    private void assignClickHandlers()
-    {
+    private void assignClickHandlers() {
         // add one month and refresh UI
-        btnNext.setOnClickListener(new OnClickListener()
-        {
+        btnNext.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 currentDate.add(Calendar.MONTH, 1);
                 updateCalendar();
             }
         });
 
         // subtract one month and refresh UI
-        btnPrev.setOnClickListener(new OnClickListener()
-        {
+        btnPrev.setOnClickListener(new OnClickListener() {
             @Override
-            public void onClick(View v)
-            {
+            public void onClick(View v) {
                 currentDate.add(Calendar.MONTH, -1);
                 updateCalendar();
             }
         });
 
         // long-pressing a day
-        grid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
-        {
+        grid.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
             @Override
-            public boolean onItemLongClick(AdapterView<?> view, View cell, int position, long id)
-            {
+            public boolean onItemLongClick(AdapterView<?> view, View cell, int position, long id) {
                 // handle long-press
                 if (eventHandler == null)
                     return false;
@@ -175,6 +160,7 @@ public class CalendarView extends LinearLayout {
 
     }
 
+
     /**
      * Display dates correctly in grid
      */
@@ -182,110 +168,103 @@ public class CalendarView extends LinearLayout {
     /**
      * Display dates correctly in grid
      */
-    public void updateCalendar()
-    {
+    public void updateCalendar() {
 
         this.cells = new ArrayList<>();
-        final Calendar calendar = (Calendar)currentDate.clone();
+        final Calendar calendar = (Calendar) currentDate.clone();
 
         // determine the cell for current month's beginning
         calendar.set(Calendar.DAY_OF_MONTH, 1);
-        final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) - 1;
+
+        final int monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) - 3;
 
         // move calendar backwards to the beginning of the week
         calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell);
 
         // fill cells
-        while (cells.size() < DAYS_COUNT)
-        {
+        while (cells.size() < DAYS_COUNT) {
             cells.add(new GridDateModel(calendar.getTime()));
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
-        }
+            while (cells.size() < DAYS_COUNT) {
+                cells.add(new GridDateModel(calendar.getTime()));
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
 
-        // update grid
-        final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(getContext(),cells);
-        grid.setAdapter(calendarAdapter);
+            // update grid
+            final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(getContext(), cells);
+            grid.setAdapter(calendarAdapter);
 
-        // multiselect
-        //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
-        //on touch
-        if(this.isEditMode) {
+            // multiselect
+            //grid.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE_MODAL);
+            //on touch
+            if (this.isEditMode) {
 
-            grid.setOnTouchListener(new OnTouchListener() {
+                grid.setOnTouchListener(new OnTouchListener() {
 
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    float initialY = motionEvent.getY(), initialX = motionEvent.getX();
-                    int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
-                    if (i >= 0 && i < 42) {
+                    @Override
+                    public boolean onTouch(View view, MotionEvent motionEvent) {
+                        float initialY = motionEvent.getY(), initialX = motionEvent.getX();
+                        int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
+                        if (i >= 0 && i < 42) {
 
-                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP){
-                            isDoneOnce = false;
-                        }
-                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                        changeSateAndResetPos(cells.get(i),i,initialX,initialY);
-                            if(!isMenuCreated) {
-                                launchMultiSelectMenu();
-                                isMenuCreated =true;
+                            if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP) {
+                                isDoneOnce = false;
                             }
-                        if (!isDoneOnce) {
-                            sendDataToFragment(i, cells.get(i));
-                            isDoneOnce = true;
+                            if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                                changeSateAndResetPos(cells.get(i), i, initialX, initialY);
+                                if (!isMenuCreated) {
+                                    launchMultiSelectMenu();
+                                    isMenuCreated = true;
+                                }
+                                if (!isDoneOnce) {
+                                    sendDataToFragment(i, cells.get(i));
+                                    isDoneOnce = true;
+                                }
+
+                                return true;
+
+                                //on swipe
+                            } else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                                if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(), grid.getChildAt(i).getHeight())) {
+                                    changeSateAndResetPos(cells.get(i), i, initialX, initialY);
+                                    sendDataToFragment(i, cells.get(i));
+
+                                }
+
+                            }
+
                         }
 
                         return true;
-
-                        //on swipe
-                        }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                        if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(),grid.getChildAt(i).getHeight())) {
-                            changeSateAndResetPos(cells.get(i),i,initialX,initialY);
-                            sendDataToFragment(i,cells.get(i));
-
-                        }
-
-                        }
-
                     }
+                });
+            } else {
+                grid.setOnTouchListener(null);
+                assignClickHandlers();
+                // à faire ( swipe changer mois
+            }
+            // update title
+            SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
+            txtDate.setText(sdf.format(currentDate.getTime()));
 
-                    return true;
-                }
-            });
+            // set header color according to current season
+            int month = currentDate.get(Calendar.MONTH);
+            int season = monthSeason[month];
+            int color = rainbow[season];
+
+            header.setBackgroundColor(getResources().getColor(color));
+
         }
-        else{
-            grid.setOnTouchListener(null);
-            assignClickHandlers();
-            // à faire ( swipe changer mois
-        }
-        // update title
-        SimpleDateFormat sdf = new SimpleDateFormat(dateFormat);
-        txtDate.setText(sdf.format(currentDate.getTime()));
 
-        // set header color according to current season
-        int month = currentDate.get(Calendar.MONTH);
-        int season = monthSeason[month];
-        int color = rainbow[season];
 
-        header.setBackgroundColor(getResources().getColor(color));
+        /**
+         * Assign event handler to be passselectedList = new ArrayList<>();ed needed events
+         */
 
+        /**
+         * This interface defines what events to be reported to
+         * the outside world
+         */
     }
-
-   
-
-
-
-
-    /**
-     * Assign event handler to be passselectedList = new ArrayList<>();ed needed events
-     */
-    public void setEventHandler(EventHandler eventHandler)
-    {
-        this.eventHandler = eventHandler;
-    }
-
-    /**
-     * This interface defines what events to be reported to
-     * the outside world
-     */
     public interface EventHandler
     {
         void onDayLongPress(GridDateModel date);
@@ -304,15 +283,16 @@ public class CalendarView extends LinearLayout {
 
 
     }
+
     // change state of cell at position and set associated background and reset start positions
     public void changeSateAndResetPos(GridDateModel selectedDay, int position, float x, float y){
         startX = x;
         startY = y;
-        if (!selectedDay.isState()){
+        if (!selectedDay.isState()) {
             grid.getChildAt(position).setBackgroundResource(R.color.SELECTING_COLOR);
             selectedDay.setState(true);
 
-        }else {
+        } else {
             grid.getChildAt(position).setBackgroundResource(0);
             selectedDay.setState(false);
 
@@ -337,28 +317,28 @@ public class CalendarView extends LinearLayout {
             }
         }
     }
-    public void launchMultiSelectMenu(){
+
+    public void launchMultiSelectMenu() {
 
 
-        final Activity activity = (MainActivity)getContext();
+        final Activity activity = (MainActivity) getContext();
         FragmentManager fm = activity.getFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
         this.fragment = new MultiSelectMenuFragment();
-        ft.add(R.id.list_fragment_container,fragment).commit();
+        ft.add(R.id.list_fragment_container, fragment).commit();
 
 
     }
-    public void onButtonCancel(boolean bool){
-        if (!bool) {
-            for (int i = 0 ; i < grid.getChildCount();i++)
-            grid.getChildAt(i).setBackgroundResource(0);
 
+    public void onButtonCancel(boolean bool) {
+        if (!bool) {
+            for (int i = 0; i < grid.getChildCount(); i++)
+                grid.getChildAt(i).setBackgroundResource(0);
 
 
         }
 
     }
-
 
 
 }
