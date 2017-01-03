@@ -2,6 +2,7 @@ package fr.wildcodeschool.haa.waxym;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,24 +67,31 @@ public class CustomDayAdapter extends BaseAdapter {
         if (convertView == null){
             gridView = inflater.inflate(R.layout.activity_day,null);
             TextView halfDay = (TextView) gridView.findViewById(R.id.activity_day_text);
+            GradientDrawable gd = new GradientDrawable();
+            gd.setCornerRadius(100);
             if(position == 0){
+                halfDay.setText("Matin");
+                halfDay.setTextColor(Color.BLACK);
                 if(this.dayEvents.size() > 0){
                     halfDay.setText(this.dayEvents.get(0).getContractNumber() + " " + this.dayEvents.get(0).getActivity());
-                    halfDay.setBackgroundColor(Color.parseColor(this.dayEvents.get(0).getActivityColor()));
+                    gd.setColor(Color.parseColor(this.dayEvents.get(0).getActivityColor()));
+                    gd.setStroke(100, Color.parseColor("#FFFFFF"));
+                    halfDay.setBackgroundDrawable(gd);
                 }
-                else {
-                    halfDay.setText("Matin");
-                }
+
             }
             else if (position == 1){
+                halfDay.setText("Après-midi");
+                halfDay.setTextColor(Color.BLACK);
                 if(this.dayEvents.size() > 1){
                     halfDay.setText(this.dayEvents.get(1).getContractNumber() + " " + this.dayEvents.get(1).getActivity());
-                    halfDay.setBackgroundColor(Color.parseColor(this.dayEvents.get(1).getActivityColor()));
+                    gd.setColor(Color.parseColor(this.dayEvents.get(1).getActivityColor()));
+                    gd.setStroke(100, Color.parseColor("#FFFFFF"));
+                    halfDay.setBackgroundDrawable(gd);
+
 
                 }
-                else {
-                    halfDay.setText("Après-midi");
-                }
+
             }
         }
         else {

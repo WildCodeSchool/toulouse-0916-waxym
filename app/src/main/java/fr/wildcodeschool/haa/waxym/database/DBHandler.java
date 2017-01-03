@@ -139,7 +139,9 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             valuesActivity.put(Constants.ACTIVITY_COLOR, dayEvent.getActivityColor());
             valuesActivity.put(Constants.ID_ACTIVITY_TYPE, determineActyvityTypeID(dayEvent));
 
-            String SQLActivity = Constants.DATE + " = '" + this.sdf.format(dayEvent.getDate()) + "' AND " + "id_user" + " = '" + dayEvent.getUserId() +"'";
+            String SQLActivity = Constants.DATE + " = '" + this.sdf.format(dayEvent.getDate()) + "' " +
+                    "AND " + Constants.ID_USER+ " = '" + dayEvent.getUserId() +"'" +
+                    "AND " + Constants.ID_ACTIVITY_TYPE + " = '" + determineActyvityTypeID(dayEvent) + "'";
             db.update(Constants.ACTIVITY, valuesActivity, SQLActivity, null);
 
 
@@ -162,7 +164,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
     public void setEventCompleter(DayStuffModel dayEvent) throws ParseException {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues valuesActivity = new ContentValues();
-        // if date half- day already exists in db for this user
+        // if date half- day already doesn't exists in db for this user
         if (!searchAndCompareDate(getTwoMonthEvents(dayEvent.getUserId(), dayEvent.getDate()), dayEvent)) {
 
             // Activity table
