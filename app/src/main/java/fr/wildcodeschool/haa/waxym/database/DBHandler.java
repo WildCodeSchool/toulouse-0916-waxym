@@ -96,6 +96,34 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         return eventsList;
     }
 
+    // get all events of mentioned user of the entered date
+    public ArrayList<DayStuffModel> getDayEvents(int user, Date referenceDate) throws ParseException {
+        DayStuffModel dayStuff = null;
+        ArrayList<DayStuffModel> eventsList = new ArrayList<>();
+        Calendar date = Calendar.getInstance();
+        date.setTime(referenceDate);
+        openDatabase();
+        //SELECT activity.date, activity_name, contract_number,morning, afternoon, name_user, user.id_user FROM user,activity,activity_type
+        //WHERE user.id_user = activity.id_user AND user.id_user = '1' AND activity.id_activity_type = activity_type.id_activity_type AND activity.date = '2016-11-30'        // WHERE user.id_user = activity.id_user AND user.id_user = '1' AND activity.id_activity_type = activity_type.id_activity_type AND date >= entered date -1 month And date <= entered date +1 month
+        Cursor cursor = mDatabase.rawQuery("SELECT " + Constants.DATE_ACTIVITY + ", " + Constants.NAME_ACTIVITY + ", " + Constants.CONTRACT_NUMBER +
+                ", " + Constants.ACTIVITY_COLOR + "," + Constants.MORNING + ", " + Constants.AFTERNOON + ", " + Constants.NAME_USER + ", " + Constants.ID_USER_USER +
+                " FROM " + Constants.USER + "," + Constants.ACTIVITY + "," + Constants.ACTIVITY_TYPE +
+                " WHERE " + Constants.ID_USER_USER + " = " + Constants.ID_USER_ACTIVITY +
+                " AND " + Constants.ID_USER_ACTIVITY + " = " + "'" + user + "'" +
+                " AND " + Constants.ID_ACTIVITY_TYPE_ACTIVITY + " = " + Constants.ID_ACTIVITY_TYPE_ACTIVITY_TYPE +
+                " AND " + Constants.DATE_ACTIVITY + " = " + "'" + convertDatetoString(date.getTime()) + "'" , null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            dayStuff = new DayStuffModel(convertStringToDate(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4),
+                    cursor.getInt(5), cursor.getString(6), cursor.getInt(7));
+            eventsList.add(dayStuff);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        closeDatabase();
+        return eventsList;
+    }
+
 
     // set activity event on date and overwrite if already exist
     public void setEventEraser(DayStuffModel dayEvent) throws ParseException {

@@ -34,6 +34,7 @@ public class CalendarFragment extends Fragment  {
     private GridView grid;
     private LinearLayout header;
     private int monthBeginningCell;
+    Calendar dayCalendar;
 
     View root;
     Calendar calendar;
@@ -82,23 +83,25 @@ public class CalendarFragment extends Fragment  {
         if (status.isInMonthView()) {
             this.calendar.add(Calendar.MONTH, position - Constants.TOTAL_SLIDES / 2);
         } else if (status.isInDayView()) {
-            this.calendar.add(Calendar.DAY_OF_MONTH, position - Constants.TOTAL_SLIDES / 2);
+          //  this.calendar.add(Calendar.DAY_OF_MONTH, position - Constants.TOTAL_SLIDES / 2);
         }
 
         // determine the cell for current month's beginning
-        this.calendar.set(Calendar.DAY_OF_MONTH, 1);
         if (status.isInMonthView()) {
+            this.calendar.set(Calendar.DAY_OF_MONTH, 1);
             if (this.calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
                 this.monthBeginningCell = this.calendar.get(Calendar.DAY_OF_WEEK) + 5;
             } else
                 this.monthBeginningCell = this.calendar.get(Calendar.DAY_OF_WEEK) - 2;
         } else if (status.isInDayView()) {
-            calendar.add(Calendar.DAY_OF_MONTH, position - Constants.TOTAL_SLIDES/2);
-            if (this.calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY) {
-                this.calendar.add(Calendar.DAY_OF_MONTH, 1);
-            } else if (this.calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SATURDAY) {
-                this.calendar.add(Calendar.DAY_OF_MONTH, 2);
-            }
+            this.dayCalendar = status.getCurrentDate();
+           // this.dayCalendar.add(Calendar.DAY_OF_MONTH, position - Constants.TOTAL_SLIDES/2);
+
+           /* if (this.dayCalendar.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY) {
+                this.dayCalendar.add(Calendar.DAY_OF_MONTH, 1);
+            } else if (this.dayCalendar.get(Calendar.DAY_OF_MONTH) == Calendar.SATURDAY) {
+                this.dayCalendar.add(Calendar.DAY_OF_MONTH, 2);
+            }*/
         }
 
         // move calendar backwards to the beginning of the week
@@ -118,8 +121,8 @@ public class CalendarFragment extends Fragment  {
         }
 
         else if (status.isInDayView()){
-            cells.add(new GridDateModel(calendar.getTime()));
-            cells.add(new GridDateModel(calendar.getTime()));
+            cells.add(new GridDateModel(this.dayCalendar.getTime()));
+            cells.add(new GridDateModel(this.dayCalendar.getTime()));
             grid.setNumColumns(1);
             grid.setAdapter(new CustomDayAdapter(context, cells));
         }
@@ -140,6 +143,11 @@ public class CalendarFragment extends Fragment  {
                             boolean isAlreadyCheckedTwice = false;
                             int checkedFirstPos = 0;
                             int checkLastPos = 0;
+                            // check if menu is launched if not,  launch it
+                            if(!statusSingleton.isMenuCreated()) {
+                                launchMultiSelectMenu();
+                                statusSingleton.setMenuCreated(true);
+                            }
                             for (int g = 0; g < cells.size();g++) {
                                 if (cells.get(g).isState()) {
                                     isAlreadychecked = true;
@@ -210,14 +218,10 @@ public class CalendarFragment extends Fragment  {
                                 }
                             }else {
                                 changeSate(cells.get(touchedPosition), touchedPosition);
-                                sendDataToFragment(touchedPosition,cells.get(touchedPosition) );
+                                //sendDataToFragment(touchedPosition,cells.get(touchedPosition) );
                             }
 
-                            // check if menu is launched if not,  launch it
-                            if(!statusSingleton.isMenuCreated()) {
-                                launchMultiSelectMenu();
-                                statusSingleton.setMenuCreated(true);
-                            }
+
                             if (!isDoneOnce) {
                                 sendDataToFragment(touchedPosition, cells.get(touchedPosition));
                                 isDoneOnce = true;
@@ -312,7 +316,7 @@ public class CalendarFragment extends Fragment  {
             return this.cells.get(15);
         }
         else if(status.isInDayView()){
-            return new GridDateModel(calendar.getTime());
+            return new GridDateModel(this.dayCalendar.getTime());
         }
         // Week place
         else return null;

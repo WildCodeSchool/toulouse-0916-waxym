@@ -101,7 +101,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
                 passedDay2.setAfternoon(1);
                 this.selectedList.add(passedDay2);
             }
-        }  else {
+        } else {
 
             if (statusSingleton.isInMonthView()) {
                 // search and delete passed days from selectedList

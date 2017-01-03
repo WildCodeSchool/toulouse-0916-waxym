@@ -1,5 +1,7 @@
 package fr.wildcodeschool.haa.waxym;
 
+import java.util.Calendar;
+
 /**
  * Created by tuffery on 21/12/16.
  */
@@ -10,12 +12,14 @@ public class StatusSingleton {
     private  boolean isEditMode;
     private boolean isInMonthView;
     private boolean isInDayView;
+    private Calendar currentDate;
 
     private StatusSingleton() {
         isEditMode = false;
         isMenuCreated = false;
         isInMonthView = true;
         isInDayView = false;
+        this.currentDate = Calendar.getInstance();
     }
     public static StatusSingleton getInstance(){
         if(mInstance == null)
@@ -55,5 +59,13 @@ public class StatusSingleton {
 
     public void setInDayView(boolean inDayView) {
         isInDayView = inDayView;
+    }
+
+    public Calendar getCurrentDate() {
+        return currentDate;
+    }
+
+    public void setCurrentDate(Calendar currentDate) {
+        this.currentDate = currentDate;
     }
 }

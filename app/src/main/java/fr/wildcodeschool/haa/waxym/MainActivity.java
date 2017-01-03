@@ -29,6 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Locale;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     ViewPager viewPager;
     TextView textDate;
     LinearLayout header;
+    int viewcurrentPosition = Constants.TOTAL_SLIDES/2;
 
 
 
@@ -118,6 +120,20 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
                     @Override
                     public void onPageSelected(int position) {
+                        StatusSingleton status = StatusSingleton.getInstance();
+                        if(status.isInDayView()){
+                            Calendar calendar = status.getCurrentDate();
+                            if(viewcurrentPosition < position){
+
+                                calendar.add(Calendar.DAY_OF_MONTH,1);
+                                status.setCurrentDate(skipWeekend(calendar, true));
+                            }else {
+                                calendar.add(Calendar.DAY_OF_MONTH, -1);
+                                status.setCurrentDate(skipWeekend(calendar, false));
+
+                            }
+                            viewcurrentPosition = position;
+                        }
                         updateCurrentViewPagerFragment();
                         showCurrentDate();
 
@@ -161,12 +177,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                 if (position == 1) {
                     status.setInDayView(true);
                     status.setInMonthView(false);
-                    updateCurrentViewPagerFragment();
+                    viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
                     updateBorderViewPagerFragment();
+                    updateCurrentViewPagerFragment();
                 }
                 else if (position == 3){
                     status.setInDayView(false);
                     status.setInMonthView(true);
+                    viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
                     updateCurrentViewPagerFragment();
                     updateBorderViewPagerFragment();
                 }
@@ -187,7 +205,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_show_list) {
-            this.viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
+           this.viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
+            StatusSingleton status = StatusSingleton.getInstance();
+            if(status.isInDayView()){
+                status.setCurrentDate(Calendar.getInstance());
+                updateCurrentViewPagerFragment();
+                showCurrentDate();
+            }
+
             // this.viewPager.getAdapter().notifyDataSetChanged();
             return true;
         }
@@ -272,7 +297,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         }
         else if (status.isInDayView()) {
             header.setVisibility(View.INVISIBLE);
-            dateFormat = "dd MMMM";
+            dateFormat = "EEEE dd MMMM";
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(gridDateModel.getDate());
+            status.setCurrentDate(calendar);
         }
         else
             dateFormat = "MMMM yyyy";
@@ -297,6 +325,23 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         rightCalendarFragment.updateCalendar(getApplicationContext());
         CalendarFragment leftCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem()-1);
         leftCalendarFragment.updateCalendar(getApplicationContext());
+    }
+
+    private Calendar skipWeekend(Calendar calendar, boolean isTotheFuture){
+
+        if (isTotheFuture){
+            if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SATURDAY)
+                calendar.add(Calendar.DAY_OF_MONTH, 2);
+            else if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY)
+                calendar.add(Calendar.DAY_OF_MONTH, 1);
+        }else {
+            if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SATURDAY)
+                calendar.add(Calendar.DAY_OF_MONTH, -1);
+            else if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY)
+                calendar.add(Calendar.DAY_OF_MONTH, -2);
+        }
+
+        return calendar;
     }
 
 
