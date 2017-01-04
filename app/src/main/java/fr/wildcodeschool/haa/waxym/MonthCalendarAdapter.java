@@ -7,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -34,6 +33,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
     private Context context;
     private ArrayList<GridDateModel> days;
     private MainActivityCallBackInterface callback;
+    private StatusSingleton status;
 
     public MonthCalendarAdapter(Context context, ArrayList<GridDateModel> days)
     {
@@ -41,6 +41,12 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.days = days;
+        mDBHandler = new DBHandler(getContext());
+        try {
+            eventDays = this.mDBHandler.getMonthEvents(1, days.get(15).getDate());
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
     }
 
@@ -55,12 +61,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         int month = date.getMonth();
         int year = date.getYear();
 
-        mDBHandler = new DBHandler(getContext());
-        try {
-            eventDays = this.mDBHandler.getTwoMonthEvents(1, date);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
+
         // today
         Date today = new Date();
 
@@ -75,10 +76,10 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
 
 
         // if this day has an event, specify event view
+ if (eventDays != null) {
 
-        if (eventDays != null) {
             for (DayStuffModel eventDate : eventDays) {
-                if (eventDate.getDate().getMonth() == days.get(15).getDate().getMonth()) {
+                //if (eventDate.getDate().getMonth() == days.get(15).getDate().getMonth()) {
                     if (eventDate.getDate().getDate() == day &&
                             eventDate.getDate().getMonth() == month &&
                             eventDate.getDate().getYear() == year) {
@@ -97,7 +98,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
 
                         }
                     }
-                }
+
             }
         }
 
@@ -126,18 +127,22 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         dayDateView.setText(String.valueOf(date.getDate()));
         //set row height
         view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,200));
-        final StatusSingleton status = StatusSingleton.getInstance();
+        status = StatusSingleton.getInstance();
         if (!status.isEditMode()) {
-            final View finalView = view;
-            view.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Calendar calendar = Calendar.getInstance();
-                    calendar.setTime(days.get(position).getDate());
-                    status.setCurrentDate(calendar);
-                    callback.launchDayView();
-                }
-            });
+            Calendar currentDay = Calendar.getInstance();
+            currentDay.setTime(days.get(position).getDate());
+            if (currentDay.get(Calendar.DAY_OF_MONTH) != Calendar.SUNDAY || currentDay.get(Calendar.DAY_OF_MONTH) != Calendar.SATURDAY) {
+                final View finalView = view;
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        Calendar calendar = Calendar.getInstance();
+                        calendar.setTime(days.get(position).getDate());
+                        status.setCurrentDate(calendar);
+                        callback.launchDayView();
+                    }
+                });
+            }
         }
         return view;
     }

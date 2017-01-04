@@ -3,6 +3,7 @@ package fr.wildcodeschool.haa.waxym;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -34,7 +35,8 @@ public class CalendarFragment extends Fragment  {
     private GridView grid;
     private LinearLayout header;
     private int monthBeginningCell;
-    Calendar dayCalendar;
+    private Calendar dayCalendar;
+    private MonthCalendarAdapter calendarAdapter;
 
     View root;
     Calendar calendar;
@@ -113,14 +115,16 @@ public class CalendarFragment extends Fragment  {
                 cells.add(new GridDateModel(this.calendar.getTime()));
                 this.calendar.add(Calendar.DAY_OF_MONTH, 1);
             }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new CreateAndSetMonthAdapter().doInBackground();
+                }
+            });
 
             // create and set adapter on gridView
-            final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(context, cells);
-            grid.setNumColumns(7);
-            MainActivity activity = (MainActivity)getActivity();
-            MainActivityCallBackInterface mainActivityCallBackInterface = (MainActivityCallBackInterface)activity;
-            calendarAdapter.setCallback(mainActivityCallBackInterface);
-            grid.setAdapter(calendarAdapter);
+
+
         }
 
         else if (status.isInDayView()){
@@ -325,7 +329,19 @@ public class CalendarFragment extends Fragment  {
         else return null;
     }
 
+class CreateAndSetMonthAdapter extends AsyncTask<Void,Void,Void>{
 
+    @Override
+    protected Void doInBackground(Void... params) {
+        calendarAdapter = new MonthCalendarAdapter(getContext(), cells);
+        grid.setNumColumns(7);
+        MainActivity activity = (MainActivity)getActivity();
+        MainActivityCallBackInterface mainActivityCallBackInterface = (MainActivityCallBackInterface)activity;
+        calendarAdapter.setCallback(mainActivityCallBackInterface);
+        grid.setAdapter(calendarAdapter);
+        return null;
+    }
+}
 
 
 

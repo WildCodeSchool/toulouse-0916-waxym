@@ -64,15 +64,15 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
     }
 
     // get all events of mentioned user from 1 month of the entered date
-    public ArrayList<DayStuffModel> getTwoMonthEvents(int user, Date referenceDate) throws ParseException {
+    public ArrayList<DayStuffModel> getMonthEvents(int user, Date referenceDate) throws ParseException {
         DayStuffModel dayStuff = null;
         ArrayList<DayStuffModel> eventsList = new ArrayList<>();
         Calendar fromDate = Calendar.getInstance();
         Calendar toDate = Calendar.getInstance();
         toDate.setTime(referenceDate);
         fromDate.setTime(referenceDate);
-        fromDate.add(Calendar.MONTH, -1);
-        toDate.add(Calendar.MONTH, 1);
+        fromDate.set(Calendar.DAY_OF_MONTH,fromDate.getActualMinimum(Calendar.DAY_OF_MONTH));
+        toDate.set(Calendar.DAY_OF_MONTH,toDate.getActualMaximum(Calendar.DAY_OF_MONTH));
         openDatabase();
         // sqlite request : SQLiteQuery: SELECT activity.date, activity_name, contract_number,morning, afternoon, name_user, id_user FROM user,activity,activity_type
         // WHERE user.id_user = activity.id_user AND user.id_user = '1' AND activity.id_activity_type = activity_type.id_activity_type AND date >= entered date -1 month And date <= entered date +1 month
@@ -130,7 +130,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues valuesActivity = new ContentValues();
         // if date half- day already exists in db for this user
-        if (searchAndCompareDate(getTwoMonthEvents(dayEvent.getUserId(), dayEvent.getDate()), dayEvent)) {
+        if (searchAndCompareDate(getMonthEvents(dayEvent.getUserId(), dayEvent.getDate()), dayEvent)) {
 
 
             // Activity table
@@ -165,7 +165,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues valuesActivity = new ContentValues();
         // if date half- day already doesn't exists in db for this user
-        if (!searchAndCompareDate(getTwoMonthEvents(dayEvent.getUserId(), dayEvent.getDate()), dayEvent)) {
+        if (!searchAndCompareDate(getMonthEvents(dayEvent.getUserId(), dayEvent.getDate()), dayEvent)) {
 
             // Activity table
             valuesActivity.put(Constants.NAME_ACTIVITY, dayEvent.getActivity());

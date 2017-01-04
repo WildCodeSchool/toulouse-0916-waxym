@@ -10,7 +10,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
  * Created by tuffery on 22/12/16.
  */
 
-public class MyPagerAdapter extends FragmentStatePagerAdapter
+public class MyPagerAdapter extends FragmentStatePagerAdapter implements PagerAdapterInterface
 {
     private Context context;
 
@@ -41,6 +41,14 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter
         CalendarFragment f = (CalendarFragment) object;
         f.updateCalendar(context);
         return super.getItemPosition(object);
+    }
+
+    @Override
+    public void changeListenerState() {
+        StatusSingleton status = StatusSingleton.getInstance();
+        if (status.isEditMode()){
+
+        }
     }
 
 }

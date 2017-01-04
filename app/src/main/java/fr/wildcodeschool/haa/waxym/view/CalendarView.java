@@ -1,4 +1,4 @@
-package fr.wildcodeschool.haa.waxym;
+package fr.wildcodeschool.haa.waxym.view;
 
 import android.content.Context;
 import android.util.AttributeSet;
@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import fr.wildcodeschool.haa.waxym.R;
 import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 
 /**

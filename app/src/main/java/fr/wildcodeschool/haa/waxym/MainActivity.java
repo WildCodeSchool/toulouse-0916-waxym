@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -13,6 +14,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemSelectedListener;
@@ -35,17 +37,21 @@ import java.util.Locale;
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 import fr.wildcodeschool.haa.waxym.model.GridDateModel;
+import fr.wildcodeschool.haa.waxym.view.CustomViewPager;
 
 
 public class MainActivity extends AppCompatActivity implements MainActivityCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
-    private ViewPager viewPager;
+    private CustomViewPager viewPager;
     private TextView textDate;
     private LinearLayout header;
     private int viewcurrentPosition = Constants.TOTAL_SLIDES/2;
     private Spinner spin;
     private MenuItem mitem;
+    CalendarFragment calendarFragment;
+    CalendarFragment leftCalendarFragment;
+    CalendarFragment rightCalendarFragment;
 
 
 
@@ -78,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                 StatusSingleton statusSingleton = StatusSingleton.getInstance();
                 if (statusSingleton.isEditMode()) {
                     statusSingleton.setEditMode(false);
+                    changeSwipeMode();
 
                     if (statusSingleton.isMenuCreated()) {
                         getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentById(R.id.list_fragment_container)).commit();
@@ -89,6 +96,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                     // viewPager.getAdapter().notifyDataSetChanged();
                 } else {
                     statusSingleton.setEditMode(true);
+                    changeSwipeMode();
                     editButton.setBackgroundResource(R.drawable.annul);
                     updateCurrentViewPagerFragment();
                     //viewPager.getAdapter().notifyDataSetChanged();
@@ -101,7 +109,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
             @Override
             public void run() {
                 PagerAdapter adapter = new MyPagerAdapter(getSupportFragmentManager(), getApplicationContext());
-                viewPager = (ViewPager) findViewById(R.id.viewPager);
+                viewPager = (CustomViewPager) findViewById(R.id.viewPager);
                 viewPager.setAdapter(adapter);
                 viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
                 // set postdelayed to let time to viewpager instantiate fragments
@@ -322,18 +330,30 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
     }
 
-    public void updateCurrentViewPagerFragment() {
-        FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter) viewPager.getAdapter();
-        CalendarFragment calendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem());
-        calendarFragment.updateCalendar(getApplicationContext());
+    public void updateCurrentViewPagerFragment()  {
+
+        FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter) this.viewPager.getAdapter();
+        this.calendarFragment = (CalendarFragment) fsp.instantiateItem(this.viewPager, this.viewPager.getCurrentItem());
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new UpdateCurrentViewPagerFragment().doInBackground();
+            }
+        });
+
+
     }
 
     public void updateBorderViewPagerFragment() {
-        FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter) viewPager.getAdapter();
-        CalendarFragment rightCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem()+1);
-        rightCalendarFragment.updateCalendar(getApplicationContext());
-        CalendarFragment leftCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem()-1);
-        leftCalendarFragment.updateCalendar(getApplicationContext());
+        FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter) this.viewPager.getAdapter();
+        this.rightCalendarFragment = (CalendarFragment) fsp.instantiateItem(this.viewPager, this.viewPager.getCurrentItem()+1);
+        this.leftCalendarFragment = (CalendarFragment) fsp.instantiateItem(this.viewPager, this.viewPager.getCurrentItem()-1);
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                new  UpdateBorderViewPagerFragment();
+            }
+        });
     }
 
     private Calendar skipWeekend(Calendar calendar, boolean isTotheFuture){
@@ -354,7 +374,36 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     }
 @Override
     public void onBackPressed(){
-    super.onBackPressed();
-}
 
 }
+    public void changeSwipeMode(){
+        StatusSingleton status = StatusSingleton.getInstance();
+        if (status.isEditMode()){
+           viewPager.setPagingEnabled(false);
+        }else {
+            viewPager.setPagingEnabled(true);
+        }
+
+    }
+    class UpdateCurrentViewPagerFragment extends AsyncTask<CalendarFragment,Integer,Void> {
+
+
+        @Override
+        protected Void doInBackground(CalendarFragment... params) {
+            calendarFragment.updateCalendar(getApplicationContext());
+            return null;
+        }
+    }
+    class UpdateBorderViewPagerFragment extends AsyncTask<CalendarFragment,Integer,Void> {
+
+
+        @Override
+        protected Void doInBackground(CalendarFragment... params) {
+            leftCalendarFragment.updateCalendar(getApplicationContext());
+            rightCalendarFragment.updateCalendar(getApplicationContext());
+            return null;
+        }
+    }
+}
+
+
