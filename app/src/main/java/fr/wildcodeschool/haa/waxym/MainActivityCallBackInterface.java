@@ -13,6 +13,7 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 public interface MainActivityCallBackInterface {
     void onMethodCallBack();
     void sendSelectedDays(ArrayList<DayStuffModel> passedList);
+    void launchDayView();
 
 }
 

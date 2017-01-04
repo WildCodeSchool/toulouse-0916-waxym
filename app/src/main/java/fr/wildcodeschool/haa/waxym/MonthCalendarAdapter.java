@@ -7,11 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
@@ -30,7 +32,8 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
     // for view inflation
     private LayoutInflater inflater;
     private Context context;
-    ArrayList<GridDateModel> days;
+    private ArrayList<GridDateModel> days;
+    private MainActivityCallBackInterface callback;
 
     public MonthCalendarAdapter(Context context, ArrayList<GridDateModel> days)
     {
@@ -43,7 +46,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
 
 
     @Override
-    public View getView(int position, View view, ViewGroup parent)
+    public View getView(final int position, View view, ViewGroup parent)
     {
 
         // day in question
@@ -123,7 +126,24 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         dayDateView.setText(String.valueOf(date.getDate()));
         //set row height
         view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,200));
+        final StatusSingleton status = StatusSingleton.getInstance();
+        if (!status.isEditMode()) {
+            final View finalView = view;
+            view.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Calendar calendar = Calendar.getInstance();
+                    calendar.setTime(days.get(position).getDate());
+                    status.setCurrentDate(calendar);
+                    callback.launchDayView();
+                }
+            });
+        }
         return view;
+    }
+    public void setCallback(MainActivityCallBackInterface callback){
+
+        this.callback = callback;
     }
 
 }

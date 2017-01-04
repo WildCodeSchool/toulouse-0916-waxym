@@ -117,6 +117,9 @@ public class CalendarFragment extends Fragment  {
             // create and set adapter on gridView
             final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(context, cells);
             grid.setNumColumns(7);
+            MainActivity activity = (MainActivity)getActivity();
+            MainActivityCallBackInterface mainActivityCallBackInterface = (MainActivityCallBackInterface)activity;
+            calendarAdapter.setCallback(mainActivityCallBackInterface);
             grid.setAdapter(calendarAdapter);
         }
 

@@ -40,10 +40,12 @@ import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 public class MainActivity extends AppCompatActivity implements MainActivityCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
-    ViewPager viewPager;
-    TextView textDate;
-    LinearLayout header;
-    int viewcurrentPosition = Constants.TOTAL_SLIDES/2;
+    private ViewPager viewPager;
+    private TextView textDate;
+    private LinearLayout header;
+    private int viewcurrentPosition = Constants.TOTAL_SLIDES/2;
+    private Spinner spin;
+    private MenuItem mitem;
 
 
 
@@ -163,9 +165,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spinner_list, R.layout.spinner_item);
         //adapter.setDropDownViewResource(R.layout.spinner_item);
-        MenuItem mitem = menu.findItem(R.id.item1);
+        mitem = menu.findItem(R.id.item1);
 
-        Spinner spin = (Spinner) MenuItemCompat.getActionView(mitem);
+        spin = (Spinner) MenuItemCompat.getActionView(mitem);
 
         spin.setAdapter(adapter);
         //click spinner
@@ -282,6 +284,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     public void sendSelectedDays(ArrayList<DayStuffModel> passedList) {
         launchPopup(passedList);
     }
+
+    @Override
+    public void launchDayView() {
+        spin.setSelection(1);
+
+    }
+
     // get current Date of currentCalendarFragment and show it on top
     public void showCurrentDate() {
         StatusSingleton status = StatusSingleton.getInstance();
@@ -343,6 +352,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
         return calendar;
     }
-
+@Override
+    public void onBackPressed(){
+    super.onBackPressed();
+}
 
 }
