@@ -126,7 +126,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         // set text
         dayDateView.setText(String.valueOf(date.getDate()));
         //set row height
-        view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,200));
+        view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,300));
         status = StatusSingleton.getInstance();
         if (!status.isEditMode()) {
             Calendar currentDay = Calendar.getInstance();

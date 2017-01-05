@@ -46,9 +46,6 @@ public class MyPagerAdapter extends FragmentStatePagerAdapter implements PagerAd
     @Override
     public void changeListenerState() {
         StatusSingleton status = StatusSingleton.getInstance();
-        if (status.isEditMode()){
-
-        }
     }
 
 }
