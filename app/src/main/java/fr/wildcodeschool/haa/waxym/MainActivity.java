@@ -185,14 +185,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                 if (position == 1) {
                     status.setInDayView(true);
                     status.setInMonthView(false);
+                    status.setLastMonthPosition(viewPager.getCurrentItem());
                     viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
-                    updateBorderViewPagerFragment();
                     updateCurrentViewPagerFragment();
+                    updateBorderViewPagerFragment();
+
                 }
                 else if (position == 3){
                     status.setInDayView(false);
                     status.setInMonthView(true);
-                    viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
+                    viewPager.setCurrentItem(status.getLastMonthPosition());
                     updateCurrentViewPagerFragment();
                     updateBorderViewPagerFragment();
                 }
@@ -293,6 +295,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
     @Override
     public void launchDayView() {
+        StatusSingleton.getInstance().setLastMonthPosition(viewPager.getCurrentItem());
         spin.setSelection(1);
 
     }
@@ -343,29 +346,32 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     }
 
     public void updateBorderViewPagerFragment() {
-        FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter) this.viewPager.getAdapter();
-        this.rightCalendarFragment = (CalendarFragment) fsp.instantiateItem(this.viewPager, this.viewPager.getCurrentItem()+1);
-        this.leftCalendarFragment = (CalendarFragment) fsp.instantiateItem(this.viewPager, this.viewPager.getCurrentItem()-1);
-        runOnUiThread(new Runnable() {
+        FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter) viewPager.getAdapter();
+        rightCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem()+1);
+        rightCalendarFragment.updateCalendar(getApplicationContext());
+        leftCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem()-1);
+        leftCalendarFragment.updateCalendar(getApplicationContext());
+
+       /* runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 new  UpdateBorderViewPagerFragment();
             }
-        });
+        });*/
     }
 
     private Calendar skipWeekend(Calendar calendar, boolean isTotheFuture){
 
         if (isTotheFuture){
-            if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SATURDAY)
-                calendar.add(Calendar.DAY_OF_MONTH, 2);
-            else if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY)
-                calendar.add(Calendar.DAY_OF_MONTH, 1);
+            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)
+                calendar.add(Calendar.DAY_OF_WEEK, 2);
+            else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+                calendar.add(Calendar.DAY_OF_WEEK, 1);
         }else {
-            if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SATURDAY)
-                calendar.add(Calendar.DAY_OF_MONTH, -1);
-            else if (calendar.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY)
-                calendar.add(Calendar.DAY_OF_MONTH, -2);
+            if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)
+                calendar.add(Calendar.DAY_OF_WEEK, -1);
+            else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
+                calendar.add(Calendar.DAY_OF_WEEK, -2);
         }
 
         return calendar;
@@ -397,8 +403,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
         @Override
         protected Void doInBackground(CalendarFragment... params) {
-            leftCalendarFragment.updateCalendar(getApplicationContext());
-            rightCalendarFragment.updateCalendar(getApplicationContext());
+
             return null;
         }
     }

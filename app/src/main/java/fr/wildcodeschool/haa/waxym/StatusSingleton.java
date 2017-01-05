@@ -13,6 +13,7 @@ public class StatusSingleton {
     private boolean isInMonthView;
     private boolean isInDayView;
     private Calendar currentDate;
+    private int lastMonthPosition;
 
     private StatusSingleton() {
         isEditMode = false;
@@ -67,5 +68,13 @@ public class StatusSingleton {
 
     public void setCurrentDate(Calendar currentDate) {
         this.currentDate = currentDate;
+    }
+
+    public int getLastMonthPosition() {
+        return lastMonthPosition;
+    }
+
+    public void setLastMonthPosition(int lastMonthPosition) {
+        this.lastMonthPosition = lastMonthPosition;
     }
 }

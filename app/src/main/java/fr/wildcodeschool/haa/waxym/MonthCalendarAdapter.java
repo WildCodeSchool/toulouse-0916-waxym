@@ -131,13 +131,16 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         if (!status.isEditMode()) {
             Calendar currentDay = Calendar.getInstance();
             currentDay.setTime(days.get(position).getDate());
-            if (currentDay.get(Calendar.DAY_OF_MONTH) != Calendar.SUNDAY || currentDay.get(Calendar.DAY_OF_MONTH) != Calendar.SATURDAY) {
+            if (currentDay.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && currentDay.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
                 final View finalView = view;
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(days.get(position).getDate());
+                        if (status.getLastMonthPosition() != Constants.TOTAL_SLIDES/2){
+                            calendar.add(Calendar.DAY_OF_MONTH,1);
+                        };
                         status.setCurrentDate(calendar);
                         callback.launchDayView();
                     }
