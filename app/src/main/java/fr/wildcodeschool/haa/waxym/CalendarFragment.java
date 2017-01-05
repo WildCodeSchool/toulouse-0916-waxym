@@ -31,12 +31,14 @@ public class CalendarFragment extends Fragment  {
     private ArrayList<GridDateModel> cells ;
     private boolean isDoneOnce = false;
     private MultiSelectMenuFragment fragment;
-    private TextView txtDate;
     private GridView grid;
     private LinearLayout header;
     private int monthBeginningCell;
     private Calendar dayCalendar;
     private MonthCalendarAdapter calendarAdapter;
+    private float startX;
+    private float startY;
+    private int startPosition = 0;
 
     View root;
     Calendar calendar;
@@ -77,7 +79,7 @@ public class CalendarFragment extends Fragment  {
 
     public void updateCalendar(final Context context) {
 
-        StatusSingleton status = StatusSingleton.getInstance();
+        final StatusSingleton status = StatusSingleton.getInstance();
         currentDate = Calendar.getInstance();
 
         this.cells = new ArrayList<>();
@@ -136,37 +138,56 @@ public class CalendarFragment extends Fragment  {
         // multiselect
         //on touch
         final StatusSingleton statusSingleton = StatusSingleton.getInstance();
+
+
         if(statusSingleton.isEditMode()) {
-            grid.setOnTouchListener(new OnTouchListener() {
+            grid.setOnTouchListener(new View.OnTouchListener() {
 
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     float initialY = motionEvent.getY(), initialX = motionEvent.getX();
-                    int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
-                    if (i >= 0 && i < 42) {
+                    int position = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
+                    if (position >= 0 && position < 42) {
 
                         if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP){
                             isDoneOnce = false;
+                            startPosition = 0;
                         }
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                            changeSateAndResetPos(cells.get(i),i,initialX,initialY);
-                            if(!isMenuCreated) {
+                            changeSate(cells.get(position),position,initialX,initialY);
+                            if (startPosition == 0){
+                                startPosition = position;
+                            }
+                            if(!status.isMenuCreated()) {
                                 launchMultiSelectMenu();
-                                isMenuCreated =true;
+                                status.setMenuCreated(true);
                             }
                             if (!isDoneOnce) {
-                                sendDataToFragment(i, cells.get(i));
+                                sendDataToFragment(position, cells.get(position));
                                 isDoneOnce = true;
+
                             }
 
                             return true;
 
                             //on swipe
                         }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
-                            if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(),grid.getChildAt(i).getHeight())) {
-                                changeSateAndResetPos(cells.get(i),i,initialX,initialY);
-                                sendDataToFragment(i,cells.get(i));
+                            if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(position).getWidth(),grid.getChildAt(position).getHeight())) {
+                               if (startPosition < position){
+                                   for (int i = startPosition +1; i < position +1; i++){
+                                       changeSate(cells.get(i),i,initialX,initialY);
 
+                                   }
+                               }else {
+                                   for (int i = position; i < startPosition  ; i++){
+                                       changeSate(cells.get(i),i,initialX,initialY);
+
+                                   }
+
+                                  /* changeSate(cells.get(position), position, initialX, initialY);
+                                   sendDataToFragment(position, cells.get(position));*/
+                               }
+                                startPosition = position;
                             }
 
                         }
@@ -298,7 +319,9 @@ public class CalendarFragment extends Fragment  {
 
     }
     // change state of GridDateModel selected and set right color on gridview
-    public void changeSate(GridDateModel selectedDay, int position) {
+    public void changeSate(GridDateModel selectedDay, int position, float x, float y) {
+        startX = x;
+        startY = y;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(selectedDay.getDate());
         int cellPosition;
@@ -372,7 +395,7 @@ public class CalendarFragment extends Fragment  {
         float diffY = 0;
         diffX = Math.abs(deltaX - x);
         diffY = Math.abs(deltaY - y);
-        if(diffX>width || diffY >height)
+        if(diffX>width -width * 0.15 || diffY >height -height * 0.15)
             return true;
         else
             return false;
