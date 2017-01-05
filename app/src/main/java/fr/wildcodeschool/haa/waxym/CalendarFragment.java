@@ -137,8 +137,47 @@ public class CalendarFragment extends Fragment  {
         //on touch
         final StatusSingleton statusSingleton = StatusSingleton.getInstance();
         if(statusSingleton.isEditMode()) {
+            grid.setOnTouchListener(new OnTouchListener() {
 
-            grid.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    float initialY = motionEvent.getY(), initialX = motionEvent.getX();
+                    int i = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
+                    if (i >= 0 && i < 42) {
+
+                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP){
+                            isDoneOnce = false;
+                        }
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                            changeSateAndResetPos(cells.get(i),i,initialX,initialY);
+                            if(!isMenuCreated) {
+                                launchMultiSelectMenu();
+                                isMenuCreated =true;
+                            }
+                            if (!isDoneOnce) {
+                                sendDataToFragment(i, cells.get(i));
+                                isDoneOnce = true;
+                            }
+
+                            return true;
+
+                            //on swipe
+                        }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                            if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(i).getWidth(),grid.getChildAt(i).getHeight())) {
+                                changeSateAndResetPos(cells.get(i),i,initialX,initialY);
+                                sendDataToFragment(i,cells.get(i));
+
+                            }
+
+                        }
+
+                    }
+
+                    return true;
+                }
+            });
+
+/*            grid.setOnTouchListener(new View.OnTouchListener() {
 
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -242,7 +281,7 @@ public class CalendarFragment extends Fragment  {
 
                     return true;
                 }
-            });
+            });*/
         }
         else{
             grid.setOnTouchListener(null);
@@ -328,8 +367,19 @@ public class CalendarFragment extends Fragment  {
         // Week place
         else return null;
     }
+    public boolean checkDistance(float x, float y, float deltaX, float deltaY, int width, int height) {
+        float diffX = 0;
+        float diffY = 0;
+        diffX = Math.abs(deltaX - x);
+        diffY = Math.abs(deltaY - y);
+        if(diffX>width || diffY >height)
+            return true;
+        else
+            return false;
 
-class CreateAndSetMonthAdapter extends AsyncTask<Void,Void,Void>{
+
+    }
+    class CreateAndSetMonthAdapter extends AsyncTask<Void,Void,Void>{
 
     @Override
     protected Void doInBackground(Void... params) {
