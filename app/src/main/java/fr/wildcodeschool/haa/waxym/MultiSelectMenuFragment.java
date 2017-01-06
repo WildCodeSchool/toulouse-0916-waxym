@@ -42,15 +42,12 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
             @Override
             public void onClick(View v) {
                 closeMenu();
-                try {
 
                     closeMenu();
                     // refresh current CalendarFragment
                     ((MainActivityCallBackInterface)getView().getContext()
                     ).onMethodCallBack();
-                }catch (ClassCastException e){
 
-                }
                 selectedList.clear();
                 resetMultiselect();
             }
@@ -62,13 +59,11 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
             public void onClick(View v) {
                 closeMenu();
 
-                try {
+
 
                     ((MainActivityCallBackInterface)getView().getContext()
                     ).sendSelectedDays(selectedList);
-                }catch (ClassCastException e){
-
-                }
+            
                 selectedList.clear();
                 resetMultiselect();
             }
