@@ -100,21 +100,32 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
                 passedDay2.setMorning(0);
                 passedDay2.setAfternoon(1);
                 this.selectedList.add(passedDay2);
+            }else if (statusSingleton.isInDayView()){
+                if (position == 0){
+                    passedDay.setAfternoon(0);
+                    passedDay.setMorning(1);
+                    this.selectedList.add(passedDay);
+                }else {
+                    passedDay.setDate(date);
+                    passedDay.setMorning(0);
+                    passedDay.setAfternoon(1);
+                    this.selectedList.add(passedDay);
+                }
             }
-        }  else {
+        } else {
 
-            if (statusSingleton.isInMonthView()) {
+
                 // search and delete passed days from selectedList
                 Iterator iterator = selectedList.iterator();
                 while (iterator.hasNext()) {
-                    DayStuffModel passedDay2 = (DayStuffModel) iterator.next();
+                    DayStuffModel passedDay3 = (DayStuffModel) iterator.next();
                     Calendar passedDate = Calendar.getInstance();
-                    passedDate.setTime(passedDay2.getDate());
+                    passedDate.setTime(passedDay3.getDate());
                     Calendar evaluateDate = Calendar.getInstance();
                     evaluateDate.setTime(date);
                     if (passedDate.get(Calendar.DAY_OF_MONTH) == evaluateDate.get(Calendar.DAY_OF_MONTH))
                         iterator.remove();
-                }
+
 
             }
         }

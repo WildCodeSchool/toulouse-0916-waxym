@@ -3,6 +3,7 @@ package fr.wildcodeschool.haa.waxym;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -29,9 +31,15 @@ public class CalendarFragment extends Fragment  {
     private ArrayList<GridDateModel> cells ;
     private boolean isDoneOnce = false;
     private MultiSelectMenuFragment fragment;
-    private TextView txtDate;
     private GridView grid;
     private LinearLayout header;
+    private int monthBeginningCell;
+    private Calendar dayCalendar;
+    private MonthCalendarAdapter calendarAdapter;
+    private float startX;
+    private float startY;
+    private int startPosition = 0;
+
     View root;
     Calendar calendar;
     int[] monthSeason = new int[] {2, 2, 3, 3, 3, 0, 0, 0, 1, 1, 1, 2};
@@ -69,42 +77,128 @@ public class CalendarFragment extends Fragment  {
         return root;
     }
 
-    public void updateCalendar(final Context context)
-    {
+    public void updateCalendar(final Context context) {
+
+        final StatusSingleton status = StatusSingleton.getInstance();
         currentDate = Calendar.getInstance();
 
         this.cells = new ArrayList<>();
-        calendar = (Calendar)currentDate.clone();
-        calendar.add(Calendar.MONTH, position-Constants.TOTAL_SLIDES /2);
+        this.calendar = (Calendar) currentDate.clone();
+        if (status.isInMonthView()) {
+            this.calendar.add(Calendar.MONTH, position - Constants.TOTAL_SLIDES / 2);
+        } else if (status.isInDayView()) {
+          //  this.calendar.add(Calendar.DAY_OF_MONTH, position - Constants.TOTAL_SLIDES / 2);
+        }
 
         // determine the cell for current month's beginning
-        calendar.set(Calendar.DAY_OF_MONTH, 1);
-        final int monthBeginningCell;
-        if(calendar.get(Calendar.DAY_OF_WEEK)== Calendar.SUNDAY){
-            monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) +5;
-        }else
-            monthBeginningCell = calendar.get(Calendar.DAY_OF_WEEK) -2;
+        if (status.isInMonthView()) {
+            this.calendar.set(Calendar.DAY_OF_MONTH, 1);
+            if (this.calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+                this.monthBeginningCell = this.calendar.get(Calendar.DAY_OF_WEEK) + 5;
+            } else
+                this.monthBeginningCell = this.calendar.get(Calendar.DAY_OF_WEEK) - 2;
+        } else if (status.isInDayView()) {
+            this.dayCalendar = status.getCurrentDate();
+           // this.dayCalendar.add(Calendar.DAY_OF_MONTH, position - Constants.TOTAL_SLIDES/2);
+
+           /* if (this.dayCalendar.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY) {
+                this.dayCalendar.add(Calendar.DAY_OF_MONTH, 1);
+            } else if (this.dayCalendar.get(Calendar.DAY_OF_MONTH) == Calendar.SATURDAY) {
+                this.dayCalendar.add(Calendar.DAY_OF_MONTH, 2);
+            }*/
+        }
 
         // move calendar backwards to the beginning of the week
+        if (status.isInMonthView()) {
+            this.calendar.add(Calendar.DAY_OF_MONTH, -this.monthBeginningCell);
 
-        calendar.add(Calendar.DAY_OF_MONTH, -monthBeginningCell);
+            // fill cells
+            while (cells.size() < DAYS_COUNT) {
+                cells.add(new GridDateModel(this.calendar.getTime()));
+                this.calendar.add(Calendar.DAY_OF_MONTH, 1);
+            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    new CreateAndSetMonthAdapter().doInBackground();
+                }
+            });
 
-        // fill cells
-        while (cells.size() < DAYS_COUNT)
-        {
-            cells.add(new GridDateModel(calendar.getTime()));
-            calendar.add(Calendar.DAY_OF_MONTH, 1);
+            // create and set adapter on gridView
+
+
         }
-        // create and set adapter on gridView
-        final MonthCalendarAdapter calendarAdapter = new MonthCalendarAdapter(context,cells);
-        grid.setAdapter(calendarAdapter);
 
+        else if (status.isInDayView()){
+            cells.add(new GridDateModel(this.dayCalendar.getTime()));
+            cells.add(new GridDateModel(this.dayCalendar.getTime()));
+            grid.setNumColumns(1);
+            grid.setAdapter(new CustomDayAdapter(context, cells));
+        }
         // multiselect
         //on touch
         final StatusSingleton statusSingleton = StatusSingleton.getInstance();
-        if(statusSingleton.isEditMode()) {
 
+
+        if(statusSingleton.isEditMode()) {
             grid.setOnTouchListener(new View.OnTouchListener() {
+
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    float initialY = motionEvent.getY(), initialX = motionEvent.getX();
+                    int position = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
+                    if (position >= 0 && position < 42) {
+
+                        if (motionEvent.getActionMasked() == MotionEvent.ACTION_UP){
+                            isDoneOnce = false;
+                            startPosition = 0;
+                        }
+                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+                            changeSate(cells.get(position),position,initialX,initialY);
+                            if (startPosition == 0){
+                                startPosition = position;
+                            }
+                            if(!status.isMenuCreated()) {
+                                launchMultiSelectMenu();
+                                status.setMenuCreated(true);
+                            }
+                            if (!isDoneOnce) {
+                                sendDataToFragment(position, cells.get(position));
+                                isDoneOnce = true;
+
+                            }
+
+                            return true;
+
+                            //on swipe
+                        }else if (motionEvent.getAction() == MotionEvent.ACTION_MOVE) {
+                            if (checkDistance(startX, startY, motionEvent.getX(), motionEvent.getY(), grid.getChildAt(position).getWidth(),grid.getChildAt(position).getHeight())) {
+                               if (startPosition < position){
+                                   for (int i = startPosition +1; i < position +1; i++){
+                                       changeSate(cells.get(i),i,initialX,initialY);
+
+                                   }
+                               }else {
+                                   for (int i = position; i < startPosition  ; i++){
+                                       changeSate(cells.get(i),i,initialX,initialY);
+
+                                   }
+
+                                  /* changeSate(cells.get(position), position, initialX, initialY);
+                                   sendDataToFragment(position, cells.get(position));*/
+                               }
+                                startPosition = position;
+                            }
+
+                        }
+
+                    }
+
+                    return true;
+                }
+            });
+
+/*            grid.setOnTouchListener(new View.OnTouchListener() {
 
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -114,17 +208,22 @@ public class CalendarFragment extends Fragment  {
                         if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                             boolean isAlreadychecked = false;
                             boolean isAlreadyCheckedTwice = false;
-                            int checkedPos = 0;
+                            int checkedFirstPos = 0;
                             int checkLastPos = 0;
+                            // check if menu is launched if not,  launch it
+                            if(!statusSingleton.isMenuCreated()) {
+                                launchMultiSelectMenu();
+                                statusSingleton.setMenuCreated(true);
+                            }
                             for (int g = 0; g < cells.size();g++) {
                                 if (cells.get(g).isState()) {
                                     isAlreadychecked = true;
-                                    checkedPos = g;
+                                    checkedFirstPos = g;
                                     break;
                                 }
                             }
                                 if (isAlreadychecked){
-                                    for (int g = cells.size()-1; g >=0 ;g--){
+                                    for (int g = cells.size()-1; g >= checkedFirstPos + 1 ;g--){
                                         if (cells.get(g).isState()){
                                             isAlreadyCheckedTwice = true;
                                             checkLastPos = g;
@@ -136,46 +235,64 @@ public class CalendarFragment extends Fragment  {
                             }
                             if(isAlreadychecked){
                                 if(!isAlreadyCheckedTwice) {
-                                    if (touchedPosition <= checkedPos) {
-                                        for (int j = touchedPosition; j <= checkedPos ; j++) {
+                                    if (touchedPosition == checkedFirstPos){
+                                        changeSate(cells.get(touchedPosition),touchedPosition);
+                                    }
+                                    else if (touchedPosition <= checkedFirstPos) {
+                                        for (int j = touchedPosition; j <= checkedFirstPos -1 ; j++) {
 
                                             changeSate(cells.get(j), j);
                                         }
 
                                     } else {
-                                        for (int j = checkedPos +1 ; j < touchedPosition + 1; j++) {
+                                        for (int j = checkedFirstPos +1 ; j < touchedPosition + 1; j++) {
                                             changeSate(cells.get(j), j);
                                         }
 
                                     }
                                 }else {
-                                    if (touchedPosition <= checkLastPos) {
-                                    for (int j = touchedPosition; j <= checkLastPos; j++) {
+                                    if(!cells.get(touchedPosition).isState()) {
 
-                                        changeSate(cells.get(j), j);
+                                        if (touchedPosition <= checkLastPos) {
+                                            for (int j = touchedPosition; j <= checkedFirstPos - 1; j++) {
+
+                                                changeSate(cells.get(j), j);
+                                            }
+
+                                        } else {
+                                            for (int j = checkLastPos + 1; j < touchedPosition + 1; j++) {
+                                                changeSate(cells.get(j), j);
+                                            }
+
+                                        }
+                                    }else {
+                                        if(touchedPosition == checkedFirstPos){
+                                            changeSate(cells.get(touchedPosition),touchedPosition);
+                                        }else if (touchedPosition <= checkLastPos) {
+                                            for (int j = touchedPosition; j <= checkLastPos; j++) {
+
+                                                changeSate(cells.get(j), j);
+                                            }
+
+                                        } else {
+                                            for (int j = checkLastPos + 1; j < touchedPosition + 1; j++) {
+                                                changeSate(cells.get(j), j);
+                                            }
+
+                                        }
+
                                     }
-
-                                } else {
-                                    for (int j = checkLastPos +1; j < touchedPosition + 1; j++) {
-                                        changeSate(cells.get(j), j);
-                                    }
-
-                                }
-
                                 }
                             }else {
                                 changeSate(cells.get(touchedPosition), touchedPosition);
+                                //sendDataToFragment(touchedPosition,cells.get(touchedPosition) );
                             }
 
-                            // check if menu is launched if not,  launch it
-                            if(!statusSingleton.isMenuCreated()) {
-                                launchMultiSelectMenu();
-                                statusSingleton.setMenuCreated(true);
-                            }
-                         /*   if (!isDoneOnce) {
+
+                            if (!isDoneOnce) {
                                 sendDataToFragment(touchedPosition, cells.get(touchedPosition));
                                 isDoneOnce = true;
-                            }*/
+                            }
 
                             return true;
 
@@ -185,7 +302,7 @@ public class CalendarFragment extends Fragment  {
 
                     return true;
                 }
-            });
+            });*/
         }
         else{
             grid.setOnTouchListener(null);
@@ -202,13 +319,25 @@ public class CalendarFragment extends Fragment  {
 
     }
     // change state of GridDateModel selected and set right color on gridview
-    public void changeSate(GridDateModel selectedDay, int position) {
+    public void changeSate(GridDateModel selectedDay, int position, float x, float y) {
+        startX = x;
+        startY = y;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(selectedDay.getDate());
+        int cellPosition;
+        StatusSingleton status = StatusSingleton.getInstance();
+        if(status.isInDayView()){
+            cellPosition = 0;
+        }
+        else if (status.isInMonthView()){
+            cellPosition = 15;
+        }
+        else cellPosition = 02;
         if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
                 && calendar.get(Calendar.DAY_OF_WEEK )!= Calendar.SUNDAY
-                && selectedDay.getDate().getMonth() == cells.get(15).getDate().getMonth()) {
+                && selectedDay.getDate().getMonth() == cells.get(cellPosition).getDate().getMonth()) {
             if (!selectedDay.isState()) {
+
                 grid.getChildAt(position).setBackgroundResource(R.color.SELECTING_COLOR);
                 selectedDay.setState(true);
 
@@ -251,8 +380,41 @@ public class CalendarFragment extends Fragment  {
     }
     // get date to show on top
     public GridDateModel getCurrentDate(){
-        return this.cells.get(15);
+        StatusSingleton status = StatusSingleton.getInstance();
+        if(status.isInMonthView()) {
+            return this.cells.get(15);
+        }
+        else if(status.isInDayView()){
+            return new GridDateModel(this.dayCalendar.getTime());
+        }
+        // Week place
+        else return null;
     }
+    public boolean checkDistance(float x, float y, float deltaX, float deltaY, int width, int height) {
+        float diffX = 0;
+        float diffY = 0;
+        diffX = Math.abs(deltaX - x);
+        diffY = Math.abs(deltaY - y);
+        if(diffX>width -width * 0.15 || diffY >height -height * 0.15)
+            return true;
+        else
+            return false;
+
+
+    }
+    class CreateAndSetMonthAdapter extends AsyncTask<Void,Void,Void>{
+
+    @Override
+    protected Void doInBackground(Void... params) {
+        calendarAdapter = new MonthCalendarAdapter(getContext(), cells);
+        grid.setNumColumns(7);
+        MainActivity activity = (MainActivity)getActivity();
+        MainActivityCallBackInterface mainActivityCallBackInterface = (MainActivityCallBackInterface)activity;
+        calendarAdapter.setCallback(mainActivityCallBackInterface);
+        grid.setAdapter(calendarAdapter);
+        return null;
+    }
+}
 
 
 

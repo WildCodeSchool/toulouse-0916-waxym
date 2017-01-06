@@ -80,7 +80,7 @@ public class SlidingListFragment extends DialogFragment {
                 if (isContractSelected)
             addSelectedContractToSelectedDays();
                 isEraseChoice = false;
-                complete.setBackgroundColor(Color.BLUE);
+                complete.setBackgroundResource(R.drawable.button2_selected);
                 erase.setBackgroundResource(R.drawable.button);
             }
         });
@@ -92,7 +92,7 @@ public class SlidingListFragment extends DialogFragment {
                 if (isContractSelected)
                 addSelectedContractToSelectedDays();
                 isEraseChoice = true;
-                erase.setBackgroundColor(Color.BLUE);
+                erase.setBackgroundResource(R.drawable.button_selected);
                 complete.setBackgroundResource(R.drawable.button2);
             }
         });
