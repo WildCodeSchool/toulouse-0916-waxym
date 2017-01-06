@@ -75,8 +75,8 @@ public class CustomDayAdapter extends BaseAdapter {
                 if(this.dayEvents.size() > 0) {
                     for (int i = 0; i < this.dayEvents.size(); i++) {
                         if (this.dayEvents.get(i).getMorning() == 1) {
-                            halfDay.setText(this.dayEvents.get(0).getContractNumber() + " " + this.dayEvents.get(0).getActivity());
-                            gd.setColor(Color.parseColor(this.dayEvents.get(0).getActivityColor()));
+                            halfDay.setText(this.dayEvents.get(i).getContractNumber() + " " + this.dayEvents.get(i).getActivity());
+                            gd.setColor(Color.parseColor(this.dayEvents.get(i).getActivityColor()));
                             gd.setStroke(100, Color.parseColor("#FFFFFF"));
                             halfDay.setBackgroundDrawable(gd);
 
