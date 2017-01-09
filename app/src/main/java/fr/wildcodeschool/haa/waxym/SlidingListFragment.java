@@ -132,6 +132,7 @@ public class SlidingListFragment extends DialogFragment {
         selectedDays.get(i).setActivity(selectedContract.getActivityName());
         selectedDays.get(i).setActivityColor(selectedContract.getActivityColor());
         selectedDays.get(i).setUserId(1);
+        selectedDays.get(i).setSendState(Constants.NOT_SENDED);
     }
     }
     private void writeInDatabase() throws ParseException {

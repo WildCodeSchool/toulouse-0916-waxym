@@ -154,6 +154,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
             this.selectedList.get(i).setActivity(Constants.CLEAR_ACTIVITY);
             this.selectedList.get(i).setActivityColor("#" + getResources().getString(R.color.white).substring(3));
             this.selectedList.get(i).setUserId(StatusSingleton.getInstance().getCurrentUserId());
+            this.selectedList.get(i).setSendState(Constants.NOT_SENDED);
             DBHandler mDBHandler = new DBHandler(getActivity().getBaseContext());
             mDBHandler.setEventEraser(this.selectedList.get(i));
         }
