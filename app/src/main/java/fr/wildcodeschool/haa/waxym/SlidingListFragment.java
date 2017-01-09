@@ -44,7 +44,7 @@ public class SlidingListFragment extends DialogFragment {
 
         final View view = inflater.inflate(R.layout.sliding_fragment_layout, container, false);
         this.mHandler = new DBHandler(view.getContext());
-        this.mesContrats = this.mHandler.getUserActivitiesList(1);
+        this.mesContrats = this.mHandler.getUserActivitiesList();
 
 
 
@@ -137,6 +137,14 @@ public class SlidingListFragment extends DialogFragment {
     private void writeInDatabase() throws ParseException {
         for (int i = 0; i < this.selectedDays.size();i++){
             if (!this.isEraseChoice){
+               ArrayList<DayStuffModel> lastSelectedDayevents =  mHandler.getDayEvents(StatusSingleton.getInstance().getCurrentUserId(), this.selectedDays.get(i).getDate());
+                if (lastSelectedDayevents.size() >0){
+                    for (int j = 0; j < lastSelectedDayevents.size() ; j ++){
+                        if (lastSelectedDayevents.get(j).getActivity().equals(Constants.CLEAR_ACTIVITY)){
+                            mHandler.setEventEraser(selectedDays.get(i));
+                        }
+                    }
+                }
                mHandler.setEventCompleter(selectedDays.get(i));
             }else
                 mHandler.setEventEraser(selectedDays.get(i));
