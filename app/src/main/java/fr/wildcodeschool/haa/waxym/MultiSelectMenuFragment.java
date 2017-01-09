@@ -79,7 +79,7 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
-                resetMultiselect();
+
                 ((MainActivityCallBackInterface) getView().getContext()
                 ).onMethodCallBack();
             }
