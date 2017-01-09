@@ -54,7 +54,7 @@ public class CustomDayAdapter extends BaseAdapter {
         mDBHandler = new DBHandler(context);
 
         try{
-            this.dayEvents = this.mDBHandler.getDayEvents(1,days.get(0).getDate());
+            this.dayEvents = this.mDBHandler.getDayEvents(StatusSingleton.getInstance().getCurrentUserId(),days.get(0).getDate());
         }
         catch (ParseException e) {
             e.printStackTrace();

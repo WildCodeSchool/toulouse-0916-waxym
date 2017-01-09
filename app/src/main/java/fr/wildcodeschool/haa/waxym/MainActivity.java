@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         return true;
     }
 
+    // return to current da/weeky/month
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();

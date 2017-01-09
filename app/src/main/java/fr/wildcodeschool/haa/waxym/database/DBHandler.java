@@ -183,7 +183,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
 
     }
 
-    public ArrayList<ActivityItemModel> getUserActivitiesList(int userId) {
+    public ArrayList<ActivityItemModel> getUserActivitiesList() {
         ArrayList<ActivityItemModel> activitiesList = new ArrayList<>();
         Calendar from = Calendar.getInstance();
         Calendar to = Calendar.getInstance();
@@ -215,6 +215,28 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
 
 
         return activitiesList;
+    }
+
+    public ArrayList<Integer> getAllUsers(){
+        ArrayList<Integer> userIdList = new ArrayList<>();
+        Cursor cursor = mDatabase.rawQuery("SELECT " + Constants.ID_USER +
+                " FROM " + Constants.USER , null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int id = cursor.getInt(0);
+            userIdList.add(id);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        closeDatabase();
+    return userIdList;
+    }
+    public void newUser(int id, String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues valuesActivity = new ContentValues();
+        valuesActivity.put(Constants.NAME_USER,name);
+        valuesActivity.put(Constants.ID_USER,id);
+        db.insert(Constants.USER,null,valuesActivity);
     }
 
     private Date convertStringToDate(String toDate) throws ParseException {

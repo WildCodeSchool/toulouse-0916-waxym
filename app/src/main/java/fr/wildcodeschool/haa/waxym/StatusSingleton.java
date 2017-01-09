@@ -14,6 +14,7 @@ public class StatusSingleton {
     private boolean isInDayView;
     private Calendar currentDate;
     private int lastMonthPosition;
+    private int currentUserId;
 
     private StatusSingleton() {
         isEditMode = false;
@@ -21,6 +22,7 @@ public class StatusSingleton {
         isInMonthView = true;
         isInDayView = false;
         this.currentDate = Calendar.getInstance();
+        this.currentUserId = 0;
     }
     public static StatusSingleton getInstance(){
         if(mInstance == null)
@@ -76,5 +78,13 @@ public class StatusSingleton {
 
     public void setLastMonthPosition(int lastMonthPosition) {
         this.lastMonthPosition = lastMonthPosition;
+    }
+
+    public int getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(int currentUserId) {
+        this.currentUserId = currentUserId;
     }
 }

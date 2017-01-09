@@ -43,7 +43,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         this.days = days;
         mDBHandler = new DBHandler(getContext());
         try {
-            eventDays = this.mDBHandler.getMonthEvents(1, days.get(15).getDate());
+            eventDays = this.mDBHandler.getMonthEvents(StatusSingleton.getInstance().getCurrentUserId(), days.get(15).getDate());
         } catch (ParseException e) {
             e.printStackTrace();
         }
