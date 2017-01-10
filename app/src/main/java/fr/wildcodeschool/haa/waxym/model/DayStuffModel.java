@@ -19,8 +19,9 @@ public class DayStuffModel implements Parcelable{
     private String userName;
     private int userId;
     private String activityColor;
+    private int sendState;
 
-    public DayStuffModel(Date date, String activity, String contractNumber, String activityColor, int morning, int afternoon, String userName, int userId) {
+    public DayStuffModel(Date date, String activity, String contractNumber, String activityColor, int morning, int afternoon, String userName, int userId, int sendState) {
         this.date = date;
         this.activity = activity;
         this.activityColor = activityColor;
@@ -29,6 +30,7 @@ public class DayStuffModel implements Parcelable{
         this.contractNumber = contractNumber;
         this.userName = userName;
         this.userId = userId;
+        this.sendState = sendState;
     }
 
     public DayStuffModel() {
@@ -42,6 +44,7 @@ public class DayStuffModel implements Parcelable{
         userName = in.readString();
         userId = in.readInt();
         activityColor = in.readString();
+        sendState = in.readInt();
     }
 
     public static final Creator<DayStuffModel> CREATOR = new Creator<DayStuffModel>() {
@@ -120,6 +123,14 @@ public class DayStuffModel implements Parcelable{
         this.activityColor = activityColor;
     }
 
+    public int getSendState() {
+        return sendState;
+    }
+
+    public void setSendState(int sendState) {
+        this.sendState = sendState;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -134,5 +145,6 @@ public class DayStuffModel implements Parcelable{
         dest.writeString(userName);
         dest.writeInt(userId);
         dest.writeString(activityColor);
+        dest.writeInt(sendState);
     }
 }

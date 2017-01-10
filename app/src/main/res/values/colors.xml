@@ -15,4 +15,5 @@
 
     <color name="button_ec">#8080ff</color>
     <color name="button_comp">#85e085</color>
+    <color name="white">#ffffff</color>
 </resources>

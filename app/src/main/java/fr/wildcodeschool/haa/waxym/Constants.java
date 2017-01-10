@@ -5,35 +5,40 @@ package fr.wildcodeschool.haa.waxym;
  */
 
 public class Constants {
-    public static String DBNAME ="database.sqlite";
+    public final static String DBNAME ="database.sqlite";
     //
-    public static String DATE_FORMAT  = "yyyy-MM-dd";
+    public final static String DATE_FORMAT  = "yyyy-MM-dd";
     // table columns names
-    public static String ACTIVITY_COLOR = "activity_color";
-    public static String DATE = "date";
-    public static String DATE_ACTIVITY = "activity.date";
-    public static String NAME_ACTIVITY = "activity_name";
-    public static String CONTRACT_NUMBER = "contract_number";
-    public static String MORNING = "morning";
-    public static String AFTERNOON = "afternoon";
-    public static String ID_USER = "id_user";
-    public static String ID_USER_ACTIVITY = "activity.id_user";
-    public static String ID_USER_USER = "user.id_user";
-    public static String NAME_USER = "name_user";
-    public static String ID_ACTIVITY_TYPE = "id_activity_type";
-    public static String ID_ACTIVITY_TYPE_ACTIVITY_TYPE = "activity_type.id_activity_type";
-    public static String ID_ACTIVITY_TYPE_ACTIVITY = "activity.id_activity_type";
+    public final static String ACTIVITY_COLOR = "activity_color";
+    public final static String DATE = "date";
+    public final static String DATE_ACTIVITY = "activity.date";
+    public final static String NAME_ACTIVITY = "activity_name";
+    public final static String CONTRACT_NUMBER = "contract_number";
+    public final static String MORNING = "morning";
+    public final static String AFTERNOON = "afternoon";
+    public final static String ID_USER = "id_user";
+    public final static String ID_USER_ACTIVITY = "activity.id_user";
+    public final static String ID_USER_USER = "user.id_user";
+    public final static String NAME_USER = "name_user";
+    public final static String ID_ACTIVITY_TYPE = "id_activity_type";
+    public final static String ID_ACTIVITY_TYPE_ACTIVITY_TYPE = "activity_type.id_activity_type";
+    public final static String ID_ACTIVITY_TYPE_ACTIVITY = "activity.id_activity_type";
+    public final static String ACTIVITY_SEND_STATE = "activity.send_state";
+
+    public final static String SEND_STATE = "send_state";
     // table names
-    public static String ACTIVITY = "activity";
-    public static String ACTIVITY_TYPE = "activity_type";
-    public static String USER = "user";
+    public final static String ACTIVITY = "activity";
+    public final static String ACTIVITY_TYPE = "activity_type";
+    public final static String USER = "user";
 
     //Id error
-    public static int ID_ERROR = 404;
+    public final static int ID_ERROR = 404;
 
     //other
-    public static final String POSITION_KEY= "Month";
-    public static String SELECTED_DAYS = "selected";
-    public static int TOTAL_SLIDES = 60;
+    public final static String POSITION_KEY= "Month";
+    public final static String SELECTED_DAYS = "selected";
+    public final static int TOTAL_SLIDES = 60;
+    public final static String CLEAR_ACTIVITY = "clearEvilOfDoom";
+    public final static int NOT_SENDED = 1;
 
 }

@@ -67,6 +67,7 @@ public class LogActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
+                        StatusSingleton.getInstance().setCurrentUserId(1);
                         onLoginSuccess();
                         // onLoginFailed();
                         progressDialog.dismiss();

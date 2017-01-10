@@ -13,9 +13,19 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:background="@drawable/button_clear_animation"
+            android:text="Vider"
+            android:textColor="#CC0033"
+            android:layout_marginTop="10sp"
+            android:layout_weight="0.10"
+            android:layout_marginRight="10sp"
+            android:id="@+id/clear"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/buttonannuler"
             android:layout_marginTop="10sp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.4"
             android:id="@+id/cancel"
             android:text="Annuler"
             android:textColor="#fff"/>
@@ -23,7 +33,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
-            android:layout_weight="0.5"
+            android:layout_weight="0.4"
+            android:layout_marginLeft="5sp"
             android:background="@drawable/buttonvalider"
             android:id="@+id/valid"
             android:text="Valider"

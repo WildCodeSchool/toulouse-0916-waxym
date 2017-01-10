@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         return true;
     }
 
+    // return to current da/weeky/month
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
@@ -376,10 +377,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
         return calendar;
     }
-@Override
-    public void onBackPressed(){
+    @Override
+        public void onBackPressed(){
 
-}
+    }
     public void changeSwipeMode(){
         StatusSingleton status = StatusSingleton.getInstance();
         if (status.isEditMode()){

@@ -53,10 +53,9 @@ public class CustomDayAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         mDBHandler = new DBHandler(context);
 
-        try{
-            this.dayEvents = this.mDBHandler.getDayEvents(1,days.get(0).getDate());
-        }
-        catch (ParseException e) {
+        try {
+            this.dayEvents = this.mDBHandler.getDayEvents(StatusSingleton.getInstance().getCurrentUserId(), days.get(0).getDate());
+        } catch (ParseException e) {
             e.printStackTrace();
         }
         DayStuffModel thisDay = new DayStuffModel();
@@ -64,45 +63,47 @@ public class CustomDayAdapter extends BaseAdapter {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View gridView;
-        if (convertView == null){
-            gridView = inflater.inflate(R.layout.activity_day,null);
+        if (convertView == null) {
+            gridView = inflater.inflate(R.layout.activity_day, null);
             TextView halfDay = (TextView) gridView.findViewById(R.id.activity_day_text);
             GradientDrawable gd = new GradientDrawable();
             gd.setCornerRadius(100);
-            if(position == 0){
+            if (position == 0) {
                 halfDay.setText("Matin");
                 halfDay.setTextColor(Color.BLACK);
-                if(this.dayEvents.size() > 0) {
+                if (this.dayEvents.size() > 0) {
                     for (int i = 0; i < this.dayEvents.size(); i++) {
-                        if (this.dayEvents.get(i).getMorning() == 1) {
-                            halfDay.setText(this.dayEvents.get(i).getContractNumber() + " " + this.dayEvents.get(i).getActivity());
-                            gd.setColor(Color.parseColor(this.dayEvents.get(i).getActivityColor()));
-                            gd.setStroke(100, Color.parseColor("#FFFFFF"));
-                            halfDay.setBackgroundDrawable(gd);
+                        if (!this.dayEvents.get(i).getActivity().equals(Constants.CLEAR_ACTIVITY)) {
+                            if (this.dayEvents.get(i).getMorning() == 1) {
+                                halfDay.setText(this.dayEvents.get(i).getContractNumber() + " " + this.dayEvents.get(i).getActivity());
+                                gd.setColor(Color.parseColor(this.dayEvents.get(i).getActivityColor()));
+                                gd.setStroke(100, Color.parseColor("#FFFFFF"));
+                                halfDay.setBackgroundDrawable(gd);
 
 
+                            }
                         }
                     }
                 }
-            }
-            else if (position == 1){
+            } else if (position == 1) {
                 halfDay.setText("Après-midi");
                 halfDay.setTextColor(Color.BLACK);
 
-                if (dayEvents.size() !=0) {
+                if (dayEvents.size() != 0) {
                     for (int i = 0; i < this.dayEvents.size(); i++) {
-                        if (this.dayEvents.get(i).getAfternoon() == 1) {
-                            halfDay.setText(this.dayEvents.get(i).getContractNumber() + " " + this.dayEvents.get(i).getActivity());
-                            gd.setColor(Color.parseColor(this.dayEvents.get(i).getActivityColor()));
-                            gd.setStroke(100, Color.parseColor("#FFFFFF"));
-                            halfDay.setBackgroundDrawable(gd);
+                        if (!this.dayEvents.get(i).getActivity().equals(Constants.CLEAR_ACTIVITY)) {
+                            if (this.dayEvents.get(i).getAfternoon() == 1) {
+                                halfDay.setText(this.dayEvents.get(i).getContractNumber() + " " + this.dayEvents.get(i).getActivity());
+                                gd.setColor(Color.parseColor(this.dayEvents.get(i).getActivityColor()));
+                                gd.setStroke(100, Color.parseColor("#FFFFFF"));
+                                halfDay.setBackgroundDrawable(gd);
 
+                            }
                         }
                     }
                 }
             }
-        }
-        else {
+        } else {
             gridView = (View) convertView;
         }
 

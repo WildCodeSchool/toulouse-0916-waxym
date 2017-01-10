@@ -77,7 +77,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         // sqlite request : SQLiteQuery: SELECT activity.date, activity_name, contract_number,morning, afternoon, name_user, id_user FROM user,activity,activity_type
         // WHERE user.id_user = activity.id_user AND user.id_user = '1' AND activity.id_activity_type = activity_type.id_activity_type AND date >= entered date -1 month And date <= entered date +1 month
         Cursor cursor = mDatabase.rawQuery("SELECT " + Constants.DATE_ACTIVITY + ", " + Constants.NAME_ACTIVITY + ", " + Constants.CONTRACT_NUMBER +
-                ", " + Constants.ACTIVITY_COLOR + "," + Constants.MORNING + ", " + Constants.AFTERNOON + ", " + Constants.NAME_USER + ", " + Constants.ID_USER_USER +
+                ", " + Constants.ACTIVITY_COLOR + "," + Constants.MORNING + ", " + Constants.AFTERNOON + ", " + Constants.NAME_USER + ", " + Constants.ID_USER_USER + ", " + Constants.ACTIVITY_SEND_STATE +
                 " FROM " + Constants.USER + "," + Constants.ACTIVITY + "," + Constants.ACTIVITY_TYPE +
                 " WHERE " + Constants.ID_USER_USER + " = " + Constants.ID_USER_ACTIVITY +
                 " AND " + Constants.ID_USER_ACTIVITY + " = " + "'" + user + "'" +
@@ -87,7 +87,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             dayStuff = new DayStuffModel(convertStringToDate(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4),
-                    cursor.getInt(5), cursor.getString(6), cursor.getInt(7));
+                    cursor.getInt(5), cursor.getString(6), cursor.getInt(7), cursor.getInt(8));
             eventsList.add(dayStuff);
             cursor.moveToNext();
         }
@@ -106,7 +106,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         //SELECT activity.date, activity_name, contract_number,morning, afternoon, name_user, user.id_user FROM user,activity,activity_type
         //WHERE user.id_user = activity.id_user AND user.id_user = '1' AND activity.id_activity_type = activity_type.id_activity_type AND activity.date = '2016-11-30'        // WHERE user.id_user = activity.id_user AND user.id_user = '1' AND activity.id_activity_type = activity_type.id_activity_type AND date >= entered date -1 month And date <= entered date +1 month
         Cursor cursor = mDatabase.rawQuery("SELECT " + Constants.DATE_ACTIVITY + ", " + Constants.NAME_ACTIVITY + ", " + Constants.CONTRACT_NUMBER +
-                ", " + Constants.ACTIVITY_COLOR + "," + Constants.MORNING + ", " + Constants.AFTERNOON + ", " + Constants.NAME_USER + ", " + Constants.ID_USER_USER +
+                ", " + Constants.ACTIVITY_COLOR + "," + Constants.MORNING + ", " + Constants.AFTERNOON + ", " + Constants.NAME_USER + ", " + Constants.ID_USER_USER + ", " + Constants.ACTIVITY_SEND_STATE +
                 " FROM " + Constants.USER + "," + Constants.ACTIVITY + "," + Constants.ACTIVITY_TYPE +
                 " WHERE " + Constants.ID_USER_USER + " = " + Constants.ID_USER_ACTIVITY +
                 " AND " + Constants.ID_USER_ACTIVITY + " = " + "'" + user + "'" +
@@ -115,7 +115,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             dayStuff = new DayStuffModel(convertStringToDate(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4),
-                    cursor.getInt(5), cursor.getString(6), cursor.getInt(7));
+                    cursor.getInt(5), cursor.getString(6), cursor.getInt(7), cursor.getInt(8));
             eventsList.add(dayStuff);
             cursor.moveToNext();
         }
@@ -138,6 +138,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             valuesActivity.put(Constants.CONTRACT_NUMBER, dayEvent.getContractNumber());
             valuesActivity.put(Constants.ACTIVITY_COLOR, dayEvent.getActivityColor());
             valuesActivity.put(Constants.ID_ACTIVITY_TYPE, determineActyvityTypeID(dayEvent));
+            valuesActivity.put(Constants.SEND_STATE, dayEvent.getSendState());
 
             String SQLActivity = Constants.DATE + " = '" + this.sdf.format(dayEvent.getDate()) + "' " +
                     "AND " + Constants.ID_USER+ " = '" + dayEvent.getUserId() +"'" +
@@ -153,6 +154,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             valuesActivity.put(Constants.ID_ACTIVITY_TYPE, determineActyvityTypeID(dayEvent));
             valuesActivity.put(Constants.DATE, this.sdf.format(dayEvent.getDate()));
             valuesActivity.put(Constants.ID_USER, dayEvent.getUserId());
+            valuesActivity.put(Constants.SEND_STATE, dayEvent.getSendState());
 
             db.insert(Constants.ACTIVITY, null, valuesActivity);
             db.close();
@@ -174,6 +176,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             valuesActivity.put(Constants.ID_ACTIVITY_TYPE, determineActyvityTypeID(dayEvent));
             valuesActivity.put(Constants.DATE, this.sdf.format(dayEvent.getDate()));
             valuesActivity.put(Constants.ID_USER, dayEvent.getUserId());
+            valuesActivity.put(Constants.SEND_STATE, dayEvent.getSendState());
 
             db.insert(Constants.ACTIVITY, null, valuesActivity);
             db.close();
@@ -183,7 +186,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
 
     }
 
-    public ArrayList<ActivityItemModel> getUserActivitiesList(int userId) {
+    public ArrayList<ActivityItemModel> getUserActivitiesList() {
         ArrayList<ActivityItemModel> activitiesList = new ArrayList<>();
         Calendar from = Calendar.getInstance();
         Calendar to = Calendar.getInstance();
@@ -215,6 +218,47 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
 
 
         return activitiesList;
+    }
+    public ArrayList<DayStuffModel> getNotSendedActivities() throws ParseException {
+        ArrayList<DayStuffModel> notSendedList = new ArrayList<>();
+        DayStuffModel dayStuff;
+        openDatabase();
+        Cursor cursor = mDatabase.rawQuery("SELECT " + Constants.DATE_ACTIVITY + ", " + Constants.NAME_ACTIVITY + ", " + Constants.CONTRACT_NUMBER +
+                ", " + Constants.ACTIVITY_COLOR + "," + Constants.MORNING + ", " + Constants.AFTERNOON + ", " + Constants.NAME_USER + ", " + Constants.ID_USER_USER + ", " + Constants.SEND_STATE +
+                " FROM " + Constants.USER + "," + Constants.ACTIVITY + "," + Constants.ACTIVITY_TYPE +
+                " WHERE " + Constants.SEND_STATE +" = '" + Constants.ACTIVITY_SEND_STATE + "'", null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            dayStuff = new DayStuffModel(convertStringToDate(cursor.getString(0)), cursor.getString(1), cursor.getString(2), cursor.getString(3), cursor.getInt(4),
+                    cursor.getInt(5), cursor.getString(6), cursor.getInt(7), cursor.getInt(8));
+            notSendedList.add(dayStuff);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        closeDatabase();
+        return notSendedList;
+
+    }
+    public ArrayList<Integer> getAllUsers(){
+        ArrayList<Integer> userIdList = new ArrayList<>();
+        Cursor cursor = mDatabase.rawQuery("SELECT " + Constants.ID_USER +
+                " FROM " + Constants.USER , null);
+        cursor.moveToFirst();
+        while (!cursor.isAfterLast()) {
+            int id = cursor.getInt(0);
+            userIdList.add(id);
+            cursor.moveToNext();
+        }
+        cursor.close();
+        closeDatabase();
+    return userIdList;
+    }
+    public void newUser(int id, String name){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues valuesActivity = new ContentValues();
+        valuesActivity.put(Constants.NAME_USER,name);
+        valuesActivity.put(Constants.ID_USER,id);
+        db.insert(Constants.USER,null,valuesActivity);
     }
 
     private Date convertStringToDate(String toDate) throws ParseException {
