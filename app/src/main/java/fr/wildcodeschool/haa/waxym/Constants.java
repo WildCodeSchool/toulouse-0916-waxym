@@ -41,4 +41,11 @@ public class Constants {
     public final static String CLEAR_ACTIVITY = "clearEvilOfDoom";
     public final static int NOT_SENDED = 1;
 
+    //Code server
+    public final static int OK = 0;
+    public final static int USER_KNOWED = 1001;
+    public final static int STATUS_CODE_OK = 200;
+    public final static int DSTART_DTEND_UNKNOW = 1002;
+    public final static int incoherent_content = 1003;
+
 }
