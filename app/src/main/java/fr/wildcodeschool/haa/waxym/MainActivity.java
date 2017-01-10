@@ -377,10 +377,10 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
         return calendar;
     }
-@Override
-    public void onBackPressed(){
+    @Override
+        public void onBackPressed(){
 
-}
+    }
     public void changeSwipeMode(){
         StatusSingleton status = StatusSingleton.getInstance();
         if (status.isEditMode()){

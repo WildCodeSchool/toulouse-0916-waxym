@@ -2,10 +2,13 @@ package fr.wildcodeschool.haa.waxym;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.graphics.Typeface;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.TextView;
@@ -34,6 +37,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
     private ArrayList<GridDateModel> days;
     private MainActivityCallBackInterface callback;
     private StatusSingleton status;
+    private int height;
 
     public MonthCalendarAdapter(Context context, ArrayList<GridDateModel> days)
     {
@@ -41,12 +45,19 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.days = days;
+
         mDBHandler = new DBHandler(getContext());
         try {
             eventDays = this.mDBHandler.getMonthEvents(StatusSingleton.getInstance().getCurrentUserId(), days.get(15).getDate());
         } catch (ParseException e) {
             e.printStackTrace();
         }
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        this.height = size.y;
 
     }
 
@@ -126,12 +137,12 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         // set text
         dayDateView.setText(String.valueOf(date.getDate()));
         //set row height
-        view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT,300));
+        view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT, (int) (height/8.5)));
         status = StatusSingleton.getInstance();
         if (!status.isEditMode()) {
             Calendar currentDay = Calendar.getInstance();
             currentDay.setTime(days.get(position).getDate());
-            if (currentDay.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && currentDay.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY) {
+            if (currentDay.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY && currentDay.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY && month == days.get(15).getDate().getMonth()) {
                 final View finalView = view;
                 view.setOnClickListener(new View.OnClickListener() {
                     @Override
