@@ -19,18 +19,21 @@ public interface SuperInterface {
     Call<ActivitiesModel> getActivities(@Path("userId") long userId);
 
     @POST("login")
-    Call<UserModel> login(@Body UserModel login);
+    Call<UserModel> postlogin(@Body UserModel login);
 
-   // @GET("activities/{userId}");
-   // Call<> activities(@Path(""))
+    @GET("dayactivities/{userId}/{dtstart}/{dtend}")
+    Call<DayActivitiesModel> getDayActivities(@Path("userId") long userid, @Path("dtstart") long dtstart, @Path("dtend") long dtend );
 
-    @GET("http://www.waxym.com/employeah/v1/dayactivities/{userId}/{dtstart}/{dtend}")
-    Call<DayActivitiesModel> getUserId();
-
-    @POST("http://www.waxym.com/employeah/v1/dayactivities/{userId}")
-    Call<DayActivitiesModel> addUserId(@Body DayActivitiesModel );
+    @POST("dayactivities/{userId}")
+    Call<DayActivitiesModel> addActivities(@Body DayActivitiesModel dayActivities);
 
     @POST("dayactivities/register")
-    Call<UserModel> createregister(@Body UserModel register);
+    Call<UserModel> createRegister(@Body UserModel register);
+
+    @POST("activity")
+    Call<ActivitiesModel> addActivity(@Body ActivitiesModel activity);
+
+    @POST("activities/{userId}/add")
+    Call<ActivitiesModel> addUser(@Body ActivitiesModel addUser);
 
 }
