@@ -47,5 +47,7 @@ public class Constants {
     public final static int STATUS_CODE_OK = 200;
     public final static int DSTART_DTEND_UNKNOW = 1002;
     public final static int incoherent_content = 1003;
+    public final static String BASE_URL = "http://www.waxym.com/employeah/v1";
+
 
 }
