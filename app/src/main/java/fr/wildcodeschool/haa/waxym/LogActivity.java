@@ -13,15 +13,70 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+
+import fr.wildcodeschool.haa.waxym.model.UserModel;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
+
 
 public class LogActivity extends AppCompatActivity {
     private static final String TAG = "LogActivity";
     private Button btn_login;
     private EditText textEmailAddress;
     private EditText textPassword;
+    private MessageDigest digest;
+    private String encryptedPassword;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+
+        final String BASE_URL = "http://api.myservice.com/";
+
+        Gson gson = new GsonBuilder()
+                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
+                .create();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl(Constants.BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .build();
+        SuperInterface apiService = retrofit.create(SuperInterface.class);
+        String password = "";
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
+        try {
+            encryptedPassword = new String(hash,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        UserModel userModel = new UserModel("TestUser", this.encryptedPassword );
+        Call<JsonObject> call  = apiService.createregister(userModel);
+        call.enqueue(new Callback<JsonObject>() {
+            @Override
+            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
+
+            }
+
+            @Override
+            public void onFailure(Call<JsonObject> call, Throwable t) {
+
+            }
+        });
         //no action bar
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
