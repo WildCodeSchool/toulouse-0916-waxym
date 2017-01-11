@@ -1,5 +1,7 @@
 package fr.wildcodeschool.haa.waxym;
 
+import com.google.gson.JsonObject;
+
 import fr.wildcodeschool.haa.waxym.model.ActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.DayActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.UserModel;
@@ -16,24 +18,24 @@ import retrofit2.http.Path;
 public interface SuperInterface {
 
     @GET("activities/{userId}")
-    Call<ActivitiesModel> getActivities(@Path("userId") long userId);
+    Call<JsonObject> getActivities(@Path("userId") long userId);
 
     @POST("login")
-    Call<UserModel> postlogin(@Body UserModel login);
+    Call<JsonObject> postlogin(@Body UserModel login);
 
     @GET("dayactivities/{userId}/{dtstart}/{dtend}")
-    Call<DayActivitiesModel> getDayActivities(@Path("userId") long userid, @Path("dtstart") long dtstart, @Path("dtend") long dtend );
+    Call<JsonObject> getDayActivities(@Path("userId") long userid, @Path("dtstart") long dtstart, @Path("dtend") long dtend );
 
     @POST("dayactivities/{userId}")
-    Call<DayActivitiesModel> addActivities(@Body DayActivitiesModel dayActivities);
+    Call<JsonObject> addActivities(@Body DayActivitiesModel dayActivities);
 
     @POST("dayactivities/register")
-    Call<UserModel> createRegister(@Body UserModel register);
+    Call<JsonObject> createRegister(@Body UserModel register);
 
     @POST("activity")
-    Call<ActivitiesModel> addActivity(@Body ActivitiesModel activity);
+    Call<JsonObject> addActivity(@Body ActivitiesModel activity);
 
     @POST("activities/{userId}/add")
-    Call<ActivitiesModel> addUser(@Body ActivitiesModel addUser);
+    Call<JsonObject> addUser(@Body ActivitiesModel addUser);
 
 }
