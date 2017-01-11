@@ -30,7 +30,7 @@ public interface SuperInterface {
     Call<JsonObject> addActivities(@Body DayActivitiesModel dayActivities);
 
     @POST("dayactivities/register")
-    Call<JsonObject> createRegister(@Body UserModel register);
+    Call<Long> createRegister(@Body UserModel register);
 
     @POST("activity")
     Call<JsonObject> addActivity(@Body ActivitiesModel activity);

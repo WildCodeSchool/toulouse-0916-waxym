@@ -65,15 +65,17 @@ public class LogActivity extends AppCompatActivity {
             e.printStackTrace();
         }
         UserModel userModel = new UserModel("TestUser", this.encryptedPassword );
-        Call<JsonObject> call  = apiService.createRegister(userModel);
-        call.enqueue(new Callback<JsonObject>() {
+        Call<Long> call  = apiService.createRegister(userModel);
+
+        call.enqueue(new Callback<Long>() {
             @Override
-            public void onResponse(Call<JsonObject> call, Response<JsonObject> response) {
-                    long  userId =  response.body();
+            public void onResponse(Call<Long> call, Response<Long> response) {
+                long id = response.body();
+                response.code();
             }
 
             @Override
-            public void onFailure(Call<JsonObject> call, Throwable t) {
+            public void onFailure(Call<Long> call, Throwable t) {
 
             }
         });
