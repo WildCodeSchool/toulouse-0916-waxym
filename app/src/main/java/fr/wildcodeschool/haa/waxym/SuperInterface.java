@@ -25,7 +25,7 @@ public interface SuperInterface {
     Call<JsonObject> getActivities(@Path("userId") long userId);
 
     @POST("userID")
-    Call<JsonObject> postlogin(@Body UserModel login);
+    Call<IdModel> login(@Body UserModel login);
 
     @GET("dayactivities/{userId}/{dtstart}/{dtend}")
     Call<JsonObject> getDayActivities(@Path("userId") long userid, @Path("dtstart") long dtstart, @Path("dtend") long dtend );

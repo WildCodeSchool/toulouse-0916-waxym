@@ -17,6 +17,7 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 import fr.wildcodeschool.haa.waxym.model.UserModel;
 import okhttp3.Headers;
@@ -36,6 +37,7 @@ public class LogActivity extends AppCompatActivity {
     Headers header;
     long resultCode;
     long idTest;
+    String headTest;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,22 +48,6 @@ public class LogActivity extends AppCompatActivity {
                 .create();*/
 
 
-        String password = "";
-        try {
-            digest = MessageDigest.getInstance("SHA-256");
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        byte[] hash = digest.digest(password.getBytes(StandardCharsets.UTF_8));
-        try {
-            encryptedPassword = new String(hash,"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        }
-        SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
-        UserModel userModel = new UserModel("TestUser", this.encryptedPassword );
-        Call<IdModel> call  = apiService.newUser(userModel);
-        new NetworkCall().execute(call);
 
 
         //no action bar
@@ -86,6 +72,22 @@ public class LogActivity extends AppCompatActivity {
 
     public void login() {
         Log.d(TAG, "Login");
+
+        try {
+            digest = MessageDigest.getInstance("SHA-256");
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        byte[] hash = digest.digest(textPassword.getText().toString().getBytes(StandardCharsets.UTF_8));
+        try {
+            encryptedPassword = new String(hash,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
+        UserModel userModel = new UserModel(textEmailAddress.getText().toString(), this.encryptedPassword );
+        Call<IdModel> call  = apiService.newUser(userModel);
+        new NetworkCall().execute(call);
 
         if (!validate()) {
             onLoginFailed();
@@ -167,10 +169,10 @@ public class LogActivity extends AppCompatActivity {
                 Response<IdModel> response = call.execute();
                 int prout = response.code();
                 Long id = response.body().getUserID();
+                headTest = new String(response.headers().get("X-Employeah-RC"));
+
                 Headers headers = response.headers();
-                   String message= response.message();
-                   ResponseBody responseBody= response.errorBody();
-                okhttp3.Response response1 = response.raw();
+                String message= response.message();
                 return id;
             } catch (IOException e) {
                 e.printStackTrace();
