@@ -47,9 +47,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     private int viewcurrentPosition = Constants.TOTAL_SLIDES/2;
     private Spinner spin;
     private MenuItem mitem;
-    CalendarFragment calendarFragment;
-    CalendarFragment leftCalendarFragment;
-    CalendarFragment rightCalendarFragment;
+    private CalendarFragment calendarFragment;
+    private CalendarFragment leftCalendarFragment;
+    private CalendarFragment rightCalendarFragment;
 
 
 

@@ -2,6 +2,7 @@ package fr.wildcodeschool.haa.waxym;
 
 import android.app.DialogFragment;
 import android.graphics.Color;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,12 +14,17 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.ActivityItemModel;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
+import fr.wildcodeschool.haa.waxym.model.UserModel;
+import okhttp3.Headers;
+import retrofit2.Call;
+import retrofit2.Response;
 
 
 /**
@@ -150,6 +156,7 @@ public class SlidingListFragment extends DialogFragment {
             }else
                 mHandler.setEventEraser(selectedDays.get(i));
         }
+        SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
 
 
     }
@@ -160,6 +167,23 @@ public class SlidingListFragment extends DialogFragment {
 
 
     }
+    private class NetworkCall extends AsyncTask<Call, Void, Long> {
+        @Override
+        protected Long doInBackground(Call... params) {
+            try {
+                Call<IdModel> call = params[0];
+                Response<IdModel> response = call.execute();
 
+                return response.body().getUserID();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Long result) {
+        }
+    }
 }
 
