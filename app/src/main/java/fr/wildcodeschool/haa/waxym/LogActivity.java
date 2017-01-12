@@ -1,7 +1,7 @@
 package fr.wildcodeschool.haa.waxym;
 
-import android.app.ActionBar;
 import android.app.ProgressDialog;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -10,24 +10,20 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import fr.wildcodeschool.haa.waxym.model.UserModel;
+import okhttp3.Headers;
+import okhttp3.ResponseBody;
+import okhttp3.internal.framed.Header;
 import retrofit2.Call;
-import retrofit2.Callback;
 import retrofit2.Response;
-import retrofit2.Retrofit;
-import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class LogActivity extends AppCompatActivity {
@@ -37,21 +33,19 @@ public class LogActivity extends AppCompatActivity {
     private EditText textPassword;
     private MessageDigest digest;
     private String encryptedPassword;
+    Headers header;
+    long resultCode;
+    long idTest;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
-        final String BASE_URL = "http://api.myservice.com/";
 
-        Gson gson = new GsonBuilder()
+        /*Gson gson = new GsonBuilder()
                 .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                .create();
+                .create();*/
 
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl(Constants.BASE_URL)
-                .addConverterFactory(GsonConverterFactory.create(gson))
-                .build();
-        SuperInterface apiService = retrofit.create(SuperInterface.class);
+
         String password = "";
         try {
             digest = MessageDigest.getInstance("SHA-256");
@@ -64,21 +58,12 @@ public class LogActivity extends AppCompatActivity {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
+        SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
         UserModel userModel = new UserModel("TestUser", this.encryptedPassword );
-        Call<Long> call  = apiService.createRegister(userModel);
+        Call<IdModel> call  = apiService.newUser(userModel);
+        new NetworkCall().execute(call);
 
-        call.enqueue(new Callback<Long>() {
-            @Override
-            public void onResponse(Call<Long> call, Response<Long> response) {
-                long id = response.body();
-                response.code();
-            }
 
-            @Override
-            public void onFailure(Call<Long> call, Throwable t) {
-
-            }
-        });
         //no action bar
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
@@ -174,5 +159,28 @@ public class LogActivity extends AppCompatActivity {
 
         return valid;
     }
+    private class NetworkCall extends AsyncTask<Call, Void, Long> {
+        @Override
+        protected Long doInBackground(Call... params) {
+            try {
+                Call<IdModel> call = params[0];
+                Response<IdModel> response = call.execute();
+                int prout = response.code();
+                Long id = response.body().getUserID();
+                Headers headers = response.headers();
+                   String message= response.message();
+                   ResponseBody responseBody= response.errorBody();
+                okhttp3.Response response1 = response.raw();
+                return id;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
 
+        @Override
+        protected void onPostExecute(Long result) {
+            idTest = result;
+        }
+    }
 }
