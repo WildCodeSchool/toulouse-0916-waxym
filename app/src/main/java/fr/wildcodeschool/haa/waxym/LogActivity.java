@@ -86,7 +86,7 @@ public class LogActivity extends AppCompatActivity {
         }
         SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
         UserModel userModel = new UserModel(textEmailAddress.getText().toString(), this.encryptedPassword );
-        Call<IdModel> call  = apiService.newUser(userModel);
+        Call<IdModel> call  = apiService.login(userModel);
         new NetworkCall().execute(call);
 
         if (!validate()) {

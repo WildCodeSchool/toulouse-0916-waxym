@@ -1,5 +1,7 @@
 package fr.wildcodeschool.haa.waxym;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 
 import java.util.Calendar;
@@ -7,6 +9,7 @@ import java.util.Calendar;
 import fr.wildcodeschool.haa.waxym.model.ActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.DayActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.UserModel;
+import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -24,7 +27,7 @@ public interface SuperInterface {
     @GET("activities/{userId}")
     Call<JsonObject> getActivities(@Path("userId") long userId);
 
-    @POST("userID")
+    @POST("login")
     Call<IdModel> login(@Body UserModel login);
 
     @GET("dayactivities/{userId}/{dtstart}/{dtend}")
@@ -44,7 +47,7 @@ public interface SuperInterface {
 
     @POST("register")
     Call<IdModel> newUser(@Body UserModel userModel);
-
+    public OkHttpClient okClient = new OkHttpClient();
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
