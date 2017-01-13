@@ -15,7 +15,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/button_clear_animation"
             android:text="Vider"
-            android:textColor="#CC0033"
+            android:textColor="#ffff"
             android:layout_marginTop="10sp"
             android:layout_weight="0.10"
             android:layout_marginRight="10sp"

@@ -43,7 +43,7 @@ public interface SuperInterface {
     Call<JsonObject> addActivity(@Body ActivitiesModel activity);
 
     @POST("activities/{userId}/add")
-    Call<JsonObject> addUser(@Body ActivitiesModel addUser);
+    Call<JsonObject> addActivityToUser(@Body ActivitiesModel addActivityToUser);
 
     @POST("register")
     Call<IdModel> newUser(@Body UserModel userModel);

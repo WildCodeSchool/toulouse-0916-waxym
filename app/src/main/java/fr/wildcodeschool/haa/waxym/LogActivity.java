@@ -169,7 +169,7 @@ public class LogActivity extends AppCompatActivity {
                 Response<IdModel> response = call.execute();
                 int prout = response.code();
                 Long id = response.body().getUserID();
-                headTest = new String(response.headers().get("X-Employeah-RC"));
+                headTest = response.headers().get("X-Employeah-RC");
 
                 Headers headers = response.headers();
                 String message= response.message();
