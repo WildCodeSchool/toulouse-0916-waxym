@@ -78,12 +78,15 @@ public class LogActivity extends AppCompatActivity {
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
-        byte[] hash = digest.digest(textPassword.getText().toString().getBytes(StandardCharsets.UTF_8));
-        try {
-            encryptedPassword = new String(hash,"UTF-8");
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
+        digest.update(textPassword.getText().toString().getBytes());
+        byte[] hash = digest.digest();
+        StringBuffer sb = new StringBuffer();
+        for (int i =0; i < hash.length; i++) {
+            sb.append(Integer.toString((hash[i] & 0xff) + 0x100, 16).substring(1));
         }
+
+            encryptedPassword = sb.toString();
+
         SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
         UserModel userModel = new UserModel(textEmailAddress.getText().toString(), this.encryptedPassword );
         Call<IdModel> call  = apiService.login(userModel);

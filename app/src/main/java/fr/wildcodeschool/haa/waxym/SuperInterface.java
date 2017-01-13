@@ -1,10 +1,9 @@
 package fr.wildcodeschool.haa.waxym;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
+
 import com.google.gson.JsonObject;
 
-import java.util.Calendar;
+
 
 import fr.wildcodeschool.haa.waxym.model.ActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.DayActivitiesModel;
