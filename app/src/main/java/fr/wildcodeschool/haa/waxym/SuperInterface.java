@@ -4,6 +4,7 @@ package fr.wildcodeschool.haa.waxym;
 import com.google.gson.JsonObject;
 
 
+import java.util.List;
 
 import fr.wildcodeschool.haa.waxym.model.ActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.DayActivitiesModel;
@@ -24,7 +25,7 @@ import retrofit2.http.Path;
 public interface SuperInterface {
 
     @GET("activities/{userId}")
-    Call<JsonObject> getActivities(@Path("userId") long userId);
+    Call<List<ActivitiesModel>> getActivities(@Path("userId") long userId);
 
     @POST("login")
     Call<IdModel> login(@Body UserModel login);

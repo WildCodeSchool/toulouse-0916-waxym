@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;

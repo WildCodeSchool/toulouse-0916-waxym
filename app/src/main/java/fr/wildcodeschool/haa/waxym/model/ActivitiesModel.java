@@ -34,4 +34,28 @@ public class ActivitiesModel {
         this.contractId = contractId;
         this.color = color;
     }
+
+    public long getId() {
+        return id;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public String getLabel() {
+        return label;
+    }
+
+    public long getClientId() {
+        return clientId;
+    }
+
+    public long getContractId() {
+        return contractId;
+    }
+
+    public String getColor() {
+        return color;
+    }
 }

@@ -3,7 +3,6 @@ package fr.wildcodeschool.haa.waxym.model;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,13 +14,13 @@ public class DayStuffModel implements Parcelable{
     private String activity;
     private int morning;
     private int afternoon;
-    private String contractNumber;
+    private long contractNumber;
     private String userName;
-    private int userId;
+    private long userId;
     private String activityColor;
     private int sendState;
 
-    public DayStuffModel(Date date, String activity, String contractNumber, String activityColor, int morning, int afternoon, String userName, int userId, int sendState) {
+    public DayStuffModel(Date date, String activity, long contractNumber, String activityColor, int morning, int afternoon, String userName, int userId, int sendState) {
         this.date = date;
         this.activity = activity;
         this.activityColor = activityColor;
@@ -40,7 +39,7 @@ public class DayStuffModel implements Parcelable{
         activity = in.readString();
         morning = in.readInt();
         afternoon = in.readInt();
-        contractNumber = in.readString();
+        contractNumber = in.readLong();
         userName = in.readString();
         userId = in.readInt();
         activityColor = in.readString();
@@ -59,11 +58,11 @@ public class DayStuffModel implements Parcelable{
         }
     };
 
-    public int getUserId() {
+    public long getUserId() {
         return userId;
     }
 
-    public void setUserId(int userId) {
+    public void setUserId(long userId) {
         this.userId = userId;
     }
 
@@ -99,11 +98,11 @@ public class DayStuffModel implements Parcelable{
         this.afternoon = afternoon;
     }
 
-    public String getContractNumber() {
+    public long getContractNumber() {
         return contractNumber;
     }
 
-    public void setContractNumber(String contractNumber) {
+    public void setContractNumber(long contractNumber) {
         this.contractNumber = contractNumber;
     }
 
@@ -141,9 +140,9 @@ public class DayStuffModel implements Parcelable{
         dest.writeString(activity);
         dest.writeInt(morning);
         dest.writeInt(afternoon);
-        dest.writeString(contractNumber);
+        dest.writeLong(contractNumber);
         dest.writeString(userName);
-        dest.writeInt(userId);
+        dest.writeLong(userId);
         dest.writeString(activityColor);
         dest.writeInt(sendState);
     }

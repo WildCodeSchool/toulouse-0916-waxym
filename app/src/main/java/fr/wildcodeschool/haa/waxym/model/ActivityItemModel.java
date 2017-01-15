@@ -7,10 +7,10 @@ package fr.wildcodeschool.haa.waxym.model;
 public class ActivityItemModel {
     private String activityName;
     private String activityColor;
-    private String activityNumber;
+    private long activityNumber;
     private boolean isSelected;
 
-    public ActivityItemModel(String activityNumber,String activityName, String activityColor) {
+    public ActivityItemModel(long activityNumber,String activityName, String activityColor) {
         this.activityNumber = activityNumber;
         this.activityName = activityName;
         this.activityColor = activityColor;
@@ -25,11 +25,11 @@ public class ActivityItemModel {
         isSelected = selected;
     }
 
-    public String getActivityNumber() {
+    public long getActivityNumber() {
         return activityNumber;
     }
 
-    public void setActivityNumber(String activityNumber) {
+    public void setActivityNumber(long activityNumber) {
         this.activityNumber = activityNumber;
     }
 

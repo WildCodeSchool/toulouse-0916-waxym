@@ -22,4 +22,16 @@ public class DayActivitiesModel {
         this.amActivityId = amActivityId;
         this.pmActivityId = pmActivityId;
     }
+
+    public String getDay() {
+        return day;
+    }
+
+    public long getAmActivityId() {
+        return amActivityId;
+    }
+
+    public long getPmActivityId() {
+        return pmActivityId;
+    }
 }

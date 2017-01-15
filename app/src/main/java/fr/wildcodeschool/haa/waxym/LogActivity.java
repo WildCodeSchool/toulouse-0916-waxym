@@ -13,16 +13,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.List;
 
 import fr.wildcodeschool.haa.waxym.model.UserModel;
 import okhttp3.Headers;
-import okhttp3.ResponseBody;
-import okhttp3.internal.framed.Header;
 import retrofit2.Call;
 import retrofit2.Response;
 
