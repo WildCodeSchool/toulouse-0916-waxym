@@ -60,9 +60,10 @@ public class CustomAdapter extends BaseAdapter {
                 gd.setCornerRadius(5);
                 gd.setStroke(5, Color.parseColor("#0000E5"));
                 text.setBackgroundDrawable(gd);
-            }else
-            text.setBackgroundColor(Color.parseColor(this.listContrat.get(position).getActivityColor()));
-
+            }else {
+                if (this.listContrat.get(position).getActivityColor() != null)
+                text.setBackgroundColor(Color.parseColor(this.listContrat.get(position).getActivityColor()));
+            }
         return customView;
 
     }

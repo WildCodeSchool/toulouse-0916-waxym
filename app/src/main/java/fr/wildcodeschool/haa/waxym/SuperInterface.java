@@ -10,6 +10,7 @@ import fr.wildcodeschool.haa.waxym.model.ActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.ActivityModel;
 import fr.wildcodeschool.haa.waxym.model.DayActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.IdModel;
+import fr.wildcodeschool.haa.waxym.model.ListOfActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.UserModel;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -27,7 +28,7 @@ import retrofit2.http.Path;
 public interface SuperInterface {
 
     @GET("activities/{userId}")
-    Call<List<ActivitiesModel>> getActivities(@Path("userId") long userId);
+    Call<ListOfActivitiesModel> getActivities(@Path("userId") long userId);
 
     @POST("login")
     Call<IdModel> login(@Body UserModel login);
@@ -47,7 +48,9 @@ public interface SuperInterface {
     @POST("activities/{userId}/add")
     Call<JsonObject> addActivityToUser(@Path("userId") long userId,
                                        @Body IdModel idActivity);
-
+    @POST("activities/{userId}/remove")
+    Call<JsonObject> removeActivityToUser(@Path("userId") long userId,
+                                       @Body IdModel idActivity);
     @POST("register")
     Call<IdModel> newUser(@Body UserModel userModel);
     public OkHttpClient okClient = new OkHttpClient();

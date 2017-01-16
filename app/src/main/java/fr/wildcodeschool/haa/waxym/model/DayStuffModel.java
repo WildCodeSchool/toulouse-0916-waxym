@@ -19,8 +19,10 @@ public class DayStuffModel implements Parcelable{
     private long userId;
     private String activityColor;
     private int sendState;
+    private long activityId ;
+    private long activityDetailType;
 
-    public DayStuffModel(Date date, String activity, long contractNumber, String activityColor, int morning, int afternoon, String userName, int userId, int sendState) {
+    public DayStuffModel(Date date, String activity, long contractNumber, String activityColor, int morning, int afternoon, String userName, int userId, int sendState, long activityId, long activityDetailType) {
         this.date = date;
         this.activity = activity;
         this.activityColor = activityColor;
@@ -30,10 +32,13 @@ public class DayStuffModel implements Parcelable{
         this.userName = userName;
         this.userId = userId;
         this.sendState = sendState;
+        this.activityId = activityId;
+        this.activityDetailType = activityDetailType;
     }
 
     public DayStuffModel() {
     }
+
 
     protected DayStuffModel(Parcel in) {
         activity = in.readString();
@@ -41,9 +46,11 @@ public class DayStuffModel implements Parcelable{
         afternoon = in.readInt();
         contractNumber = in.readLong();
         userName = in.readString();
-        userId = in.readInt();
+        userId = in.readLong();
         activityColor = in.readString();
         sendState = in.readInt();
+        activityId = in.readLong();
+        activityDetailType = in.readLong();
     }
 
     public static final Creator<DayStuffModel> CREATOR = new Creator<DayStuffModel>() {
@@ -130,6 +137,22 @@ public class DayStuffModel implements Parcelable{
         this.sendState = sendState;
     }
 
+    public long getActivityId() {
+        return activityId;
+    }
+
+    public void setActivityId(long activityId) {
+        this.activityId = activityId;
+    }
+
+    public long getActivityDetailType() {
+        return activityDetailType;
+    }
+
+    public void setActivityDetailType(long activityDetailType) {
+        this.activityDetailType = activityDetailType;
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -145,5 +168,7 @@ public class DayStuffModel implements Parcelable{
         dest.writeLong(userId);
         dest.writeString(activityColor);
         dest.writeInt(sendState);
+        dest.writeLong(activityId);
+        dest.writeLong(activityDetailType);
     }
 }

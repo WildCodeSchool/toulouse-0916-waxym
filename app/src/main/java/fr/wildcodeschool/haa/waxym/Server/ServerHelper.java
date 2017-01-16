@@ -14,6 +14,7 @@ import fr.wildcodeschool.haa.waxym.SuperInterface;
 import fr.wildcodeschool.haa.waxym.model.ActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.ActivityItemModel;
 import fr.wildcodeschool.haa.waxym.model.ActivityModel;
+import fr.wildcodeschool.haa.waxym.model.ListOfActivitiesModel;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -27,17 +28,17 @@ public class ServerHelper {
 
     public  void updateServerListActivities(){
         SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
-        Call<List<ActivitiesModel>> call =  apiService.getActivities(StatusSingleton.getInstance().getCurrentUserId());
+        Call<ListOfActivitiesModel> call =  apiService.getActivities(11);
         new ListActivitiesCall().execute(call);
 
 
     }
-    private class ListActivitiesCall extends AsyncTask<Call, Void, Response<List<ActivitiesModel>>> {
+    private class ListActivitiesCall extends AsyncTask<Call, Void, Response<ListOfActivitiesModel>> {
         @Override
-        protected Response<List<ActivitiesModel>> doInBackground(Call... params) {
+        protected Response<ListOfActivitiesModel> doInBackground(Call... params) {
             try {
-                Call<List<ActivitiesModel>> call = params[0];
-                Response<List<ActivitiesModel>> response = call.execute();
+                Call<ListOfActivitiesModel> call = params[0];
+                Response<ListOfActivitiesModel> response = call.execute();
 
                 return response;
             } catch (IOException e) {
@@ -47,10 +48,10 @@ public class ServerHelper {
         }
 
         @Override
-        protected void onPostExecute(Response<List<ActivitiesModel>> result) {
-          List<ActivityItemModel> activitieslist =  new ArrayList<>();
-            for (int i = 0; i < result.body().size(); i++){
-                result.body().get(i);
+        protected void onPostExecute(Response<ListOfActivitiesModel> result) {
+          ArrayList<ActivitiesModel> activitieslist =  result.body().getListOfActivities();
+            for (int i = 0; i < activitieslist.size(); i++){
+                activitieslist.get(i);
             }
 
 
@@ -63,7 +64,9 @@ public class ServerHelper {
         // ActivityModel rtt = new ActivityModel(0,"RTT","#9FE855"); id = 13
         // ActivityModel SansSolde = new ActivityModel(0,"Sans Soldes","#ce6348"); id = 14
         // ActivityModel cp = new ActivityModel(0,"CP","#55e8b0"); id = 15
-        ActivityModel cp = new ActivityModel(0,"CP","#55e8b0");
+        // ActivityModel cp = new ActivityModel(1,"CP","#55e8b0"); id = 16
+        //ActivityModel cp = new ActivityModel(1,"Sans Solde","#ce6348"); id = 17
+        ActivityModel cp = new ActivityModel(1,"Sans Solde","#ce6348");
         Call<IdModel> call =  apiService.addActivity(cp);
         new AddActivityCall().execute(call);
 
@@ -91,18 +94,44 @@ public class ServerHelper {
 
         }
     }
-
-    public  void attachUserToActivity(){
+    public void detachUserToActivity(){
         SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
         IdModel idModel = new IdModel((long) 13);
-        Call<JsonObject> call =  apiService.addActivityToUser(11,idModel);
+        Call<JsonObject> call =  apiService.removeActivityToUser(11,idModel);
         new AttachCall().execute(call);
         IdModel idModel2 = new IdModel((long) 14);
-        Call<JsonObject> call2 =  apiService.addActivityToUser(11,idModel2);
+        Call<JsonObject> call2 =  apiService.removeActivityToUser(11,idModel2);
         new AttachCall().execute(call2);
         IdModel idModel3 = new IdModel((long) 15);
+        Call<JsonObject> call3 =  apiService.removeActivityToUser(11,idModel3);
+        new AttachCall().execute(call3);
+    }
+    public  void attachUserToActivity(){
+        SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
+        IdModel idModel = new IdModel((long) 4);
+        Call<JsonObject> call =  apiService.addActivityToUser(11,idModel);
+        new AttachCall().execute(call);
+        IdModel idModel2 = new IdModel((long) 5);
+        Call<JsonObject> call2 =  apiService.addActivityToUser(11,idModel2);
+        new AttachCall().execute(call2);
+        IdModel idModel3 = new IdModel((long) 6);
         Call<JsonObject> call3 =  apiService.addActivityToUser(11,idModel3);
         new AttachCall().execute(call3);
+        IdModel idModel4 = new IdModel((long) 7);
+        Call<JsonObject> call4 =  apiService.addActivityToUser(11,idModel4);
+        new AttachCall().execute(call4);
+        IdModel idModel5 = new IdModel((long) 8);
+        Call<JsonObject> call5 =  apiService.addActivityToUser(11,idModel5);
+        new AttachCall().execute(call5);
+        IdModel idModel6 = new IdModel((long) 9);
+        Call<JsonObject> call6 =  apiService.addActivityToUser(11,idModel6);
+        new AttachCall().execute(call6);
+        IdModel idModel7 = new IdModel((long) 10);
+        Call<JsonObject> call7 =  apiService.addActivityToUser(11,idModel7);
+        new AttachCall().execute(call7);
+        IdModel idModel8 = new IdModel((long) 10);
+        Call<JsonObject> call8 =  apiService.addActivityToUser(11,idModel8);
+        new AttachCall().execute(call8);
 
 
     }

@@ -62,11 +62,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         textDate = (TextView) findViewById(R.id.calendar_date_display);
 
         ServerHelper serverHelper = new ServerHelper();
-        serverHelper.updateServerListActivities();
+        //serverHelper.attachUserToActivity();
+        //serverHelper.updateServerListActivities();
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
-        //copyDatabase(getApplicationContext());
+        copyDatabase(getApplicationContext());
         if (!database.exists()) {
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
@@ -120,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                     public void run() {
                         showCurrentDate();
                     }
-                }, 18);
+                }, 50);
 
                 // set OnpageChangeListener to refresh currentDate
                 ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -152,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                                 updateCurrentViewPagerFragment();
                                 showCurrentDate();
                             }
-                        },100);
+                        },200);
 
                     }
 
@@ -232,8 +233,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                 updateCurrentViewPagerFragment();
                 showCurrentDate();
             }
-
-            // this.viewPager.getAdapter().notifyDataSetChanged();
+            status.setLastMonthPosition(viewPager.getCurrentItem());
             return true;
         }
         return super.onOptionsItemSelected(item);

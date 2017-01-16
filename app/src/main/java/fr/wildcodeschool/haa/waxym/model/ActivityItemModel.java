@@ -8,12 +8,14 @@ public class ActivityItemModel {
     private String activityName;
     private String activityColor;
     private long activityNumber;
+    private long activityID;
     private boolean isSelected;
 
-    public ActivityItemModel(long activityNumber,String activityName, String activityColor) {
+    public ActivityItemModel(long activityNumber,String activityName, String activityColor, long activityID) {
         this.activityNumber = activityNumber;
         this.activityName = activityName;
         this.activityColor = activityColor;
+        this.activityID = activityID;
         this.isSelected = false;
     }
 
@@ -31,6 +33,14 @@ public class ActivityItemModel {
 
     public void setActivityNumber(long activityNumber) {
         this.activityNumber = activityNumber;
+    }
+
+    public long getActivityID() {
+        return activityID;
+    }
+
+    public void setActivityID(long activityID) {
+        this.activityID = activityID;
     }
 
     public String getActivityName() {
