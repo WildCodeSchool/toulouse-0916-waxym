@@ -1,4 +1,4 @@
-package fr.wildcodeschool.haa.waxym;
+package fr.wildcodeschool.haa.waxym.model;
 
 import com.google.gson.annotations.SerializedName;
 

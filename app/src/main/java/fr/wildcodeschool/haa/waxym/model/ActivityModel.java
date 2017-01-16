@@ -23,6 +23,12 @@ public class ActivityModel {
     @SerializedName("color")
     String color;
 
+    public ActivityModel( int type, String label, String color) {
+        this.label = label;
+        this.type = type;
+        this.color = color;
+    }
+
     public ActivityModel(int type, String label, long clientId, long contractId, String color) {
         this.type = type;
         this.label = label;

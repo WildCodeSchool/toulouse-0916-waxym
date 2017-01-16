@@ -7,7 +7,9 @@ import com.google.gson.JsonObject;
 import java.util.List;
 
 import fr.wildcodeschool.haa.waxym.model.ActivitiesModel;
+import fr.wildcodeschool.haa.waxym.model.ActivityModel;
 import fr.wildcodeschool.haa.waxym.model.DayActivitiesModel;
+import fr.wildcodeschool.haa.waxym.model.IdModel;
 import fr.wildcodeschool.haa.waxym.model.UserModel;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -40,10 +42,11 @@ public interface SuperInterface {
     Call<Long> createRegister(@Body UserModel register);
 
     @POST("activity")
-    Call<JsonObject> addActivity(@Body ActivitiesModel activity);
+    Call<IdModel> addActivity(@Body ActivityModel activity);
 
     @POST("activities/{userId}/add")
-    Call<JsonObject> addActivityToUser(@Body ActivitiesModel addActivityToUser);
+    Call<JsonObject> addActivityToUser(@Path("userId") long userId,
+                                       @Body IdModel idActivity);
 
     @POST("register")
     Call<IdModel> newUser(@Body UserModel userModel);

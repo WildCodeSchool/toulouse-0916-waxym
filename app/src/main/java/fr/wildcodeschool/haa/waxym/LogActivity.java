@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import fr.wildcodeschool.haa.waxym.model.IdModel;
 import fr.wildcodeschool.haa.waxym.model.UserModel;
 import okhttp3.Headers;
 import retrofit2.Call;
@@ -171,6 +172,7 @@ public class LogActivity extends AppCompatActivity {
 
                 Headers headers = response.headers();
                 String message= response.message();
+                StatusSingleton.getInstance().setCurrentUserId(id);
                 return id;
             } catch (IOException e) {
                 e.printStackTrace();

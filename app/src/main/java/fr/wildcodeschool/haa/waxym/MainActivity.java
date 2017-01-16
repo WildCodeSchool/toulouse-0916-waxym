@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import fr.wildcodeschool.haa.waxym.Server.ServerHelper;
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 import fr.wildcodeschool.haa.waxym.model.GridDateModel;
@@ -60,7 +61,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         setContentView(R.layout.activity_main);
         textDate = (TextView) findViewById(R.id.calendar_date_display);
 
-
+        ServerHelper serverHelper = new ServerHelper();
+        serverHelper.updateServerListActivities();
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
