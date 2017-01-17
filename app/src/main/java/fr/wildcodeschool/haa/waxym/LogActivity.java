@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import fr.wildcodeschool.haa.waxym.model.IdModel;
 import fr.wildcodeschool.haa.waxym.model.UserModel;
 import okhttp3.Headers;
 import retrofit2.Call;
@@ -179,9 +180,9 @@ public class LogActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Response<IdModel> result) {
 
-           if(result.body().getUserID() != -1) {
+           if(result.body().getID() != -1) {
                StatusSingleton status =  StatusSingleton.getInstance();
-               status.setCurrentUserId(result.body().getUserID());
+               status.setCurrentUserId(result.body().getID());
                onLoginSuccess();
            }
             else {
