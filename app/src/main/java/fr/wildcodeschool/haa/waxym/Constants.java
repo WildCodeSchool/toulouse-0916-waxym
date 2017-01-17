@@ -25,8 +25,9 @@ public class Constants {
     public final static String ID_ACTIVITY_TYPE_ACTIVITY = "activity.id_activity_type";
     public final static String ACTIVITY_SEND_STATE = "activity.send_state";
     public final static String CATEGORY_ACTIVITY = "activity_category";
-    public final static String ID_ACTIVITY = "activity.id_activity_details";
-    public final static String ID_ACTIVITY_DETAILS = "activity-details.id_activity_details";
+    public final static String ID_ACTIVITY = "id_activity_details";
+    public final static String ID_ACTIVITY_ACTIVITY_DETAILS = "activity.id_activity_details";
+    public final static String ID_ACTIVITY_DETAILS = "activity_details.id_activity_details";
     public final static String SEND_STATE = "send_state";
     // table names
     public final static String ACTIVITY = "activity";
@@ -45,8 +46,9 @@ public class Constants {
     public final static int NOT_SENDED = 1;
 
     //Code server
+    public final static int BLANK_HOLIDAY = -1;
     public final static int OK = 0;
-    public final static int USER_KNOWED = 1001;
+    public final static int USER_KNOWNED = 1001;
     public final static int STATUS_CODE_OK = 200;
     public final static int DSTART_DTEND_UNKNOW = 1002;
     public final static int incoherent_content = 1003;

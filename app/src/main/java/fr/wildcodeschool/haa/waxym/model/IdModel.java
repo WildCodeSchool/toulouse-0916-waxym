@@ -8,13 +8,13 @@ import com.google.gson.annotations.SerializedName;
 
 public class IdModel {
     @SerializedName("id")
-    Long userID;
+    Long ID;
 
-    public IdModel(Long login) {
-        this.userID = login;
+    public IdModel(Long ID) {
+        this.ID = ID;
     }
 
-    public Long getUserID() {
-        return userID;
+    public Long getID() {
+        return ID;
     }
 }

@@ -127,30 +127,29 @@ public class SlidingListFragment extends DialogFragment {
     }
     private void addSelectedContractToSelectedDays(){
     for (int i =0; i < selectedDays.size(); i++){
-        selectedDays.get(i).setContractNumber(selectedContract.getActivityNumber());
-        selectedDays.get(i).setActivity(selectedContract.getActivityName());
-        selectedDays.get(i).setActivityColor(selectedContract.getActivityColor());
-        selectedDays.get(i).setUserId(1);
+        selectedDays.get(i).setActivityId(selectedContract.getActivityID());
+        selectedDays.get(i).setUserId(StatusSingleton.getInstance().getCurrentUserId());
         selectedDays.get(i).setSendState(Constants.NOT_SENDED);
     }
     }
     private void writeInDatabase() throws ParseException {
-        for (int i = 0; i < this.selectedDays.size();i++){
-            if (!this.isEraseChoice){
-               ArrayList<DayStuffModel> lastSelectedDayevents =  mHandler.getDayEvents(StatusSingleton.getInstance().getCurrentUserId(), this.selectedDays.get(i).getDate());
-                if (lastSelectedDayevents.size() >0){
-                    for (int j = 0; j < lastSelectedDayevents.size() ; j ++){
-                        if (lastSelectedDayevents.get(j).getActivity().equals(Constants.CLEAR_ACTIVITY)){
-                            mHandler.setEventEraser(selectedDays.get(i));
+        if (this.selectedDays.size()>0) {
+            for (int i = 0; i < this.selectedDays.size(); i++) {
+                if (!this.isEraseChoice) {
+                    ArrayList<DayStuffModel> lastSelectedDayevents = mHandler.getDayEvents(StatusSingleton.getInstance().getCurrentUserId(), this.selectedDays.get(i).getDate());
+                    if (lastSelectedDayevents.size() > 0) {
+                        for (int j = 0; j < lastSelectedDayevents.size(); j++) {
+                            if (lastSelectedDayevents.get(j).getActivity().equals(Constants.CLEAR_ACTIVITY)) {
+                                mHandler.setEventEraser(selectedDays.get(i));
+                            }
                         }
                     }
-                }
-               mHandler.setEventCompleter(selectedDays.get(i));
-            }else
-                mHandler.setEventEraser(selectedDays.get(i));
+                    mHandler.setEventCompleter(selectedDays.get(i));
+                } else
+                    mHandler.setEventEraser(selectedDays.get(i));
+            }
+
         }
-
-
     }
     private   void closeFragment(){
         getActivity().getFragmentManager().beginTransaction().remove(SlidingListFragment.this).commit();

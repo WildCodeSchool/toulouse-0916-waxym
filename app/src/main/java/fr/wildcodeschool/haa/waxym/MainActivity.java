@@ -61,9 +61,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         setContentView(R.layout.activity_main);
         textDate = (TextView) findViewById(R.id.calendar_date_display);
 
-        ServerHelper serverHelper = new ServerHelper();
-        //serverHelper.attachUserToActivity();
-        //serverHelper.updateServerListActivities();
+
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
@@ -77,7 +75,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
             }
 
         }
-
+        ServerHelper serverHelper = new ServerHelper(this);
+        //serverHelper.attachUserToActivity();
+        serverHelper.updateServerListActivities();
 
         final Button editButton = (Button) findViewById(R.id.buttonEdit);
         editButton.setOnClickListener(new View.OnClickListener() {

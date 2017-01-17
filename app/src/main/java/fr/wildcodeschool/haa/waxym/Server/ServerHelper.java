@@ -1,5 +1,6 @@
 package fr.wildcodeschool.haa.waxym.Server;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import com.google.gson.JsonObject;
@@ -8,6 +9,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.IdModel;
 import fr.wildcodeschool.haa.waxym.StatusSingleton;
 import fr.wildcodeschool.haa.waxym.SuperInterface;
@@ -23,7 +25,9 @@ import retrofit2.Response;
  */
 
 public class ServerHelper {
-    public ServerHelper() {
+    Context context;
+    public ServerHelper(Context context) {
+        this.context = context;
     }
 
     public  void updateServerListActivities(){
@@ -53,7 +57,8 @@ public class ServerHelper {
             for (int i = 0; i < activitieslist.size(); i++){
                 activitieslist.get(i);
             }
-
+            DBHandler mDBHandler = new DBHandler(context);
+            mDBHandler.updateActivitiesList(activitieslist);
 
         }
     }

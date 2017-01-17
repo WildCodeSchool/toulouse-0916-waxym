@@ -167,12 +167,12 @@ public class LogActivity extends AppCompatActivity {
                 Call<IdModel> call = params[0];
                 Response<IdModel> response = call.execute();
                 int prout = response.code();
-                Long id = response.body().getUserID();
+                Long id = response.body().getID();
                 headTest = response.headers().get("X-Employeah-RC");
 
                 Headers headers = response.headers();
                 String message= response.message();
-                StatusSingleton.getInstance().setCurrentUserId(id);
+                StatusSingleton.getInstance().setCurrentUserId(11);
                 return id;
             } catch (IOException e) {
                 e.printStackTrace();

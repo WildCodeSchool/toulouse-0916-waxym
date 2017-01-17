@@ -99,12 +99,12 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
                             //apresMidiView.setTypeface(null,Typeface.NORMAL);
                             // apresMidiView.setTextColor(Color.BLACK);
                             //apresMidiView.setText(eventDate.getActivity());
-                            apresMidiView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
+                            apresMidiView.setBackgroundColor(Color.parseColor("#" + eventDate.getActivityColor()));
                         } else {
                             //matinView.setTypeface(null,Typeface.NORMAL);
                             //matinView.setTextColor(Color.BLACK);
                             // matinView.setText(eventDate.getActivity());
-                            matinView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
+                            matinView.setBackgroundColor(Color.parseColor("#" +eventDate.getActivityColor()));
 
 
                         }
