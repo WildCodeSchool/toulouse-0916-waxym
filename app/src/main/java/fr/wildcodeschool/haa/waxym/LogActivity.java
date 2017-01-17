@@ -44,25 +44,22 @@ public class LogActivity extends AppCompatActivity {
                 .create();*/
 
 
-
-
         //no action bar
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_log);
-        this.btn_login = (Button)findViewById(R.id.btn_login);
-        this.textEmailAddress = (EditText)findViewById(R.id.input_email);
+        this.btn_login = (Button) findViewById(R.id.btn_login);
+        this.textEmailAddress = (EditText) findViewById(R.id.input_email);
 
-        this.textPassword = (EditText)findViewById(R.id.input_password);
+        this.textPassword = (EditText) findViewById(R.id.input_password);
         btn_login.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
-                if(textEmailAddress.getText().toString().isEmpty() || textPassword.getText().toString().isEmpty()){
+                if (textEmailAddress.getText().toString().isEmpty() || textPassword.getText().toString().isEmpty()) {
                     Toast.makeText(getBaseContext(), "login ou mot de passe vide", Toast.LENGTH_LONG).show();
-                }
-                else {
+                } else {
                     login();
                 }
             }
@@ -82,15 +79,15 @@ public class LogActivity extends AppCompatActivity {
         digest.update(textPassword.getText().toString().getBytes());
         byte[] hash = digest.digest();
         StringBuffer sb = new StringBuffer();
-        for (int i =0; i < hash.length; i++) {
+        for (int i = 0; i < hash.length; i++) {
             sb.append(Integer.toString((hash[i] & 0xff) + 0x100, 16).substring(1));
         }
 
-            encryptedPassword = sb.toString();
+        encryptedPassword = sb.toString();
 
         SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
-        UserModel userModel = new UserModel(textEmailAddress.getText().toString(), this.encryptedPassword );
-        Call<IdModel> call  = apiService.login(userModel);
+        UserModel userModel = new UserModel(textEmailAddress.getText().toString(), this.encryptedPassword);
+        Call<IdModel> call = apiService.login(userModel);
         new NetworkCall().execute(call);
 
         if (!validate()) {
@@ -132,7 +129,7 @@ public class LogActivity extends AppCompatActivity {
     public void onLoginSuccess() {
         btn_login.setEnabled(true);
         finish();
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
@@ -164,6 +161,7 @@ public class LogActivity extends AppCompatActivity {
 
         return valid;
     }
+
     private class NetworkCall extends AsyncTask<Call, Void, Response<IdModel>> {
         @Override
         protected Response<IdModel> doInBackground(Call... params) {
@@ -180,14 +178,13 @@ public class LogActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(Response<IdModel> result) {
 
-           if(result.body().getID() != -1) {
-               StatusSingleton status =  StatusSingleton.getInstance();
-               status.setCurrentUserId(result.body().getID());
-               onLoginSuccess();
-           }
-            else {
-               onLoginFailed();
-           }
+            if (result.body().getID() != -1) {
+                StatusSingleton status = StatusSingleton.getInstance();
+                status.setCurrentUserId(result.body().getID());
+                onLoginSuccess();
+            } else {
+                onLoginFailed();
+            }
         }
     }
 }

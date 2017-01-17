@@ -5,40 +5,42 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="70sp"
-        android:weightSum="1"
-        android:paddingStart="20sp"
-        android:paddingEnd="20sp"
         android:background="#FBDC99"
-        >
+        android:paddingEnd="20sp"
+        android:paddingStart="20sp"
+        android:weightSum="1">
+
         <Button
+            android:id="@+id/clear"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_clear_animation"
-            android:text="Vider"
-            android:textColor="#ffff"
+            android:layout_marginRight="10sp"
             android:layout_marginTop="10sp"
             android:layout_weight="0.10"
-            android:layout_marginRight="10sp"
-            android:id="@+id/clear"/>
+            android:background="@drawable/button_clear_animation"
+            android:text="Vider"
+            android:textColor="#ffff" />
+
         <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/buttonannuler"
-            android:layout_marginTop="10sp"
-            android:layout_weight="0.4"
             android:id="@+id/cancel"
-            android:text="Annuler"
-            android:textColor="#fff"/>
-        <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10sp"
             android:layout_weight="0.4"
-            android:layout_marginLeft="5sp"
-            android:background="@drawable/buttonvalider"
+            android:background="@drawable/buttonannuler"
+            android:text="Annuler"
+            android:textColor="#fff" />
+
+        <Button
             android:id="@+id/valid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5sp"
+            android:layout_marginTop="10sp"
+            android:layout_weight="0.4"
+            android:background="@drawable/buttonvalider"
             android:text="Valider"
-            android:textColor="#fff"/>
+            android:textColor="#fff" />
     </LinearLayout>
 
 </FrameLayout>

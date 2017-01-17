@@ -5,9 +5,9 @@ package fr.wildcodeschool.haa.waxym;
  */
 
 public class Constants {
-    public final static String DBNAME ="database.sqlite";
+    public final static String DBNAME = "database.sqlite";
     //
-    public final static String DATE_FORMAT  = "yyyy-MM-dd";
+    public final static String DATE_FORMAT = "yyyy-MM-dd";
     // table columns names
     public final static String ACTIVITY_COLOR = "activity_color";
     public final static String DATE = "date";
@@ -39,7 +39,7 @@ public class Constants {
     public final static int ID_ERROR = 404;
 
     //other
-    public final static String POSITION_KEY= "Month";
+    public final static String POSITION_KEY = "Month";
     public final static String SELECTED_DAYS = "selected";
     public final static int TOTAL_SLIDES = 120;
     public final static String CLEAR_ACTIVITY = "clearEvilOfDoom";
@@ -54,5 +54,34 @@ public class Constants {
     public final static int incoherent_content = 1003;
     public final static String BASE_URL = "http://www.waxym.com/employeah/v1/";
 
+    //ActivitiesModel Constants
+    public final static String ACTIVITIES_MODEL_ID = "id";
+    public final static String ACTIVITIES_MODEL_TYPE = "type";
+    public final static String ACTIVITIES_MODEL_LABEL = "label";
+    public final static String ACTIVITIES_MODEL_CLIENT_ID = "clientId";
+    public final static String ACTIVITIES_MODEL_CONTRACT_ID = "contractId";
+    public final static String ACTIVITIES_MODEL_COLOR = "color";
+
+    //ActivityModel Constants
+    public final static String ACTIVITY_MODEL_TYPE = "type";
+    public final static String ACTIVITY_MODEL_LABEL = "label";
+    public final static String ACTIVITY_MODEL_CLIENT_ID = "clientId";
+    public final static String ACTIVITY_MODEL_CONTRACT_ID = "contractId";
+    public final static String ACTIVITY_MODEL_COLOR = "color";
+
+    //DayActivitiesMModel Constants
+    public final static String DAY_ACTIVITIES_MODEL_DAY = "day";
+    public final static String DAY_ACTIVITIES_MODEL_AM_ACTIVITY_ID = "amActivityId";
+    public final static String DAY_ACTIVITIES_MODEL_PM_ACTIVITY_ID = "pmActivityId";
+
+    //IdModel Constants
+    public final static String ID_MODEL = "day";
+
+    //ListOfActivitiesModel Constants
+    public final static String LIST_OF_ACTIVITIES_MODEL = "activities";
+
+    //UserModel Constants
+    public final static String USER_MODEL_LOGIN = "login";
+    public final static String USER_MODEL_PWD = "pwd";
 
 }

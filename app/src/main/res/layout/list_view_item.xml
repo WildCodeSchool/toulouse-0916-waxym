@@ -2,17 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="horizontal"
-    >
+    android:orientation="horizontal">
 
     <TextView
         android:id="@+id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:text=""
         android:textAlignment="center"
-        android:text="BOUUUUUUUUUUUUUUUUUUUZE"
         android:textAppearance="?android:attr/textAppearanceMedium">
 
     </TextView>
-    </LinearLayout>
+</LinearLayout>

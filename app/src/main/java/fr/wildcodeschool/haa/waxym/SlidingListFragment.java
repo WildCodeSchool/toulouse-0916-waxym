@@ -46,8 +46,7 @@ public class SlidingListFragment extends DialogFragment {
         this.mesContrats = this.mHandler.getUserActivitiesList();
 
 
-
-        final BaseAdapter customAdapter = new CustomAdapter(view.getContext(), mesContrats);
+        final BaseAdapter customAdapter = new ContractAdapter(view.getContext(), mesContrats);
         final ListView listView = (ListView) view.findViewById(R.id.listview);
         listView.setAdapter(customAdapter);
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -56,47 +55,47 @@ public class SlidingListFragment extends DialogFragment {
                 isContractSelected = true;
                 selectedContract = mesContrats.get(position);
                 mesContrats.get(position).setSelected(true);
-                for (int i = 0;i < mesContrats.size();i++){
-                    if(i != position) {
+                for (int i = 0; i < mesContrats.size(); i++) {
+                    if (i != position) {
                         mesContrats.get(i).setSelected(false);
                     }
                 }
                 listView.setAdapter(customAdapter);
                 listView.setSelection(position);
-                if (isWritingModeChoiceDone){
-                   addSelectedContractToSelectedDays();
+                if (isWritingModeChoiceDone) {
+                    addSelectedContractToSelectedDays();
 
                 }
             }
         });
 
 
-        this.complete = (Button)view.findViewById(R.id.complete);
+        this.complete = (Button) view.findViewById(R.id.complete);
         this.complete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isWritingModeChoiceDone = true;
                 if (isContractSelected)
-            addSelectedContractToSelectedDays();
+                    addSelectedContractToSelectedDays();
                 isEraseChoice = false;
                 complete.setBackgroundResource(R.drawable.button2_selected);
                 erase.setBackgroundResource(R.drawable.button);
             }
         });
-        this.erase = (Button)view.findViewById(R.id.erase);
+        this.erase = (Button) view.findViewById(R.id.erase);
         this.erase.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 isWritingModeChoiceDone = true;
                 if (isContractSelected)
-                addSelectedContractToSelectedDays();
+                    addSelectedContractToSelectedDays();
                 isEraseChoice = true;
                 erase.setBackgroundResource(R.drawable.button_selected);
                 complete.setBackgroundResource(R.drawable.button2);
             }
         });
 
-        Button validate = (Button)view.findViewById(R.id.validate);
+        Button validate = (Button) view.findViewById(R.id.validate);
         validate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -110,12 +109,12 @@ public class SlidingListFragment extends DialogFragment {
                         closeFragment();
                     } else
                         Toast.makeText(view.getContext(), "Veuillez sélectionner compléter ou écraser", Toast.LENGTH_SHORT).show();
-                }else
+                } else
                     Toast.makeText(view.getContext(), "Veuillez sélectionner le type d'activité", Toast.LENGTH_SHORT).show();
             }
         });
 
-        final Button cancel = (Button)view.findViewById(R.id.cancel);
+        final Button cancel = (Button) view.findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -125,15 +124,17 @@ public class SlidingListFragment extends DialogFragment {
 
         return view;
     }
-    private void addSelectedContractToSelectedDays(){
-    for (int i =0; i < selectedDays.size(); i++){
-        selectedDays.get(i).setActivityId(selectedContract.getActivityID());
-        selectedDays.get(i).setUserId(StatusSingleton.getInstance().getCurrentUserId());
-        selectedDays.get(i).setSendState(Constants.NOT_SENDED);
+
+    private void addSelectedContractToSelectedDays() {
+        for (int i = 0; i < selectedDays.size(); i++) {
+            selectedDays.get(i).setActivityId(selectedContract.getActivityID());
+            selectedDays.get(i).setUserId(StatusSingleton.getInstance().getCurrentUserId());
+            selectedDays.get(i).setSendState(Constants.NOT_SENDED);
+        }
     }
-    }
+
     private void writeInDatabase() throws ParseException {
-        if (this.selectedDays.size()>0) {
+        if (this.selectedDays.size() > 0) {
             for (int i = 0; i < this.selectedDays.size(); i++) {
                 if (!this.isEraseChoice) {
                     ArrayList<DayStuffModel> lastSelectedDayevents = mHandler.getDayEvents(StatusSingleton.getInstance().getCurrentUserId(), this.selectedDays.get(i).getDate());
@@ -151,9 +152,10 @@ public class SlidingListFragment extends DialogFragment {
 
         }
     }
-    private   void closeFragment(){
+
+    private void closeFragment() {
         getActivity().getFragmentManager().beginTransaction().remove(SlidingListFragment.this).commit();
-        ((MainActivityCallBackInterface)getView().getContext()
+        ((MainActivityCallBackInterface) getView().getContext()
         ).onMethodCallBack();
 
 

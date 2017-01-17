@@ -20,14 +20,14 @@ import fr.wildcodeschool.haa.waxym.model.GridDateModel;
  * Created by apprenti on 26/12/16.
  */
 
-public class CustomDayAdapter extends BaseAdapter {
+public class DayAdapter extends BaseAdapter {
     private Context context;
     private final ArrayList<GridDateModel> days;
     private DBHandler mDBHandler;
     private ArrayList<DayStuffModel> dayEvents;
 
 
-    public CustomDayAdapter(Context context, ArrayList<GridDateModel> days) {
+    public DayAdapter(Context context, ArrayList<GridDateModel> days) {
         this.context = context;
         this.days = days;
     }

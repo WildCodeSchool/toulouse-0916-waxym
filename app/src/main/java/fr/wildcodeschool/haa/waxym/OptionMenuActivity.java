@@ -10,10 +10,9 @@ import android.view.MenuItem;
  * Created by tuffery on 12/11/16.
  */
 
-public abstract class OptionMenuActivity extends AppCompatActivity{
+public abstract class OptionMenuActivity extends AppCompatActivity {
     @Override
-    public boolean onCreateOptionsMenu(Menu menu)
-    {
+    public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -27,9 +26,8 @@ public abstract class OptionMenuActivity extends AppCompatActivity{
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings)
-        {
-            Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+        if (id == R.id.action_settings) {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
             // flag to launch activity from outside class
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             this.getApplicationContext().startActivity(intent);

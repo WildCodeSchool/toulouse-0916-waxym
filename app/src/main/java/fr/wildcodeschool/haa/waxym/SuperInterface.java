@@ -34,7 +34,7 @@ public interface SuperInterface {
     Call<IdModel> login(@Body UserModel login);
 
     @GET("dayactivities/{userId}/{dtstart}/{dtend}")
-    Call<JsonObject> getDayActivities(@Path("userId") long userid, @Path("dtstart") long dtstart, @Path("dtend") long dtend );
+    Call<JsonObject> getDayActivities(@Path("userId") long userid, @Path("dtstart") long dtstart, @Path("dtend") long dtend);
 
     @POST("dayactivities/{userId}")
     Call<JsonObject> addActivities(@Body DayActivitiesModel dayActivities);
@@ -48,11 +48,14 @@ public interface SuperInterface {
     @POST("activities/{userId}/add")
     Call<JsonObject> addActivityToUser(@Path("userId") long userId,
                                        @Body IdModel idActivity);
+
     @POST("activities/{userId}/remove")
     Call<JsonObject> removeActivityToUser(@Path("userId") long userId,
-                                       @Body IdModel idActivity);
+                                          @Body IdModel idActivity);
+
     @POST("register")
     Call<IdModel> newUser(@Body UserModel userModel);
+
     public OkHttpClient okClient = new OkHttpClient();
     public static final Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)

@@ -1,6 +1,10 @@
 package fr.wildcodeschool.haa.waxym.model;
 
+import android.graphics.drawable.Drawable;
+
 import com.google.gson.annotations.SerializedName;
+
+import fr.wildcodeschool.haa.waxym.Constants;
 
 /**
  * Created by devauxarthur on 10/01/2017.
@@ -8,22 +12,22 @@ import com.google.gson.annotations.SerializedName;
 
 public class ActivityModel {
 
-    @SerializedName("type")
+    @SerializedName(Constants.ACTIVITY_MODEL_TYPE)
     int type;
 
-    @SerializedName("label")
+    @SerializedName(Constants.ACTIVITY_MODEL_LABEL)
     String label;
 
-    @SerializedName("clientId")
+    @SerializedName(Constants.ACTIVITY_MODEL_CLIENT_ID)
     long clientId;
 
-    @SerializedName("contractId")
+    @SerializedName(Constants.ACTIVITY_MODEL_CONTRACT_ID)
     long contractId;
 
-    @SerializedName("color")
+    @SerializedName(Constants.ACTIVITY_MODEL_COLOR)
     String color;
 
-    public ActivityModel( int type, String label, String color) {
+    public ActivityModel(int type, String label, String color) {
         this.label = label;
         this.type = type;
         this.color = color;

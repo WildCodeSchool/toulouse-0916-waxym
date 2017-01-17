@@ -4,13 +4,15 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.ArrayList;
 
+import fr.wildcodeschool.haa.waxym.Constants;
+
 /**
  * Created by tuffery on 16/01/17.
  */
 
 public class ListOfActivitiesModel {
 
-    @SerializedName("activities")
+    @SerializedName(Constants.LIST_OF_ACTIVITIES_MODEL)
     private ArrayList<ActivitiesModel> listOfActivities;
 
     public ListOfActivitiesModel(ArrayList<ActivitiesModel> listOfActivities) {

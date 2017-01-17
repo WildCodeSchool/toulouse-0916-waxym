@@ -3,6 +3,7 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="action_show_list">mes choix</string>
+    <string name="EmploYeah">Nom Action bar</string>
     <drawable name="icon_sliding">@drawable/ic_action_view_as_list</drawable>
     <string-array name="out_of_space">
         <item>Mercury</item>
