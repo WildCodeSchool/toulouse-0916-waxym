@@ -58,7 +58,12 @@ public class LogActivity extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                login();
+                if(textEmailAddress.getText().toString().isEmpty() || textPassword.getText().toString().isEmpty()){
+                    Toast.makeText(getBaseContext(), "login ou mot de passe vide", Toast.LENGTH_LONG).show();
+                }
+                else {
+                    login();
+                }
             }
         });
 
@@ -109,8 +114,7 @@ public class LogActivity extends AppCompatActivity {
                 new Runnable() {
                     public void run() {
                         // On complete call either onLoginSuccess or onLoginFailed
-                        StatusSingleton.getInstance().setCurrentUserId(1);
-                        onLoginSuccess();
+
                         // onLoginFailed();
                         progressDialog.dismiss();
                     }
@@ -159,19 +163,13 @@ public class LogActivity extends AppCompatActivity {
 
         return valid;
     }
-    private class NetworkCall extends AsyncTask<Call, Void, Long> {
+    private class NetworkCall extends AsyncTask<Call, Void, Response<IdModel>> {
         @Override
-        protected Long doInBackground(Call... params) {
+        protected Response<IdModel> doInBackground(Call... params) {
             try {
                 Call<IdModel> call = params[0];
                 Response<IdModel> response = call.execute();
-                int prout = response.code();
-                Long id = response.body().getUserID();
-                headTest = response.headers().get("X-Employeah-RC");
-
-                Headers headers = response.headers();
-                String message= response.message();
-                return id;
+                return response;
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -179,8 +177,16 @@ public class LogActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Long result) {
-            idTest = result;
+        protected void onPostExecute(Response<IdModel> result) {
+
+           if(result.body().getUserID() != -1) {
+               StatusSingleton status =  StatusSingleton.getInstance();
+               status.setCurrentUserId(result.body().getUserID());
+               onLoginSuccess();
+           }
+            else {
+               onLoginFailed();
+           }
         }
     }
 }
