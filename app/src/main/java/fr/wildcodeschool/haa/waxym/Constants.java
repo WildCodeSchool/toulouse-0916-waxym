@@ -75,7 +75,7 @@ public class Constants {
     public final static String DAY_ACTIVITIES_MODEL_PM_ACTIVITY_ID = "pmActivityId";
 
     //IdModel Constants
-    public final static String ID_MODEL = "day";
+    public final static String ID_MODEL = "id";
 
     //ListOfActivitiesModel Constants
     public final static String LIST_OF_ACTIVITIES_MODEL = "activities";
