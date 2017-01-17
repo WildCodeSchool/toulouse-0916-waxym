@@ -30,18 +30,10 @@ public class LogActivity extends AppCompatActivity {
     private EditText textPassword;
     private MessageDigest digest;
     private String encryptedPassword;
-    Headers header;
-    long resultCode;
-    long idTest;
-    String headTest;
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
-
-        /*Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd'T'HH:mm:ssZ")
-                .create();*/
 
 
         //no action bar
@@ -83,40 +75,23 @@ public class LogActivity extends AppCompatActivity {
             sb.append(Integer.toString((hash[i] & 0xff) + 0x100, 16).substring(1));
         }
 
-        encryptedPassword = sb.toString();
+        this.encryptedPassword = sb.toString();
 
         SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
         UserModel userModel = new UserModel(textEmailAddress.getText().toString(), this.encryptedPassword);
         Call<IdModel> call = apiService.login(userModel);
         new NetworkCall().execute(call);
 
-        if (!validate()) {
-            onLoginFailed();
-            return;
-        }
 
         btn_login.setEnabled(false);
 
-        final ProgressDialog progressDialog = new ProgressDialog(LogActivity.this,
+        this.progressDialog = new ProgressDialog(LogActivity.this,
                 R.style.AppTheme2);
-        progressDialog.setIndeterminate(true);
-        progressDialog.setMessage("Authenticating...");
-        progressDialog.show();
+        this.progressDialog.setIndeterminate(true);
+        this.progressDialog.setMessage("Authenticating...");
+        this.progressDialog.show();
 
-        String email = textEmailAddress.getText().toString();
-        String password = textPassword.getText().toString();
 
-        // TODO: Implement your own authentication logic here.
-
-        new android.os.Handler().postDelayed(
-                new Runnable() {
-                    public void run() {
-                        // On complete call either onLoginSuccess or onLoginFailed
-
-                        // onLoginFailed();
-                        progressDialog.dismiss();
-                    }
-                }, 1);
     }
 
 
@@ -131,35 +106,14 @@ public class LogActivity extends AppCompatActivity {
         finish();
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
+        this.progressDialog.dismiss();
     }
 
     public void onLoginFailed() {
         Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
 
         btn_login.setEnabled(true);
-    }
-
-    public boolean validate() {
-        boolean valid = true;
-
-        String email = textEmailAddress.getText().toString();
-        String password = textPassword.getText().toString();
-
-       /* *//*if (email.isEmpty() || !android.util.Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            textEmailAddress.setError("enter a valid email address");
-            valid = false;
-        } else {
-            textEmailAddress.setError(null);*//*
-        }
-
-        if (password.isEmpty() || password.length() < 4 || password.length() > 10) {
-            textPassword.setError("between 4 and 10 alphanumeric characters");
-            valid = false;
-        } else {
-            textPassword.setError(null);
-        }*/
-
-        return valid;
+        this.progressDialog.dismiss();
     }
 
     private class NetworkCall extends AsyncTask<Call, Void, Response<IdModel>> {

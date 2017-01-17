@@ -176,16 +176,15 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
 
-        //String[] items={"Choisissez","Jour","Semaine","Mois"};
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.spinner_list, R.layout.spinner_item);
-        //adapter.setDropDownViewResource(R.layout.spinner_item);
+
         mitem = menu.findItem(R.id.item1);
 
         spin = (Spinner) MenuItemCompat.getActionView(mitem);
 
         spin.setAdapter(adapter);
-        //click spinner
+
         spin.setOnItemSelectedListener(new OnItemSelectedListener() {
 
             @Override
