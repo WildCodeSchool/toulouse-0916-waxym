@@ -90,26 +90,26 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
  if (eventDays != null) {
 
             for (DayStuffModel eventDate : eventDays) {
-                //if (eventDate.getDate().getMonth() == days.get(15).getDate().getMonth()) {
+                if (eventDate.getDate().getMonth() == days.get(15).getDate().getMonth()) {
                     if (eventDate.getDate().getDate() == day &&
                             eventDate.getDate().getMonth() == month &&
                             eventDate.getDate().getYear() == year) {
 
                         if (eventDate.getAfternoon() == 1) {
                             //apresMidiView.setTypeface(null,Typeface.NORMAL);
-                           // apresMidiView.setTextColor(Color.BLACK);
+                            // apresMidiView.setTextColor(Color.BLACK);
                             //apresMidiView.setText(eventDate.getActivity());
-                            apresMidiView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
+                            apresMidiView.setBackgroundColor(Color.parseColor("#" + eventDate.getActivityColor()));
                         } else {
                             //matinView.setTypeface(null,Typeface.NORMAL);
                             //matinView.setTextColor(Color.BLACK);
-                           // matinView.setText(eventDate.getActivity());
-                            matinView.setBackgroundColor(Color.parseColor(eventDate.getActivityColor()));
+                            // matinView.setText(eventDate.getActivity());
+                            matinView.setBackgroundColor(Color.parseColor("#" +eventDate.getActivityColor()));
 
 
                         }
                     }
-
+                }
             }
         }
 

@@ -5,6 +5,7 @@ import android.app.FragmentTransaction;
 import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -32,6 +33,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import fr.wildcodeschool.haa.waxym.Server.ServerHelper;
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 import fr.wildcodeschool.haa.waxym.model.GridDateModel;
@@ -47,9 +49,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     private int viewcurrentPosition = Constants.TOTAL_SLIDES/2;
     private Spinner spin;
     private MenuItem mitem;
-    CalendarFragment calendarFragment;
-    CalendarFragment leftCalendarFragment;
-    CalendarFragment rightCalendarFragment;
+    private CalendarFragment calendarFragment;
+    private CalendarFragment leftCalendarFragment;
+    private CalendarFragment rightCalendarFragment;
 
 
 
@@ -63,7 +65,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
-        //copyDatabase(getApplicationContext());
+        copyDatabase(getApplicationContext());
         if (!database.exists()) {
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
@@ -73,7 +75,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
             }
 
         }
-
+        ServerHelper serverHelper = new ServerHelper(this);
+        //serverHelper.attachUserToActivity();
+        serverHelper.updateServerListActivities();
 
         final Button editButton = (Button) findViewById(R.id.buttonEdit);
         editButton.setOnClickListener(new View.OnClickListener() {
@@ -117,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                     public void run() {
                         showCurrentDate();
                     }
-                }, 18);
+                }, 50);
 
                 // set OnpageChangeListener to refresh currentDate
                 ViewPager.OnPageChangeListener pageChangeListener = new ViewPager.OnPageChangeListener() {
@@ -142,8 +146,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                             }
                             viewcurrentPosition = position;
                         }
-                        updateCurrentViewPagerFragment();
-                        showCurrentDate();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                updateCurrentViewPagerFragment();
+                                showCurrentDate();
+                            }
+                        },200);
 
                     }
 
@@ -223,8 +233,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                 updateCurrentViewPagerFragment();
                 showCurrentDate();
             }
-
-            // this.viewPager.getAdapter().notifyDataSetChanged();
+            status.setLastMonthPosition(viewPager.getCurrentItem());
             return true;
         }
         return super.onOptionsItemSelected(item);

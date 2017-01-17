@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Calendar;
 
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
@@ -76,7 +75,7 @@ public class CustomDayAdapter extends BaseAdapter {
                         if (!this.dayEvents.get(i).getActivity().equals(Constants.CLEAR_ACTIVITY)) {
                             if (this.dayEvents.get(i).getMorning() == 1) {
                                 halfDay.setText(this.dayEvents.get(i).getContractNumber() + " " + this.dayEvents.get(i).getActivity());
-                                gd.setColor(Color.parseColor(this.dayEvents.get(i).getActivityColor()));
+                                gd.setColor(Color.parseColor("#" + this.dayEvents.get(i).getActivityColor()));
                                 gd.setStroke(100, Color.parseColor("#FFFFFF"));
                                 halfDay.setBackgroundDrawable(gd);
 
@@ -94,7 +93,7 @@ public class CustomDayAdapter extends BaseAdapter {
                         if (!this.dayEvents.get(i).getActivity().equals(Constants.CLEAR_ACTIVITY)) {
                             if (this.dayEvents.get(i).getAfternoon() == 1) {
                                 halfDay.setText(this.dayEvents.get(i).getContractNumber() + " " + this.dayEvents.get(i).getActivity());
-                                gd.setColor(Color.parseColor(this.dayEvents.get(i).getActivityColor()));
+                                gd.setColor(Color.parseColor("#" + this.dayEvents.get(i).getActivityColor()));
                                 gd.setStroke(100, Color.parseColor("#FFFFFF"));
                                 halfDay.setBackgroundDrawable(gd);
 
