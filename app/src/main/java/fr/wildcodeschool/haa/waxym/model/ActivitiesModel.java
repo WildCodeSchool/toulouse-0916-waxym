@@ -2,28 +2,30 @@ package fr.wildcodeschool.haa.waxym.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import fr.wildcodeschool.haa.waxym.Constants;
+
 /**
  * Created by devauxarthur on 10/01/2017.
  */
 
 public class ActivitiesModel {
 
-    @SerializedName("id")
+    @SerializedName(Constants.ACTIVITIES_MODEL_ID)
     long id;
 
-    @SerializedName("type")
+    @SerializedName(Constants.ACTIVITIES_MODEL_TYPE)
     int type;
 
-    @SerializedName("label")
+    @SerializedName(Constants.ACTIVITIES_MODEL_LABEL)
     String label;
 
-    @SerializedName("clientId")
+    @SerializedName(Constants.ACTIVITIES_MODEL_CLIENT_ID)
     long clientId;
 
-    @SerializedName("contractId")
+    @SerializedName(Constants.ACTIVITIES_MODEL_CONTRACT_ID)
     long contractId;
 
-    @SerializedName("color")
+    @SerializedName(Constants.ACTIVITIES_MODEL_COLOR)
     String color;
 
     public ActivitiesModel(long id, int type, String label, long clientId, long contractId, String color) {

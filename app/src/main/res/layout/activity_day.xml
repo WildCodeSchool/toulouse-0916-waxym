@@ -1,18 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:gravity="center">
+    android:gravity="center"
+    android:orientation="vertical">
+
     <TextView
         android:id="@+id/activity_day_text"
         android:layout_width="match_parent"
         android:layout_height="230dp"
-        android:text="POOOOOOOOO"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:text="" />
+
     <View
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="#000"/>
+        android:background="#000" />
 
 </LinearLayout>

@@ -2,19 +2,21 @@ package fr.wildcodeschool.haa.waxym.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import fr.wildcodeschool.haa.waxym.Constants;
+
 /**
  * Created by devauxarthur on 10/01/2017.
  */
 
 public class DayActivitiesModel {
 
-    @SerializedName("day")
+    @SerializedName(Constants.DAY_ACTIVITIES_MODEL_DAY)
     String day;
 
-    @SerializedName("amActivityId")
+    @SerializedName(Constants.DAY_ACTIVITIES_MODEL_AM_ACTIVITY_ID)
     long amActivityId;
 
-    @SerializedName("pmActivityId")
+    @SerializedName(Constants.DAY_ACTIVITIES_MODEL_PM_ACTIVITY_ID)
     long pmActivityId;
 
     public DayActivitiesModel(String day, long amActivityId) {

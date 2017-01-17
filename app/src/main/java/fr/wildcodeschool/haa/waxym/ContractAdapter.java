@@ -20,12 +20,12 @@ import fr.wildcodeschool.haa.waxym.model.ActivityItemModel;
  * Created by apprenti on 30/11/16.
  */
 
-public class CustomAdapter extends BaseAdapter {
+public class ContractAdapter extends BaseAdapter {
     Context context;
     LayoutInflater inflater;
     ArrayList<ActivityItemModel> listContrat;
 
-    public CustomAdapter(Context context, ArrayList<ActivityItemModel> listContrat){
+    public ContractAdapter(Context context, ArrayList<ActivityItemModel> listContrat){
         //super(context, R.layout.list_view_item);
         this.context = context;
         this.listContrat = listContrat;

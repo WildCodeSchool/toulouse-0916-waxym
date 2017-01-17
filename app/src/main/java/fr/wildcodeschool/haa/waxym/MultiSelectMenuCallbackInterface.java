@@ -8,6 +8,6 @@ import java.util.Date;
  * Created by tuffery on 30/11/16.
  */
 
-public interface AdapterCallbackInterface {
-    void passCheckedDay(Date date,int position, boolean bool);
+public interface MultiSelectMenuCallbackInterface {
+    void passCheckedDay(Date date, int position, boolean bool);
 }

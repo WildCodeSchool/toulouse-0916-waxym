@@ -46,13 +46,12 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     private CustomViewPager viewPager;
     private TextView textDate;
     private LinearLayout header;
-    private int viewcurrentPosition = Constants.TOTAL_SLIDES/2;
+    private int viewcurrentPosition = Constants.TOTAL_SLIDES / 2;
     private Spinner spin;
     private MenuItem mitem;
     private CalendarFragment calendarFragment;
     private CalendarFragment leftCalendarFragment;
     private CalendarFragment rightCalendarFragment;
-
 
 
     @Override
@@ -133,13 +132,13 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                     @Override
                     public void onPageSelected(int position) {
                         StatusSingleton status = StatusSingleton.getInstance();
-                        if(status.isInDayView()){
+                        if (status.isInDayView()) {
                             Calendar calendar = status.getCurrentDate();
-                            if(viewcurrentPosition < position){
+                            if (viewcurrentPosition < position) {
 
-                                calendar.add(Calendar.DAY_OF_MONTH,1);
+                                calendar.add(Calendar.DAY_OF_MONTH, 1);
                                 status.setCurrentDate(skipWeekend(calendar, true));
-                            }else {
+                            } else {
                                 calendar.add(Calendar.DAY_OF_MONTH, -1);
                                 status.setCurrentDate(skipWeekend(calendar, false));
 
@@ -153,7 +152,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                                 updateCurrentViewPagerFragment();
                                 showCurrentDate();
                             }
-                        },200);
+                        }, 200);
 
                     }
 
@@ -168,7 +167,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
             }
         });
 
-        header = (LinearLayout)findViewById(R.id.calendar_header);
+        header = (LinearLayout) findViewById(R.id.calendar_header);
     }
 
 
@@ -200,8 +199,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                     updateCurrentViewPagerFragment();
                     updateBorderViewPagerFragment();
 
-                }
-                else if (position == 3){
+                } else if (position == 3) {
                     status.setInDayView(false);
                     status.setInMonthView(true);
                     viewPager.setCurrentItem(status.getLastMonthPosition());
@@ -226,9 +224,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
         if (id == R.id.action_show_list) {
-           this.viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
+            this.viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
             StatusSingleton status = StatusSingleton.getInstance();
-            if(status.isInDayView()){
+            if (status.isInDayView()) {
                 status.setCurrentDate(Calendar.getInstance());
                 updateCurrentViewPagerFragment();
                 showCurrentDate();
@@ -319,18 +317,16 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
         GridDateModel gridDateModel = calendarFragment.getCurrentDate();
         String dateFormat;
-        if(status.isInMonthView()) {
+        if (status.isInMonthView()) {
             header.setVisibility(View.VISIBLE);
             dateFormat = "MMMM yyyy";
-        }
-        else if (status.isInDayView()) {
+        } else if (status.isInDayView()) {
             header.setVisibility(View.INVISIBLE);
             dateFormat = "EEEE dd MMMM";
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(gridDateModel.getDate());
             status.setCurrentDate(calendar);
-        }
-        else
+        } else
             dateFormat = "MMMM yyyy";
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.FRANCE);
         // SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
@@ -341,7 +337,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
     }
 
-    public void updateCurrentViewPagerFragment()  {
+    public void updateCurrentViewPagerFragment() {
 
         FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter) this.viewPager.getAdapter();
         this.calendarFragment = (CalendarFragment) fsp.instantiateItem(this.viewPager, this.viewPager.getCurrentItem());
@@ -357,9 +353,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
     public void updateBorderViewPagerFragment() {
         FragmentStatePagerAdapter fsp = (FragmentStatePagerAdapter) viewPager.getAdapter();
-        rightCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem()+1);
+        rightCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem() + 1);
         rightCalendarFragment.updateCalendar(getApplicationContext());
-        leftCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem()-1);
+        leftCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem() - 1);
         leftCalendarFragment.updateCalendar(getApplicationContext());
 
        /* runOnUiThread(new Runnable() {
@@ -370,14 +366,14 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         });*/
     }
 
-    private Calendar skipWeekend(Calendar calendar, boolean isTotheFuture){
+    private Calendar skipWeekend(Calendar calendar, boolean isTotheFuture) {
 
-        if (isTotheFuture){
+        if (isTotheFuture) {
             if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)
                 calendar.add(Calendar.DAY_OF_WEEK, 2);
             else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
                 calendar.add(Calendar.DAY_OF_WEEK, 1);
-        }else {
+        } else {
             if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY)
                 calendar.add(Calendar.DAY_OF_WEEK, -1);
             else if (calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY)
@@ -386,20 +382,23 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
 
         return calendar;
     }
+
     @Override
-        public void onBackPressed(){
+    public void onBackPressed() {
 
     }
-    public void changeSwipeMode(){
+
+    public void changeSwipeMode() {
         StatusSingleton status = StatusSingleton.getInstance();
-        if (status.isEditMode()){
-           viewPager.setPagingEnabled(false);
-        }else {
+        if (status.isEditMode()) {
+            viewPager.setPagingEnabled(false);
+        } else {
             viewPager.setPagingEnabled(true);
         }
 
     }
-    class UpdateCurrentViewPagerFragment extends AsyncTask<CalendarFragment,Integer,Void> {
+
+    class UpdateCurrentViewPagerFragment extends AsyncTask<CalendarFragment, Integer, Void> {
 
 
         @Override
@@ -408,7 +407,8 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
             return null;
         }
     }
-    class UpdateBorderViewPagerFragment extends AsyncTask<CalendarFragment,Integer,Void> {
+
+    class UpdateBorderViewPagerFragment extends AsyncTask<CalendarFragment, Integer, Void> {
 
 
         @Override

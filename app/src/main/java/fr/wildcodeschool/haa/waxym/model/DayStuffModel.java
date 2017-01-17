@@ -9,7 +9,7 @@ import java.util.Date;
  * Created by tuffery on 23/11/16.
  */
 
-public class DayStuffModel implements Parcelable{
+public class DayStuffModel implements Parcelable {
     private Date date;
     private String activity;
     private int morning;
@@ -19,7 +19,7 @@ public class DayStuffModel implements Parcelable{
     private long userId;
     private String activityColor;
     private int sendState;
-    private long activityId ;
+    private long activityId;
     private long activityDetailType;
 
     public DayStuffModel(Date date, String activity, long contractNumber, String activityColor, int morning, int afternoon, String userName, int userId, int sendState, long activityId, long activityDetailType) {

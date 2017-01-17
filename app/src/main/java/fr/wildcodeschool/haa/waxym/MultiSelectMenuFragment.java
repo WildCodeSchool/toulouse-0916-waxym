@@ -23,10 +23,11 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
  * to handle interaction events.
  * create an instance of this fragment.
  */
-public class MultiSelectMenuFragment extends Fragment implements AdapterCallbackInterface {
+public class MultiSelectMenuFragment extends Fragment implements MultiSelectMenuCallbackInterface {
 
     public ArrayList<DayStuffModel> selectedList = new ArrayList<>();
     private View mView;
+
     public MultiSelectMenuFragment() {
         // Required empty public constructor
     }
@@ -147,9 +148,11 @@ public class MultiSelectMenuFragment extends Fragment implements AdapterCallback
         statusSingleton.setMenuCreated(false);
 
     }
+
     private void clearSelected() throws ParseException {
-        for (int i = 0; i < this.selectedList.size(); i++){
+        for (int i = 0; i < this.selectedList.size(); i++) {
             this.selectedList.get(i).setActivity(Constants.CLEAR_ACTIVITY);
+            //noinspection ResourceType
             this.selectedList.get(i).setActivityColor(getResources().getString(R.color.white).substring(3));
             this.selectedList.get(i).setUserId(StatusSingleton.getInstance().getCurrentUserId());
             this.selectedList.get(i).setSendState(Constants.NOT_SENDED);

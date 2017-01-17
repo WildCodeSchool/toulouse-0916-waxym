@@ -8,8 +8,8 @@ import java.util.Calendar;
 
 public class StatusSingleton {
     private static StatusSingleton mInstance = null;
-    private  boolean isMenuCreated;
-    private  boolean isEditMode;
+    private boolean isMenuCreated;
+    private boolean isEditMode;
     private boolean isInMonthView;
     private boolean isInDayView;
     private Calendar currentDate;
@@ -24,9 +24,9 @@ public class StatusSingleton {
         this.currentDate = Calendar.getInstance();
         this.currentUserId = 0;
     }
-    public static StatusSingleton getInstance(){
-        if(mInstance == null)
-        {
+
+    public static StatusSingleton getInstance() {
+        if (mInstance == null) {
             mInstance = new StatusSingleton();
         }
         return mInstance;

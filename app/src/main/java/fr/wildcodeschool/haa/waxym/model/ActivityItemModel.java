@@ -11,7 +11,7 @@ public class ActivityItemModel {
     private long activityID;
     private boolean isSelected;
 
-    public ActivityItemModel(long activityNumber,String activityName, String activityColor, long activityID) {
+    public ActivityItemModel(long activityNumber, String activityName, String activityColor, long activityID) {
         this.activityNumber = activityNumber;
         this.activityName = activityName;
         this.activityColor = activityColor;

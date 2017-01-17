@@ -2,16 +2,18 @@ package fr.wildcodeschool.haa.waxym.model;
 
 import com.google.gson.annotations.SerializedName;
 
+import fr.wildcodeschool.haa.waxym.Constants;
+
 /**
  * Created by devauxarthur on 10/01/2017.
  */
 
 public class UserModel {
 
-    @SerializedName("login")
+    @SerializedName(Constants.USER_MODEL_LOGIN)
     String login;
 
-    @SerializedName("pwd")
+    @SerializedName(Constants.USER_MODEL_PWD)
     String pwd;
 
     public UserModel(String login, String pwd) {

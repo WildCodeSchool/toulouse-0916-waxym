@@ -26,8 +26,7 @@ import fr.wildcodeschool.haa.waxym.model.GridDateModel;
  *
  */
 
-public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
-{
+public class MonthAdapter extends ArrayAdapter<GridDateModel> {
     // days with events
     private ArrayList<DayStuffModel> eventDays;
     private DBHandler mDBHandler;
@@ -39,9 +38,8 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
     private StatusSingleton status;
     private int height;
 
-    public MonthCalendarAdapter(Context context, ArrayList<GridDateModel> days)
-    {
-        super(context, R.layout.calendar_day2, days);
+    public MonthAdapter(Context context, ArrayList<GridDateModel> days) {
+        super(context, R.layout.calendar_day, days);
         this.inflater = LayoutInflater.from(context);
         this.context = context;
         this.days = days;
@@ -63,8 +61,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
 
 
     @Override
-    public View getView(final int position, View view, ViewGroup parent)
-    {
+    public View getView(final int position, View view, ViewGroup parent) {
 
         // day in question
         Date date = getItem(position).getDate();
@@ -78,16 +75,15 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
 
         // inflate item if it does not exist yet
         if (view == null)
-            view = inflater.inflate(R.layout.calendar_day2, parent, false);
+            view = inflater.inflate(R.layout.calendar_day, parent, false);
         //get views
-        TextView dayDateView = (TextView)view.findViewById(R.id.day_date);
+        TextView dayDateView = (TextView) view.findViewById(R.id.day_date);
         TextView matinView = (TextView) view.findViewById(R.id.image_matin);
-        TextView apresMidiView = (TextView)view.findViewById(R.id.image_apres_midi);
-
+        TextView apresMidiView = (TextView) view.findViewById(R.id.image_apres_midi);
 
 
         // if this day has an event, specify event view
- if (eventDays != null) {
+        if (eventDays != null) {
 
             for (DayStuffModel eventDate : eventDays) {
                 if (eventDate.getDate().getMonth() == days.get(15).getDate().getMonth()) {
@@ -104,7 +100,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
                             //matinView.setTypeface(null,Typeface.NORMAL);
                             //matinView.setTextColor(Color.BLACK);
                             // matinView.setText(eventDate.getActivity());
-                            matinView.setBackgroundColor(Color.parseColor("#" +eventDate.getActivityColor()));
+                            matinView.setBackgroundColor(Color.parseColor("#" + eventDate.getActivityColor()));
 
 
                         }
@@ -117,16 +113,14 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         dayDateView.setTypeface(null, Typeface.NORMAL);
         dayDateView.setTextColor(Color.BLACK);
 
-        if (month == days.get(15).getDate().getMonth())
-        {
+        if (month == days.get(15).getDate().getMonth()) {
             dayDateView.setTextColor(Color.BLACK);
-            if (day == today.getDate() && month == today.getMonth())
-            {
+            if (day == today.getDate() && month == today.getMonth()) {
                 // if it is today, set it to blue/bold
                 dayDateView.setTypeface(null, Typeface.BOLD);
                 dayDateView.setTextColor(context.getResources().getColor(R.color.today));
             }
-        }else{
+        } else {
             // if this day is outside current month, hide it
             dayDateView.setTextColor(Color.parseColor("#00FF0000"));
             // today in blue
@@ -137,7 +131,7 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         // set text
         dayDateView.setText(String.valueOf(date.getDate()));
         //set row height
-        view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT, (int) (height/8.5)));
+        view.setLayoutParams(new GridView.LayoutParams(GridView.AUTO_FIT, (int) (height / 8.5)));
         status = StatusSingleton.getInstance();
         if (!status.isEditMode()) {
             Calendar currentDay = Calendar.getInstance();
@@ -149,9 +143,10 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
                     public void onClick(View v) {
                         Calendar calendar = Calendar.getInstance();
                         calendar.setTime(days.get(position).getDate());
-                        if (status.getLastMonthPosition() != Constants.TOTAL_SLIDES/2){
-                            calendar.add(Calendar.DAY_OF_MONTH,1);
-                        };
+                        if (status.getLastMonthPosition() != Constants.TOTAL_SLIDES / 2) {
+                            calendar.add(Calendar.DAY_OF_MONTH, 1);
+                        }
+                        ;
                         status.setCurrentDate(calendar);
                         callback.launchDayView();
                     }
@@ -160,7 +155,8 @@ public class MonthCalendarAdapter extends ArrayAdapter<GridDateModel>
         }
         return view;
     }
-    public void setCallback(MainActivityCallBackInterface callback){
+
+    public void setCallback(MainActivityCallBackInterface callback) {
 
         this.callback = callback;
     }
