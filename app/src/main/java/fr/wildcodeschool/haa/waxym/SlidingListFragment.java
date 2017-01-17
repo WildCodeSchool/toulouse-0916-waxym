@@ -15,6 +15,7 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.util.ArrayList;
 
+import fr.wildcodeschool.haa.waxym.Server.ServerHelper;
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.ActivityItemModel;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
@@ -104,6 +105,8 @@ public class SlidingListFragment extends DialogFragment {
                     if (isWritingModeChoiceDone) {
                         try {
                             writeInDatabase();
+                            ServerHelper serverHelper = new ServerHelper(view.getContext());
+                            serverHelper.sendDaysActivities();
                         } catch (ParseException e) {
                             e.printStackTrace();
                         }

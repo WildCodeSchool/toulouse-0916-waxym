@@ -17,6 +17,16 @@ public class DayActivitiesModel {
     @SerializedName("pmActivityId")
     long pmActivityId;
 
+    public DayActivitiesModel(String day, long amActivityId) {
+        this.day = day;
+        this.amActivityId = amActivityId;
+    }
+
+    public DayActivitiesModel(long pmActivityId, String day) {
+        this.pmActivityId = pmActivityId;
+        this.day = day;
+    }
+
     public DayActivitiesModel(String day, long amActivityId, long pmActivityId) {
         this.day = day;
         this.amActivityId = amActivityId;
@@ -33,5 +43,17 @@ public class DayActivitiesModel {
 
     public long getPmActivityId() {
         return pmActivityId;
+    }
+
+    public void setDay(String day) {
+        this.day = day;
+    }
+
+    public void setAmActivityId(long amActivityId) {
+        this.amActivityId = amActivityId;
+    }
+
+    public void setPmActivityId(long pmActivityId) {
+        this.pmActivityId = pmActivityId;
     }
 }

@@ -4,6 +4,7 @@ package fr.wildcodeschool.haa.waxym;
 import com.google.gson.JsonObject;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.wildcodeschool.haa.waxym.model.ActivitiesModel;
@@ -11,6 +12,7 @@ import fr.wildcodeschool.haa.waxym.model.ActivityModel;
 import fr.wildcodeschool.haa.waxym.model.DayActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.IdModel;
 import fr.wildcodeschool.haa.waxym.model.ListOfActivitiesModel;
+import fr.wildcodeschool.haa.waxym.model.ListOfDayActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.UserModel;
 import okhttp3.OkHttpClient;
 import retrofit2.Call;
@@ -34,10 +36,10 @@ public interface SuperInterface {
     Call<IdModel> login(@Body UserModel login);
 
     @GET("dayactivities/{userId}/{dtstart}/{dtend}")
-    Call<JsonObject> getDayActivities(@Path("userId") long userid, @Path("dtstart") long dtstart, @Path("dtend") long dtend );
+    Call<ListOfDayActivitiesModel> getDayActivities(@Path("userId") long userid, @Path("dtstart") String dtstart, @Path("dtend") String dtend );
 
     @POST("dayactivities/{userId}")
-    Call<JsonObject> addActivities(@Body DayActivitiesModel dayActivities);
+    Call<JsonObject> sendActivities(@Path("userId") long userId ,@Body ListOfDayActivitiesModel listOfDayActivitiesModel);
 
     @POST("dayactivities/register")
     Call<Long> createRegister(@Body UserModel register);
@@ -53,8 +55,7 @@ public interface SuperInterface {
                                        @Body IdModel idActivity);
     @POST("register")
     Call<IdModel> newUser(@Body UserModel userModel);
-    public OkHttpClient okClient = new OkHttpClient();
-    public static final Retrofit retrofit = new Retrofit.Builder()
+    Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build();

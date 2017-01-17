@@ -45,6 +45,7 @@ public class Constants {
     public final static String CLEAR_ACTIVITY = "clearEvilOfDoom";
     public final static int NOT_SENDED = 1;
 
+
     //Code server
     public final static int BLANK_HOLIDAY = -1;
     public final static int OK = 0;

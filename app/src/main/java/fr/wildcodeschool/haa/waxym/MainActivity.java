@@ -78,7 +78,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         ServerHelper serverHelper = new ServerHelper(this);
         //serverHelper.attachUserToActivity();
         serverHelper.updateServerListActivities();
-
+        //serverHelper.getActivitiesBetweenDate();
         final Button editButton = (Button) findViewById(R.id.buttonEdit);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override

@@ -255,9 +255,13 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         openDatabase();
         Cursor cursor = mDatabase.rawQuery("SELECT " + Constants.DATE_ACTIVITY + ", " + Constants.NAME_ACTIVITY + ", " + Constants.CONTRACT_NUMBER +
                 ", " + Constants.ACTIVITY_COLOR + "," + Constants.MORNING + ", " + Constants.AFTERNOON + ", " + Constants.NAME_USER + ", " + Constants.ID_USER_USER + ", " + Constants.SEND_STATE +
-                ", " + Constants.ID_ACTIVITY + "," + Constants.CATEGORY_ACTIVITY +
+                ", " + Constants.ID_ACTIVITY_ACTIVITY_DETAILS + "," + Constants.CATEGORY_ACTIVITY +
                 " FROM " + Constants.USER + "," + Constants.ACTIVITY + "," + Constants.ACTIVITY_TYPE + "," + Constants.ACTIVITY_DETAILS +
-                " WHERE " + Constants.SEND_STATE +" = '" + Constants.ACTIVITY_SEND_STATE + "'", null);
+                " WHERE " + Constants.SEND_STATE +" = '" + Constants.NOT_SENDED + "'" +
+                " AND " + Constants.ID_ACTIVITY_ACTIVITY_DETAILS + " = " + Constants.ID_ACTIVITY_DETAILS +
+                " AND " + Constants.ID_USER_USER + " = " + Constants.ID_USER_ACTIVITY +
+                " AND " + Constants.ID_USER_ACTIVITY +" = '" + StatusSingleton.getInstance().getCurrentUserId() + "'"+
+                " AND " + Constants.ID_ACTIVITY_TYPE_ACTIVITY + " = " + Constants.ID_ACTIVITY_TYPE_ACTIVITY_TYPE, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             dayStuff = new DayStuffModel(convertStringToDate(cursor.getString(0)), cursor.getString(1), cursor.getLong(2), cursor.getString(3), cursor.getInt(4),
