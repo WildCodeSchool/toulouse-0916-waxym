@@ -77,7 +77,7 @@ public class ServerHelper {
     public void addActvityOnServer() {
         SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
         //
-        // ActivityModel rtt = new ActivityModel(0,"RTT","#9FE855"); id = 13
+        //ActivityModel rtt = new ActivityModel(0,"RTT","#9FE855"); id = 13
         // ActivityModel SansSolde = new ActivityModel(0,"Sans Soldes","#ce6348"); id = 14
         // ActivityModel cp = new ActivityModel(0,"CP","#55e8b0"); id = 15
         // ActivityModel cp = new ActivityModel(1,"CP","#55e8b0"); id = 16

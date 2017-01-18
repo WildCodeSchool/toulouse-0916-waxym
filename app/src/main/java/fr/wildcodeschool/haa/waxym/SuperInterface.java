@@ -29,31 +29,31 @@ import retrofit2.http.Path;
 
 public interface SuperInterface {
 
-    @GET("activities/{userId}")
-    Call<ListOfActivitiesModel> getActivities(@Path("userId") long userId);
+    @GET(Constants.GET_ACTIVITIES_PATH)
+    Call<ListOfActivitiesModel> getActivities(@Path(Constants.SERVER_USERID_PATH) long userId);
 
-    @POST("login")
+    @POST(Constants.LOGIN_BODY)
     Call<IdModel> login(@Body UserModel login);
 
-    @GET("dayactivities/{userId}/{dtstart}/{dtend}")
-    Call<ListOfDayActivitiesModel> getDayActivities(@Path("userId") long userid, @Path("dtstart") String dtstart, @Path("dtend") String dtend );
+    @GET(Constants.GET_DAY_ACTIVITIES_PATH)
+    Call<ListOfDayActivitiesModel> getDayActivities(@Path(Constants.SERVER_USERID_PATH) long userid, @Path(Constants.DTSTART_PATH) String dtstart, @Path(Constants.DTEND_PATH) String dtend );
 
-    @POST("dayactivities/{userId}")
-    Call<JsonObject> sendActivities(@Path("userId") long userId ,@Body ListOfDayActivitiesModel listOfDayActivitiesModel);
+    @POST(Constants.SEND_ACTIVITIES_PATH )
+    Call<JsonObject> sendActivities(@Path(Constants.SERVER_USERID_PATH) long userId ,@Body ListOfDayActivitiesModel listOfDayActivitiesModel);
 
-    @POST("dayactivities/register")
+    @POST(Constants.CREATE_REGISTER_BODY)
     Call<Long> createRegister(@Body UserModel register);
 
-    @POST("activity")
+    @POST(Constants.ADD_ACTIVITY_BODY)
     Call<IdModel> addActivity(@Body ActivityModel activity);
 
-    @POST("activities/{userId}/add")
-    Call<JsonObject> addActivityToUser(@Path("userId") long userId,
+    @POST(Constants.ADD_ACTIVITY_TO_USER)
+    Call<JsonObject> addActivityToUser(@Path(Constants.SERVER_USERID_PATH) long userId,
                                        @Body IdModel idActivity);
-    @POST("activities/{userId}/remove")
-    Call<JsonObject> removeActivityToUser(@Path("userId") long userId,
+    @POST(Constants.REMOVE_ACTIVITY_TO_USER)
+    Call<JsonObject> removeActivityToUser(@Path(Constants.SERVER_USERID_PATH) long userId,
                                        @Body IdModel idActivity);
-    @POST("register")
+    @POST(Constants.NEWUSER_BODY)
     Call<IdModel> newUser(@Body UserModel userModel);
     Retrofit retrofit = new Retrofit.Builder()
             .baseUrl(Constants.BASE_URL)
