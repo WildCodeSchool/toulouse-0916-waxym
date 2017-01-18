@@ -291,6 +291,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
     }
 
     public ArrayList<Long> getAllUsers() {
+        openDatabase();
         ArrayList<Long> userIdList = new ArrayList<>();
         Cursor cursor = mDatabase.rawQuery("SELECT " + Constants.ID_USER +
                 " FROM " + Constants.USER, null);
@@ -305,7 +306,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         return userIdList;
     }
 
-    public void newUser(int id, String name) {
+    public void newUser(long id, String name) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues valuesActivity = new ContentValues();
         valuesActivity.put(Constants.NAME_USER, name);

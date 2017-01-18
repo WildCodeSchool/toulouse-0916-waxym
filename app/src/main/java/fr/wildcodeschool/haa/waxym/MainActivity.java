@@ -60,20 +60,9 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         setContentView(R.layout.activity_main);
         textDate = (TextView) findViewById(R.id.calendar_date_display);
 
-
         this.mDBHelper = new DBHandler(this);
-        // check if database exist
-        File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
-        copyDatabase(getApplicationContext());
-        if (!database.exists()) {
-            this.mDBHelper.getReadableDatabase();
-            // and copy database with method
-            if (!this.copyDatabase(this)) {
-                Toast.makeText(this, "error cannot copy Database", Toast.LENGTH_SHORT).show();
-                return;
-            }
 
-        }
+
         ServerHelper serverHelper = new ServerHelper(this);
         //serverHelper.attachUserToActivity();
         serverHelper.updateServerListActivities();
@@ -262,32 +251,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     }
 
 
-    //copying database from assets to database folder
-    private boolean copyDatabase(Context context) {
-        try {
-            InputStream inpuStream = context.getAssets().open(Constants.DBNAME);
-            // set target of output
-            OutputStream outputStream = new FileOutputStream(getDatabasePath(Constants.DBNAME));
-            // buffer
-            byte[] buff = new byte[1024];
-            int length = 0;
-            while ((length = inpuStream.read(buff)) > 0) {
-                //writing
-                outputStream.write(buff, 0, length);
 
-            }
-            //clear buffer
-            outputStream.flush();
-            outputStream.close();
-            Log.w("MainActivity", "DB copied");
-            return true;
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-
-    }
 
     @Override
     public void onMethodCallBack() {
