@@ -45,17 +45,17 @@ EmploYeah is a management application. You can edit your daily/weekly/monthly ti
 
 **Pictures**
 --------------------
->- Day view
->- ![enter image description here](http://i.imgur.com/tXV91av.jpg)
+Day view
+![enter image description here](http://i.imgur.com/tXV91av.jpg)
 
->- Month view
->- ![enter image description here](http://i.imgur.com/UJZU7ei.jpg)
+Month view
+![enter image description here](http://i.imgur.com/UJZU7ei.jpg)
 
->- Day view EditMode
->- ![enter image description here](http://i.imgur.com/CNbYkfi.jpg)
+Day view EditMode
+![enter image description here](http://i.imgur.com/CNbYkfi.jpg)
 
->- Month view EditMode
->- ![enter image description here](http://i.imgur.com/M6FkFaj.jpg)
+Month view EditMode
+![enter image description here](http://i.imgur.com/M6FkFaj.jpg)
 
 ----------
 
