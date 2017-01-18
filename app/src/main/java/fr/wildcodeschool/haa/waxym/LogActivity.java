@@ -1,6 +1,7 @@
 package fr.wildcodeschool.haa.waxym;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -12,10 +13,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 
+import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.IdModel;
 import fr.wildcodeschool.haa.waxym.model.UserModel;
 import okhttp3.Headers;
@@ -31,6 +38,8 @@ public class LogActivity extends AppCompatActivity {
     private MessageDigest digest;
     private String encryptedPassword;
     private ProgressDialog progressDialog;
+    private DBHandler mDBHelper;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -41,6 +50,22 @@ public class LogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_log);
+
+        this.mDBHelper = new DBHandler(this);
+        // check if database exist
+        File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
+        copyDatabase(getApplicationContext());
+        if (!database.exists()) {
+            this.mDBHelper.getReadableDatabase();
+            // and copy database with method
+            if (!this.copyDatabase(this)) {
+                Toast.makeText(this, "error cannot copy Database", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        }
+
+
         this.btn_login = (Button) findViewById(R.id.btn_login);
         this.textEmailAddress = (EditText) findViewById(R.id.input_email);
 
@@ -133,6 +158,19 @@ public class LogActivity extends AppCompatActivity {
         protected void onPostExecute(Response<IdModel> result) {
 
             if (result.body().getID() != -1) {
+
+               ArrayList<Long> existingUserId = mDBHelper.getAllUsers();
+                boolean isExisting = false;
+                for (int i = 0; i < existingUserId.size(); i++) {
+                    if (existingUserId.get(i) == result.body().getID()) {
+                        isExisting = true;
+                        break;
+                    }
+                }
+                    if (!isExisting){
+                        mDBHelper.newUser(result.body().getID(), textEmailAddress.getText().toString());
+                    }
+
                 StatusSingleton status = StatusSingleton.getInstance();
                 status.setCurrentUserId(result.body().getID());
                 onLoginSuccess();
@@ -140,5 +178,31 @@ public class LogActivity extends AppCompatActivity {
                 onLoginFailed();
             }
         }
+    }
+    //copying database from assets to database folder
+    private boolean copyDatabase(Context context) {
+        try {
+            InputStream inpuStream = context.getAssets().open(Constants.DBNAME);
+            // set target of output
+            OutputStream outputStream = new FileOutputStream(getDatabasePath(Constants.DBNAME));
+            // buffer
+            byte[] buff = new byte[1024];
+            int length = 0;
+            while ((length = inpuStream.read(buff)) > 0) {
+                //writing
+                outputStream.write(buff, 0, length);
+
+            }
+            //clear buffer
+            outputStream.flush();
+            outputStream.close();
+            Log.w("MainActivity", "DB copied");
+            return true;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+
     }
 }

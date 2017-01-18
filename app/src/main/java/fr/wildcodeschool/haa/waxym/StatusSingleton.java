@@ -23,6 +23,7 @@ public class StatusSingleton {
         isInDayView = false;
         this.currentDate = Calendar.getInstance();
         this.currentUserId = 0;
+        this.lastMonthPosition = Constants.TOTAL_SLIDES/2;
     }
 
     public static StatusSingleton getInstance() {

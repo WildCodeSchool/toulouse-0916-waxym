@@ -235,7 +235,7 @@ public class ServerHelper {
         }
     }
 
-    public void getActivitiesBetweenDate(){
+    public void getActivitiesFromServer(){
         SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
         Call<ListOfDayActivitiesModel> call = apiService.getDayActivities(StatusSingleton.getInstance().getCurrentUserId(),"2017-01-01","2017-01-31");
         new GetActivitiesCall().execute(call);
