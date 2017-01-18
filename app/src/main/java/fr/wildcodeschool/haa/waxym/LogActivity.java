@@ -22,6 +22,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
+import fr.wildcodeschool.haa.waxym.Server.ServerHelper;
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.IdModel;
 import fr.wildcodeschool.haa.waxym.model.UserModel;
@@ -50,7 +51,8 @@ public class LogActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_log);
-
+        ServerHelper serverHelper = new ServerHelper(this);
+        serverHelper.addActvityOnServer();
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);

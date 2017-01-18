@@ -81,8 +81,9 @@ public class ServerHelper {
         // ActivityModel SansSolde = new ActivityModel(0,"Sans Soldes","#ce6348"); id = 14
         // ActivityModel cp = new ActivityModel(0,"CP","#55e8b0"); id = 15
         // ActivityModel cp = new ActivityModel(1,"CP","#55e8b0"); id = 16
-        //ActivityModel cp = new ActivityModel(1,"Sans Solde","#ce6348"); id = 17
-        ActivityModel cp = new ActivityModel(1, "Sans Solde", "#ce6348");
+        //ActivityModel cp = new ActivityModel(1 ,"RTT","#9FE855"); id = 17 !
+        //
+        ActivityModel cp = new ActivityModel(1 ,"RTT","#9FE855");
         Call<IdModel> call = apiService.addActivity(cp);
         new AddActivityCall().execute(call);
 
