@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="40dp"
             android:gravity="center_horizontal"
-            android:text="EmploYeah!"
+            android:text="@string/employeah"
             android:textColor="#000000"
             android:textSize="40dp"
             android:textStyle="bold" />
@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Email"
+            android:hint="@string/username"
             android:inputType="textEmailAddress"
             android:text="TestUser" />
 
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            android:hint="Password"
+            android:hint="@string/password"
             android:inputType="textPassword"
             android:text="Prout256" />
 
@@ -52,7 +52,7 @@
             android:layout_marginTop="24dp"
             android:gravity="center_horizontal"
             android:padding="12dp"
-            android:text="login" />
+            android:text="@string/login" />
     </LinearLayout>
 
 </LinearLayout>
