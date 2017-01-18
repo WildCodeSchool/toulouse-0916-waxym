@@ -76,7 +76,7 @@ public class DayAdapter extends BaseAdapter {
                             if (this.dayEvents.get(i).getMorning() == 1) {
                                 halfDay.setText(this.dayEvents.get(i).getActivity());
                                 gd.setColor(Color.parseColor("#" + this.dayEvents.get(i).getActivityColor()));
-                                gd.setStroke(100, Color.parseColor("#FFFFFF"));
+                                gd.setStroke(100, Color.WHITE);
                                 halfDay.setBackgroundDrawable(gd);
 
 
@@ -94,7 +94,7 @@ public class DayAdapter extends BaseAdapter {
                             if (this.dayEvents.get(i).getAfternoon() == 1) {
                                 halfDay.setText(this.dayEvents.get(i).getActivity());
                                 gd.setColor(Color.parseColor("#" + this.dayEvents.get(i).getActivityColor()));
-                                gd.setStroke(100, Color.parseColor("#FFFFFF"));
+                                gd.setStroke(100, Color.WHITE);
                                 halfDay.setBackgroundDrawable(gd);
 
                             }

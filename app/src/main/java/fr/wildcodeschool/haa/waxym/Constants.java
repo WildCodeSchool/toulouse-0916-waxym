@@ -85,4 +85,18 @@ public class Constants {
     public final static String USER_MODEL_LOGIN = "login";
     public final static String USER_MODEL_PWD = "pwd";
 
+    //SuperInterface
+    public final static String GET_ACTIVITIES_PATH = "activities/{userId}";
+    public final static String LOGIN_BODY = "login";
+    public final static String GET_DAY_ACTIVITIES_PATH = "dayactivities/{userId}/{dtstart}/{dtend}";
+    public final static String SERVER_USERID_PATH = "userId";
+    public final static String DTSTART_PATH = "dtstart";
+    public final static String DTEND_PATH = "dtend";
+    public final static String SEND_ACTIVITIES_PATH = "dayactivities/{userId}";
+    public final static String CREATE_REGISTER_BODY = "dayactivities/register";
+    public final static String ADD_ACTIVITY_BODY = "activity";
+    public final static String ADD_ACTIVITY_TO_USER = "activities/{userId}/add";
+    public final static String REMOVE_ACTIVITY_TO_USER = "activities/{userId}/remove";
+    public final static String NEWUSER_BODY = "register";
+
 }

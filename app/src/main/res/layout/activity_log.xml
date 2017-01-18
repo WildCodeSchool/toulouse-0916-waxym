@@ -30,6 +30,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:hint="Email"
+            android:text="TestUser"
             android:inputType="textEmailAddress" />
 
 
@@ -39,6 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
             android:hint="Password"
+            android:text="Prout256"
             android:inputType="textPassword" />
 
         <Button
