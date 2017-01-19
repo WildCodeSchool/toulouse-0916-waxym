@@ -27,6 +27,9 @@
     <string name="password">Password</string>
     <string name="login">login</string>
     <string name="wrong_login_message">login ou mot de passe vide</string>
+    <string name="login_fail_message">Login failed</string>
+    <string name="auth_message">Authenticating...</string>
+    <string name="database_error_message">error cannot copy Database</string>
 
     <drawable name="icon_sliding">@drawable/ic_action_view_as_list</drawable>
     <string-array name="spinner_list">

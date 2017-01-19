@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import fr.wildcodeschool.haa.waxym.server.ServerHelper;
 import fr.wildcodeschool.haa.waxym.server.ServerInterface;
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
-import fr.wildcodeschool.haa.waxym.model.IdModel;
-import fr.wildcodeschool.haa.waxym.model.UserModel;
+import fr.wildcodeschool.haa.waxym.dataObject.IdDataObject;
+import fr.wildcodeschool.haa.waxym.dataObject.UserDataObject;
 import retrofit2.Call;
 import retrofit2.Response;
 
@@ -64,7 +64,7 @@ public class LogActivity extends AppCompatActivity {
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
             if (!this.copyDatabase(this)) {
-                Toast.makeText(this, "error cannot copy Database", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.database_error_message, Toast.LENGTH_SHORT).show();
                 return;
             }
 
@@ -93,23 +93,12 @@ public class LogActivity extends AppCompatActivity {
     public void login() {
         Log.d(TAG, "Login");
 
-        try {
-            digest = MessageDigest.getInstance(Constants.SHA);
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        digest.update(textPassword.getText().toString().getBytes());
-        byte[] hash = digest.digest();
-        StringBuffer sb = new StringBuffer();
-        for (int i = 0; i < hash.length; i++) {
-            sb.append(Integer.toString((hash[i] & 0xff) + 0x100, 16).substring(1));
-        }
 
-        this.encryptedPassword = sb.toString();
+        this.encryptedPassword = shaConverter(this.textPassword.getText().toString());
 
         ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
-        UserModel userModel = new UserModel(textEmailAddress.getText().toString(), this.encryptedPassword);
-        Call<IdModel> call = apiService.login(userModel);
+        UserDataObject UserDataObject = new UserDataObject(textEmailAddress.getText().toString(), this.encryptedPassword);
+        Call<IdDataObject> call = apiService.login(UserDataObject);
         new NetworkCall().execute(call);
 
 
@@ -118,9 +107,25 @@ public class LogActivity extends AppCompatActivity {
         this.progressDialog = new ProgressDialog(LogActivity.this,
                 R.style.AppTheme2);
         this.progressDialog.setIndeterminate(true);
-        this.progressDialog.setMessage("Authenticating...");
+        this.progressDialog.setMessage(getString(R.string.auth_message));
         this.progressDialog.show();
 
+
+    }
+
+    protected String shaConverter(String passwordToEncrypt) {
+        try {
+            digest = MessageDigest.getInstance(Constants.SHA);
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        digest.update(passwordToEncrypt.toString().getBytes());
+        byte[] hash = digest.digest();
+        StringBuffer sb = new StringBuffer();
+        for (int i = 0; i < hash.length; i++) {
+            sb.append(Integer.toString((hash[i] & 0xff) + 0x100, 16).substring(1));
+        }
+        return sb.toString();
 
     }
 
@@ -140,18 +145,18 @@ public class LogActivity extends AppCompatActivity {
     }
 
     public void onLoginFailed() {
-        Toast.makeText(getBaseContext(), "Login failed", Toast.LENGTH_LONG).show();
+        Toast.makeText(getBaseContext(), R.string.login_fail_message, Toast.LENGTH_LONG).show();
 
         btn_login.setEnabled(true);
         this.progressDialog.dismiss();
     }
 
-    private class NetworkCall extends AsyncTask<Call, Void, Response<IdModel>> {
+    private class NetworkCall extends AsyncTask<Call, Void, Response<IdDataObject>> {
         @Override
-        protected Response<IdModel> doInBackground(Call... params) {
+        protected Response<IdDataObject> doInBackground(Call... params) {
             try {
-                Call<IdModel> call = params[0];
-                Response<IdModel> response = call.execute();
+                Call<IdDataObject> call = params[0];
+                Response<IdDataObject> response = call.execute();
                 return response;
             } catch (IOException e) {
                 e.printStackTrace();
@@ -160,7 +165,7 @@ public class LogActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(Response<IdModel> result) {
+        protected void onPostExecute(Response<IdDataObject> result) {
 
             if (result.body().getID() != -1) {
 

@@ -215,9 +215,7 @@ public class CalendarFragment extends Fragment {
         } else if (status.isInMonthView()) {
             cellPosition = 15;
         } else cellPosition = 02;
-        if (calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SATURDAY
-                && calendar.get(Calendar.DAY_OF_WEEK) != Calendar.SUNDAY
-                && selectedDay.getDate().getMonth() == cells.get(cellPosition).getDate().getMonth()) {
+        if (isNotWeekEnd(selectedDay, calendar, cells.get(cellPosition).getDate().getMonth())) {
             if (!selectedDay.isState()) {
 
                 grid.getChildAt(position).setBackgroundResource(R.color.SELECTING_COLOR);
@@ -231,6 +229,15 @@ public class CalendarFragment extends Fragment {
             sendDataToFragment(position, selectedDay);
 
         }
+    }
+
+    protected boolean isNotWeekEnd(GridDateModel gridDateModel, Calendar calendar, int month) {
+        return !isWeekend(calendar) && gridDateModel.getMonth() == month;
+    }
+
+    protected boolean isWeekend(Calendar calendar) {
+        return calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY
+                || calendar.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY;
     }
 
     public void sendDataToFragment(int position, GridDateModel gridDate) {

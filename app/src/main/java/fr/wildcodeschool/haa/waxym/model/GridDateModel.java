@@ -30,4 +30,11 @@ public class GridDateModel {
     public void setState(boolean state) {
         this.state = state;
     }
+
+    public int getMonth() {
+        if (getDate()!=null){
+            return getDate().getMonth();
+        }
+        return -1;
+    }
 }

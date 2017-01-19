@@ -23,7 +23,7 @@ import java.util.List;
 
 import fr.wildcodeschool.haa.waxym.Constants;
 import fr.wildcodeschool.haa.waxym.StatusSingleton;
-import fr.wildcodeschool.haa.waxym.model.ActivitiesModel;
+import fr.wildcodeschool.haa.waxym.dataObject.ActivitiesDataObject;
 import fr.wildcodeschool.haa.waxym.model.ActivityItemModel;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
@@ -142,19 +142,19 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
 
             // Activity table
             valuesActivity.put(Constants.ID_ACTIVITY, dayEvent.getActivityId());
-            valuesActivity.put(Constants.ID_ACTIVITY_TYPE, determineActyvityTypeID(dayEvent));
+            valuesActivity.put(Constants.ID_ACTIVITY_TYPE, dayEvent.determineActyvityTypeID());
             valuesActivity.put(Constants.SEND_STATE, dayEvent.getSendState());
 
             String SQLActivity = Constants.DATE + " = '" + this.sdf.format(dayEvent.getDate()) + "' " +
                     "AND " + Constants.ID_USER + " = '" + dayEvent.getUserId() + "'" +
-                    "AND " + Constants.ID_ACTIVITY_TYPE + " = '" + determineActyvityTypeID(dayEvent) + "'";
+                    "AND " + Constants.ID_ACTIVITY_TYPE + " = '" + dayEvent.determineActyvityTypeID() + "'";
             db.update(Constants.ACTIVITY, valuesActivity, SQLActivity, null);
 
 
         } else {
             // Activity table
             valuesActivity.put(Constants.ID_ACTIVITY, dayEvent.getActivityId());
-            valuesActivity.put(Constants.ID_ACTIVITY_TYPE, determineActyvityTypeID(dayEvent));
+            valuesActivity.put(Constants.ID_ACTIVITY_TYPE, dayEvent.determineActyvityTypeID());
             valuesActivity.put(Constants.DATE, this.sdf.format(dayEvent.getDate()));
             valuesActivity.put(Constants.ID_USER, dayEvent.getUserId());
             valuesActivity.put(Constants.SEND_STATE, dayEvent.getSendState());
@@ -174,7 +174,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
 
             // Activity table
             valuesActivity.put(Constants.ID_ACTIVITY, dayEvent.getActivityId());
-            valuesActivity.put(Constants.ID_ACTIVITY_TYPE, determineActyvityTypeID(dayEvent));
+            valuesActivity.put(Constants.ID_ACTIVITY_TYPE, dayEvent.determineActyvityTypeID());
             valuesActivity.put(Constants.DATE, this.sdf.format(dayEvent.getDate()));
             valuesActivity.put(Constants.ID_USER, dayEvent.getUserId());
             valuesActivity.put(Constants.SEND_STATE, dayEvent.getSendState());
@@ -219,7 +219,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         return activitiesList;
     }
 
-    public void updateActivitiesList(List<ActivitiesModel> newActivitiesList) {
+    public void updateActivitiesList(List<ActivitiesDataObject> newActivitiesList) {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // erase old list
@@ -277,7 +277,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
 
     }
 
-    public void addBaseActivity(ActivitiesModel newActivity) {
+    public void addBaseActivity(ActivitiesDataObject newActivity) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues valuesActivity = new ContentValues();
         valuesActivity.put(Constants.ID_ACTIVITY, newActivity.getId());
@@ -360,16 +360,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
     }
 
 
-    private int determineActyvityTypeID(DayStuffModel checkedDay) {
-        if (checkedDay.getMorning() == checkedDay.getAfternoon()) {
-            return Constants.ID_ERROR;
-        } else {
-            if (checkedDay.getMorning() == 1)
-                return 1;
-            else
-                return 2;
-        }
-    }
+    
 
 }
 

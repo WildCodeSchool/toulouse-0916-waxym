@@ -5,6 +5,8 @@ import android.os.Parcelable;
 
 import java.util.Date;
 
+import fr.wildcodeschool.haa.waxym.Constants;
+
 /**
  * Model to get/save all informations on a saved day activity
  */
@@ -170,5 +172,16 @@ public class DayStuffModel implements Parcelable {
         dest.writeInt(sendState);
         dest.writeLong(activityId);
         dest.writeLong(activityDetailType);
+    }
+
+    public int determineActyvityTypeID() {
+        if (getMorning() == getAfternoon()) {
+            return Constants.ID_ERROR;
+        } else {
+            if (getMorning() == 1)
+                return 1;
+            else
+                return 2;
+        }
     }
 }
