@@ -39,6 +39,7 @@ public class Constants {
     public final static int ID_ERROR = 404;
 
     //other
+    public final static String SHA = "SHA-256";
     public final static String POSITION_KEY = "Month";
     public final static String SELECTED_DAYS = "selected";
     public final static int TOTAL_SLIDES = 120;

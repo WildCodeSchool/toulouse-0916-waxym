@@ -97,13 +97,6 @@ public class CalendarFragment extends Fragment {
                 this.monthBeginningCell = this.calendar.get(Calendar.DAY_OF_WEEK) - 2;
         } else if (status.isInDayView()) {
             this.dayCalendar = status.getCurrentDate();
-            // this.dayCalendar.add(Calendar.DAY_OF_MONTH, position - Constants.TOTAL_SLIDES/2);
-
-           /* if (this.dayCalendar.get(Calendar.DAY_OF_MONTH) == Calendar.SUNDAY) {
-                this.dayCalendar.add(Calendar.DAY_OF_MONTH, 1);
-            } else if (this.dayCalendar.get(Calendar.DAY_OF_MONTH) == Calendar.SATURDAY) {
-                this.dayCalendar.add(Calendar.DAY_OF_MONTH, 2);
-            }*/
         }
 
         // move calendar backwards to the beginning of the week
@@ -180,8 +173,7 @@ public class CalendarFragment extends Fragment {
 
                                     }
 
-                                  /* changeSate(cells.get(position), position, initialX, initialY);
-                                   sendDataToFragment(position, cells.get(position));*/
+
                                 }
                                 startPosition = position;
                             }

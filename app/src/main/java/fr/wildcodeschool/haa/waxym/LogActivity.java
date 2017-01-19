@@ -80,7 +80,7 @@ public class LogActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (textEmailAddress.getText().toString().isEmpty() || textPassword.getText().toString().isEmpty()) {
-                    Toast.makeText(getBaseContext(), "login ou mot de passe vide", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getBaseContext(), R.string.wrong_login_message, Toast.LENGTH_LONG).show();
                 } else {
                     login();
                 }
@@ -94,7 +94,7 @@ public class LogActivity extends AppCompatActivity {
         Log.d(TAG, "Login");
 
         try {
-            digest = MessageDigest.getInstance("SHA-256");
+            digest = MessageDigest.getInstance(Constants.SHA);
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
