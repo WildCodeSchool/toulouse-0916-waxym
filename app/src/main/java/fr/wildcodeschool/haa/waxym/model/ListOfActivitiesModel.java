@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import fr.wildcodeschool.haa.waxym.Constants;
 
 /**
- * Created by tuffery on 16/01/17.
+ * used to get list of possibles activities for user on server
  */
 
 public class ListOfActivitiesModel {

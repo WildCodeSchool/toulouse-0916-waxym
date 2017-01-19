@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import fr.wildcodeschool.haa.waxym.Constants;
 
 /**
- * Created by devauxarthur on 10/01/2017.
+ * used to create new user on server
  */
 
 public class UserModel {

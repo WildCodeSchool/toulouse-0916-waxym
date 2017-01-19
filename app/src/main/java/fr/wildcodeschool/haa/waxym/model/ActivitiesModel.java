@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import fr.wildcodeschool.haa.waxym.Constants;
 
 /**
- * Created by devauxarthur on 10/01/2017.
+ * model to get activities from server
  */
 
 public class ActivitiesModel {

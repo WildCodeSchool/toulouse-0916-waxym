@@ -3,7 +3,7 @@ package fr.wildcodeschool.haa.waxym.model;
 import java.util.Date;
 
 /**
- * Created by tuffery on 20/11/16.
+ * used to generate calendar view in gridview
  */
 
 public class GridDateModel {

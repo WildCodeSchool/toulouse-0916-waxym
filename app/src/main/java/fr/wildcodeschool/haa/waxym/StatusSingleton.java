@@ -3,7 +3,8 @@ package fr.wildcodeschool.haa.waxym;
 import java.util.Calendar;
 
 /**
- * Created by tuffery on 21/12/16.
+ * get current status of app
+ * if is in different mode and viewpager last position
  */
 
 public class StatusSingleton {

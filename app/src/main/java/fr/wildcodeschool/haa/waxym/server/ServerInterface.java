@@ -1,20 +1,15 @@
-package fr.wildcodeschool.haa.waxym;
+package fr.wildcodeschool.haa.waxym.server;
 
 
 import com.google.gson.JsonObject;
 
 
-import java.util.ArrayList;
-import java.util.List;
-
-import fr.wildcodeschool.haa.waxym.model.ActivitiesModel;
+import fr.wildcodeschool.haa.waxym.Constants;
 import fr.wildcodeschool.haa.waxym.model.ActivityModel;
-import fr.wildcodeschool.haa.waxym.model.DayActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.IdModel;
 import fr.wildcodeschool.haa.waxym.model.ListOfActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.ListOfDayActivitiesModel;
 import fr.wildcodeschool.haa.waxym.model.UserModel;
-import okhttp3.OkHttpClient;
 import retrofit2.Call;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -27,7 +22,7 @@ import retrofit2.http.Path;
  * Created by apprenti on 10/01/17.
  */
 
-public interface SuperInterface {
+public interface ServerInterface {
 
     @GET(Constants.GET_ACTIVITIES_PATH)
     Call<ListOfActivitiesModel> getActivities(@Path(Constants.SERVER_USERID_PATH) long userId);

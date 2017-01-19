@@ -15,14 +15,14 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.util.ArrayList;
 
-import fr.wildcodeschool.haa.waxym.Server.ServerHelper;
+import fr.wildcodeschool.haa.waxym.server.ServerHelper;
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.ActivityItemModel;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 
 /**
- * Created by apprenti on 15/11/16.
+ * used as a popup to get user wishes about data entry
  */
 
 public class SlidingListFragment extends DialogFragment {

@@ -23,7 +23,7 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 
 /**
- *
+ * adapter for gridview month mode
  */
 
 public class MonthAdapter extends ArrayAdapter<GridDateModel> {

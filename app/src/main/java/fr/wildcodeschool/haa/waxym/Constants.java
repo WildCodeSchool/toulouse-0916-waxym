@@ -1,7 +1,7 @@
 package fr.wildcodeschool.haa.waxym;
 
 /**
- * Created by tuffery on 23/11/16.
+ *
  */
 
 public class Constants {

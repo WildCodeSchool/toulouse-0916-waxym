@@ -259,10 +259,10 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
                 ", " + Constants.ACTIVITY_COLOR + "," + Constants.MORNING + ", " + Constants.AFTERNOON + ", " + Constants.NAME_USER + ", " + Constants.ID_USER_USER + ", " + Constants.SEND_STATE +
                 ", " + Constants.ID_ACTIVITY_ACTIVITY_DETAILS + "," + Constants.CATEGORY_ACTIVITY +
                 " FROM " + Constants.USER + "," + Constants.ACTIVITY + "," + Constants.ACTIVITY_TYPE + "," + Constants.ACTIVITY_DETAILS +
-                " WHERE " + Constants.SEND_STATE +" = '" + Constants.NOT_SENDED + "'" +
+                " WHERE " + Constants.SEND_STATE + " = '" + Constants.NOT_SENDED + "'" +
                 " AND " + Constants.ID_ACTIVITY_ACTIVITY_DETAILS + " = " + Constants.ID_ACTIVITY_DETAILS +
                 " AND " + Constants.ID_USER_USER + " = " + Constants.ID_USER_ACTIVITY +
-                " AND " + Constants.ID_USER_ACTIVITY +" = '" + StatusSingleton.getInstance().getCurrentUserId() + "'"+
+                " AND " + Constants.ID_USER_ACTIVITY + " = '" + StatusSingleton.getInstance().getCurrentUserId() + "'" +
                 " AND " + Constants.ID_ACTIVITY_TYPE_ACTIVITY + " = " + Constants.ID_ACTIVITY_TYPE_ACTIVITY_TYPE, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {

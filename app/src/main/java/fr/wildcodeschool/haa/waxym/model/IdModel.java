@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import fr.wildcodeschool.haa.waxym.Constants;
 
 /**
- * Created by tuffery on 11/01/17.
+ * used to communicate with server an id
  */
 
 public class IdModel {

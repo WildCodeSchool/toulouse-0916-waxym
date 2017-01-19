@@ -20,7 +20,7 @@ import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 
 
 /**
- * Created by tuffery on 14/12/16.
+ * fragment where calendar view is generated with it properties for day or month calling respectives adapters
  */
 
 public class CalendarFragment extends Fragment {
@@ -194,111 +194,7 @@ public class CalendarFragment extends Fragment {
                 }
             });
 
-/*            grid.setOnTouchListener(new View.OnTouchListener() {
 
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-                    int touchedPosition = grid.pointToPosition((int) motionEvent.getX(), (int) motionEvent.getY());
-                    if (touchedPosition >= 0 && touchedPosition < 42) {
-
-                        if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                            boolean isAlreadychecked = false;
-                            boolean isAlreadyCheckedTwice = false;
-                            int checkedFirstPos = 0;
-                            int checkLastPos = 0;
-                            // check if menu is launched if not,  launch it
-                            if(!statusSingleton.isMenuCreated()) {
-                                launchMultiSelectMenu();
-                                statusSingleton.setMenuCreated(true);
-                            }
-                            for (int g = 0; g < cells.size();g++) {
-                                if (cells.get(g).isState()) {
-                                    isAlreadychecked = true;
-                                    checkedFirstPos = g;
-                                    break;
-                                }
-                            }
-                                if (isAlreadychecked){
-                                    for (int g = cells.size()-1; g >= checkedFirstPos + 1 ;g--){
-                                        if (cells.get(g).isState()){
-                                            isAlreadyCheckedTwice = true;
-                                            checkLastPos = g;
-                                            break;
-
-                                        }
-                                }
-
-                            }
-                            if(isAlreadychecked){
-                                if(!isAlreadyCheckedTwice) {
-                                    if (touchedPosition == checkedFirstPos){
-                                        changeSate(cells.get(touchedPosition),touchedPosition);
-                                    }
-                                    else if (touchedPosition <= checkedFirstPos) {
-                                        for (int j = touchedPosition; j <= checkedFirstPos -1 ; j++) {
-
-                                            changeSate(cells.get(j), j);
-                                        }
-
-                                    } else {
-                                        for (int j = checkedFirstPos +1 ; j < touchedPosition + 1; j++) {
-                                            changeSate(cells.get(j), j);
-                                        }
-
-                                    }
-                                }else {
-                                    if(!cells.get(touchedPosition).isState()) {
-
-                                        if (touchedPosition <= checkLastPos) {
-                                            for (int j = touchedPosition; j <= checkedFirstPos - 1; j++) {
-
-                                                changeSate(cells.get(j), j);
-                                            }
-
-                                        } else {
-                                            for (int j = checkLastPos + 1; j < touchedPosition + 1; j++) {
-                                                changeSate(cells.get(j), j);
-                                            }
-
-                                        }
-                                    }else {
-                                        if(touchedPosition == checkedFirstPos){
-                                            changeSate(cells.get(touchedPosition),touchedPosition);
-                                        }else if (touchedPosition <= checkLastPos) {
-                                            for (int j = touchedPosition; j <= checkLastPos; j++) {
-
-                                                changeSate(cells.get(j), j);
-                                            }
-
-                                        } else {
-                                            for (int j = checkLastPos + 1; j < touchedPosition + 1; j++) {
-                                                changeSate(cells.get(j), j);
-                                            }
-
-                                        }
-
-                                    }
-                                }
-                            }else {
-                                changeSate(cells.get(touchedPosition), touchedPosition);
-                                //sendDataToFragment(touchedPosition,cells.get(touchedPosition) );
-                            }
-
-
-                            if (!isDoneOnce) {
-                                sendDataToFragment(touchedPosition, cells.get(touchedPosition));
-                                isDoneOnce = true;
-                            }
-
-                            return true;
-
-                        }
-
-                    }
-
-                    return true;
-                }
-            });*/
         } else {
             grid.setOnTouchListener(null);
 

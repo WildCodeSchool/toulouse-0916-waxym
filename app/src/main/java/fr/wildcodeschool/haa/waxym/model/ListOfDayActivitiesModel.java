@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import java.util.ArrayList;
 
 /**
- * Created by tuffery on 17/01/17.
+ * used to send/get list of saved activities on server
  */
 
 public class ListOfDayActivitiesModel {

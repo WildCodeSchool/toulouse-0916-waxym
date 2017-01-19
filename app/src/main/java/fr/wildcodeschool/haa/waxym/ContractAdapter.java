@@ -17,7 +17,7 @@ import java.util.zip.Inflater;
 import fr.wildcodeschool.haa.waxym.model.ActivityItemModel;
 
 /**
- * Created by apprenti on 30/11/16.
+ * adapter used to show activities list to selct
  */
 
 public class ContractAdapter extends BaseAdapter {

@@ -1,13 +1,11 @@
 package fr.wildcodeschool.haa.waxym.model;
 
-import android.graphics.drawable.Drawable;
-
 import com.google.gson.annotations.SerializedName;
 
 import fr.wildcodeschool.haa.waxym.Constants;
 
 /**
- * Created by devauxarthur on 10/01/2017.
+ * Model used to create new activity on server
  */
 
 public class ActivityModel {

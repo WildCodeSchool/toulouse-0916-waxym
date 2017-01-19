@@ -5,7 +5,7 @@ import java.util.Date;
 
 
 /**
- * Created by tuffery on 30/11/16.
+ * used to send date from calendarFragment to multiselectfragment
  */
 
 public interface MultiSelectMenuCallbackInterface {

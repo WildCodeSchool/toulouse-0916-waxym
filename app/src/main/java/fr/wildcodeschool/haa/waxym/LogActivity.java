@@ -22,14 +22,17 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
-import fr.wildcodeschool.haa.waxym.Server.ServerHelper;
+import fr.wildcodeschool.haa.waxym.server.ServerHelper;
+import fr.wildcodeschool.haa.waxym.server.ServerInterface;
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.model.IdModel;
 import fr.wildcodeschool.haa.waxym.model.UserModel;
-import okhttp3.Headers;
 import retrofit2.Call;
 import retrofit2.Response;
 
+/**
+ *  ask for login information  send to server and check if login succes/fail
+ */
 
 public class LogActivity extends AppCompatActivity {
     private static final String TAG = "LogActivity";
@@ -104,7 +107,7 @@ public class LogActivity extends AppCompatActivity {
 
         this.encryptedPassword = sb.toString();
 
-        SuperInterface apiService = SuperInterface.retrofit.create(SuperInterface.class);
+        ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
         UserModel userModel = new UserModel(textEmailAddress.getText().toString(), this.encryptedPassword);
         Call<IdModel> call = apiService.login(userModel);
         new NetworkCall().execute(call);

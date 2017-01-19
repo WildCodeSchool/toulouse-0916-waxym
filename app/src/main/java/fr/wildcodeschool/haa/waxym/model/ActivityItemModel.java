@@ -1,7 +1,7 @@
 package fr.wildcodeschool.haa.waxym.model;
 
 /**
- * Created by tuffery on 02/12/16.
+ * model used to generate itemList of contracts
  */
 
 public class ActivityItemModel {

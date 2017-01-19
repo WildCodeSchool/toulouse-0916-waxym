@@ -7,7 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
 /**
- * Created by tuffery on 22/12/16.
+ * generate CalendarFragment
  */
 
 public class MyPagerAdapter extends FragmentStatePagerAdapter {

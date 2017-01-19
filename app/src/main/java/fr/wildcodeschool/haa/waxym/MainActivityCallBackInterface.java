@@ -7,7 +7,9 @@ import java.util.Date;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 /**
- * Created by tuffery on 29/11/16.
+ * interface to send check days from multiselctFragment to mainactivity
+ *
+ * and to update spinner on dayclick
  */
 
 public interface MainActivityCallBackInterface {

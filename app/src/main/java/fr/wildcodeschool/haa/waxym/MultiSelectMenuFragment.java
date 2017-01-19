@@ -18,10 +18,7 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 
 
 /**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * to handle interaction events.
- * create an instance of this fragment.
+ * used to store/clear selected items of gridview
  */
 public class MultiSelectMenuFragment extends Fragment implements MultiSelectMenuCallbackInterface {
 

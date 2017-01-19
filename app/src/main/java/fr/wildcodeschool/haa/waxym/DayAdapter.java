@@ -17,7 +17,7 @@ import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
 import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 
 /**
- * Created by apprenti on 26/12/16.
+ * adapter for gridview day mode
  */
 
 public class DayAdapter extends BaseAdapter {

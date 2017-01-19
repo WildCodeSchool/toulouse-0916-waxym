@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.Date;
 
 /**
- * Created by tuffery on 23/11/16.
+ * Model to get/save all informations on a saved day activity
  */
 
 public class DayStuffModel implements Parcelable {
