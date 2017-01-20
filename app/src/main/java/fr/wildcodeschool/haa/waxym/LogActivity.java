@@ -55,7 +55,7 @@ public class LogActivity extends AppCompatActivity {
         getSupportActionBar().hide();
         setContentView(R.layout.activity_log);
         ServerHelper serverHelper = new ServerHelper(this);
-        serverHelper.addActvityOnServer();
+        //serverHelper.addActvityOnServer();
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
