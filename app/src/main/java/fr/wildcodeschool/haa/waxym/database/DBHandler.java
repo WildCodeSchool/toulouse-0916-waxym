@@ -160,9 +160,9 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
             valuesActivity.put(Constants.SEND_STATE, dayEvent.getSendState());
 
             db.insert(Constants.ACTIVITY, null, valuesActivity);
-            db.close();
-        }
 
+        }
+        db.close();
     }
 
     // set activity event on date  if this event don't already exist
@@ -297,7 +297,7 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
                 " FROM " + Constants.USER, null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
-            long id = cursor.getInt(0);
+            long id = cursor.getLong(0);
             userIdList.add(id);
             cursor.moveToNext();
         }
