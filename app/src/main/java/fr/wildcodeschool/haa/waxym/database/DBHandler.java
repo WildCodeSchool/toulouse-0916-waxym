@@ -225,10 +225,11 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         SQLiteDatabase db = this.getWritableDatabase();
 
         // erase old list
-        String oldWhere = Constants.DATE + "   is null";
+        String oldWhere = Constants.DATE + "  is null";
         db.delete(Constants.ACTIVITY, oldWhere, null);
         ArrayList<Long> existingActivityID = getActivitiesIDList();
-        List<ActivitiesDataObject> savedList = newActivitiesList;
+        List<ActivitiesDataObject> savedList = new ArrayList<>();
+        savedList.addAll(newActivitiesList);
         // generate newOne
 
         for (int i = 0; i < newActivitiesList.size(); i++) {
@@ -236,14 +237,10 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
                 for (int j = 0; j < existingActivityID.size(); j++) {
                     if (newActivitiesList.get(i).getId() == existingActivityID.get(j)) {
                         newActivitiesList.remove(i);
-                        if (i > 0) {
+                        if (i > 0)
                             i--;
-
-                        }
                     }
                 }
-                if (newActivitiesList.size() > 0)
-                    addBaseActivity(newActivitiesList.get(i));
             }
             if (newActivitiesList.size() > 0)
                 addBaseActivity(newActivitiesList.get(i));
@@ -251,14 +248,14 @@ public class DBHandler extends SQLiteOpenHelper implements Serializable {
         Comparator<ActivitiesDataObject> ordoner = new Comparator<ActivitiesDataObject>() {
             @Override
             public int compare(ActivitiesDataObject o1, ActivitiesDataObject o2) {
-                return o1.getType() - o2.getType();
+                return o2.getType() - o1.getType();
             }
         };
         Collections.sort(savedList,ordoner);
         db = this.getWritableDatabase();
         ContentValues valuesActivity = new ContentValues();
         for (int i = 0; i < savedList.size(); i++) {
-            if (newActivitiesList.get(i).getId() != Constants.BLANK_HOLIDAY) {
+            if (savedList.get(i).getId() != Constants.BLANK_HOLIDAY) {
                 valuesActivity.put(Constants.ID_ACTIVITY, savedList.get(i).getId());
                 valuesActivity.put(Constants.ID_USER, StatusSingleton.getInstance().getCurrentUserId());
                 db.insert(Constants.ACTIVITY, null, valuesActivity);

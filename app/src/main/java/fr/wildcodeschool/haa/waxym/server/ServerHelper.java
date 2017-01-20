@@ -67,12 +67,13 @@ public class ServerHelper {
 
         @Override
         protected void onPostExecute(Response<ListOfActivitiesDataObject> result) {
-            ArrayList<ActivitiesDataObject> activitieslist = result.body().getListOfActivities();
-            for (int i = 0; i < activitieslist.size(); i++) {
-                activitieslist.get(i);
-            }
             DBHandler mDBHandler = new DBHandler(context);
-            mDBHandler.updateActivitiesList(activitieslist);
+            try {
+                if (mDBHandler.getNotSendedActivities().size()== 0)
+                mDBHandler.updateActivitiesList(result.body().getListOfActivities());
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
 
         }
     }

@@ -59,7 +59,7 @@ public class LogActivity extends AppCompatActivity {
         this.mDBHelper = new DBHandler(this);
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
-        copyDatabase(getApplicationContext());
+        //copyDatabase(getApplicationContext());
         if (!database.exists()) {
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
