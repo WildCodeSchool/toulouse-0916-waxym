@@ -92,14 +92,14 @@ public class MonthAdapter extends ArrayAdapter<GridDateModel> {
                             eventDate.getDate().getYear() == year) {
 
                         if (eventDate.getAfternoon() == 1) {
-                            //apresMidiView.setTypeface(null,Typeface.NORMAL);
-                            // apresMidiView.setTextColor(Color.BLACK);
-                            //apresMidiView.setText(eventDate.getActivity());
+                            if (eventDate.getActivityId() == Constants.CLEAR_ACTIVITY){
+                                apresMidiView.setBackgroundColor(android.R.color.white);
+                            }else
                             apresMidiView.setBackgroundColor(Color.parseColor("#" + eventDate.getActivityColor()));
                         } else {
-                            //matinView.setTypeface(null,Typeface.NORMAL);
-                            //matinView.setTextColor(Color.BLACK);
-                            // matinView.setText(eventDate.getActivity());
+                            if (eventDate.getActivityId() == Constants.CLEAR_ACTIVITY){
+                                apresMidiView.setBackgroundColor(android.R.color.white);
+                            }else
                             matinView.setBackgroundColor(Color.parseColor("#" + eventDate.getActivityColor()));
 
 

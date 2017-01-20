@@ -143,7 +143,7 @@ public class SlidingListFragment extends DialogFragment {
                     ArrayList<DayStuffModel> lastSelectedDayevents = mHandler.getDayEvents(StatusSingleton.getInstance().getCurrentUserId(), this.selectedDays.get(i).getDate());
                     if (lastSelectedDayevents.size() > 0) {
                         for (int j = 0; j < lastSelectedDayevents.size(); j++) {
-                            if (lastSelectedDayevents.get(j).getActivity().equals(Constants.CLEAR_ACTIVITY)) {
+                            if (lastSelectedDayevents.get(j).getActivityId() == Constants.CLEAR_ACTIVITY) {
                                 mHandler.setEventEraser(selectedDays.get(i));
                             }
                         }

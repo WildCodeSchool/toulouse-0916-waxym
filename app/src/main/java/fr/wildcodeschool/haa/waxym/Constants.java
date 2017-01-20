@@ -43,7 +43,7 @@ public class Constants {
     public final static String POSITION_KEY = "Month";
     public final static String SELECTED_DAYS = "selected";
     public final static int TOTAL_SLIDES = 120;
-    public final static String CLEAR_ACTIVITY = "clearEvilOfDoom";
+    public final static long CLEAR_ACTIVITY = -666;
     public final static int NOT_SENDED = 1;
 
 

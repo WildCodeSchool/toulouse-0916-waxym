@@ -32,7 +32,8 @@ import retrofit2.Response;
  */
 
 public class ServerHelper {
-    Context context;
+    private Context context;
+    private ArrayList<DayStuffModel> originalList;
 
     public ServerHelper(Context context) {
         this.context = context;
@@ -178,7 +179,7 @@ public class ServerHelper {
     public void sendDaysActivities() throws ParseException {
         ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
         DBHandler mDBHandler = new DBHandler(this.context);
-        ArrayList<DayStuffModel> originalList = mDBHandler.getNotSendedActivities();
+        this.originalList = mDBHandler.getNotSendedActivities();
         HashMap<String, DayActivitiesDataObject> convertedListTosend = new HashMap<>();
         ArrayList<DayActivitiesDataObject> finalListTosend = new ArrayList<>();
         DayActivitiesDataObject dayActivitiesModel;
@@ -228,7 +229,15 @@ public class ServerHelper {
 
         @Override
         protected void onPostExecute(Response<JsonObject> result) {
-            List<ActivityItemModel> activitieslist = new ArrayList<>();
+           for (int i = 0; i < originalList.size(); i++){
+               originalList.get(i).setSendState(0);
+               DBHandler mDBHandler = new DBHandler(context);
+               try {
+                   mDBHandler.setEventEraser(originalList.get(i));
+               } catch (ParseException e) {
+                   e.printStackTrace();
+               }
+           }
 
 
         }
