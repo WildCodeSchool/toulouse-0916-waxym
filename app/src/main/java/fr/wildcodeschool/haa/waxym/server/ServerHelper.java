@@ -9,9 +9,11 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 
+import fr.wildcodeschool.haa.waxym.CalendarFragment;
 import fr.wildcodeschool.haa.waxym.Constants;
 import fr.wildcodeschool.haa.waxym.dataObject.UserDataObject;
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
@@ -244,8 +246,13 @@ public class ServerHelper {
     }
 
     public void getActivitiesFromServer(){
+        Calendar calendarFrom = Calendar.getInstance();
+        Calendar calendarTo = calendarFrom;
+        calendarFrom.add(Calendar.DAY_OF_MONTH,-30);
+        calendarTo.add(Calendar.DAY_OF_MONTH, 30);
+
         ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
-        Call<ListOfDayActivitiesDataObject> call = apiService.getDayActivities(StatusSingleton.getInstance().getCurrentUserId(),"2017-01-01","2017-01-31");
+        Call<ListOfDayActivitiesDataObject> call = apiService.getDayActivities(StatusSingleton.getInstance().getCurrentUserId(),sdf.format(calendarFrom.getTime()),sdf.format(calendarTo.getTime()));
         new GetActivitiesCall().execute(call);
     }
 
@@ -265,8 +272,6 @@ public class ServerHelper {
 
         @Override
         protected void onPostExecute(Response<ListOfDayActivitiesDataObject> result) {
-            List<ActivityItemModel> activitieslist = new ArrayList<>();
-
 
         }
     }
@@ -291,10 +296,5 @@ public class ServerHelper {
             return null;
         }
 
-        @Override
-        protected void onPostExecute(Response<IdDataObject> result) {
-
-
-        }
     }
 }
