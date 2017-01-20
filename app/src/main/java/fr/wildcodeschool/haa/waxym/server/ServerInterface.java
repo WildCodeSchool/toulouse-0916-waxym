@@ -37,7 +37,7 @@ public interface ServerInterface {
     Call<JsonObject> sendActivities(@Path(Constants.SERVER_USERID_PATH) long userId ,@Body ListOfDayActivitiesDataObject listOfDayActivitiesDataObject);
 
     @POST(Constants.CREATE_REGISTER_BODY)
-    Call<Long> createRegister(@Body UserDataObject register);
+    Call<IdDataObject> register(@Body UserDataObject register);
 
     @POST(Constants.ADD_ACTIVITY_BODY)
     Call<IdDataObject> addActivity(@Body ActivityDataobject activity);

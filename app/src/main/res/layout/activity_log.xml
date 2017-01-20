@@ -31,7 +31,7 @@
             android:layout_marginBottom="10dp"
             android:hint="@string/username"
             android:inputType="textEmailAddress"
-            android:text="TestUser" />
+            android:text="Bobby" />
 
 
         <EditText
@@ -41,7 +41,7 @@
             android:layout_marginBottom="10dp"
             android:hint="@string/password"
             android:inputType="textPassword"
-            android:text="Prout256" />
+            android:text="never4me" />
 
         <Button
             android:id="@+id/btn_login"

@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import fr.wildcodeschool.haa.waxym.Constants;
+import fr.wildcodeschool.haa.waxym.dataObject.UserDataObject;
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.dataObject.DayActivitiesDataObject;
 import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
@@ -41,7 +42,7 @@ public class ServerHelper {
 
     public void updateServerListActivities() {
         ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
-        Call<ListOfActivitiesDataObject> call = apiService.getActivities(11);
+        Call<ListOfActivitiesDataObject> call = apiService.getActivities(StatusSingleton.getInstance().getCurrentUserId());
         new ListActivitiesCall().execute(call);
 
 
@@ -75,14 +76,12 @@ public class ServerHelper {
 
     public void addActvityOnServer() {
         ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
-        //
-        //ActivityModel rtt = new ActivityModel(0,"RTT","#9FE855"); id = 13
-        // ActivityModel SansSolde = new ActivityModel(0,"Sans Soldes","#ce6348"); id = 14
-        // ActivityModel cp = new ActivityModel(0,"CP","#55e8b0"); id = 15
-        // ActivityModel cp = new ActivityModel(1,"CP","#55e8b0"); id = 16
-        //ActivityModel cp = new ActivityModel(1 ,"RTT","#9FE855"); id = 17 !
-        //
-        ActivityDataobject cp = new ActivityDataobject(1 ,"RTT","#9FE855");
+        //ActivityDataobject cp = new ActivityDataobject(1 ,"Sans Solde","ce6348"); id = 35
+        //ActivityDataobject cp = new ActivityDataobject(1 ,"RTT","9FE855"); id = 36
+        //ActivityDataobject cp = new ActivityDataobject(2 ,"TI","dab398"); id = 37
+        //ActivityDataobject cp = new ActivityDataobject(3, "Infomil",52, 35,"FCDC12"); id = 38
+        //ActivityDataobject cp = new ActivityDataobject(3, "AXA",503, 98,"9683EC"); id = 41
+        ActivityDataobject cp = new ActivityDataobject(3, "AXA",503, 98,"9683EC");
         Call<IdDataObject> call = apiService.addActivity(cp);
         new AddActivityCall().execute(call);
 
@@ -113,34 +112,34 @@ public class ServerHelper {
 
     public void detachUserToActivity() {
         ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
-        IdDataObject idDataObject = new IdDataObject((long) 13);
-        Call<JsonObject> call = apiService.removeActivityToUser(11, idDataObject);
+        IdDataObject idDataObject = new IdDataObject((long) 1);
+        Call<JsonObject> call = apiService.removeActivityToUser((long)42, idDataObject);
         new AttachCall().execute(call);
-        IdDataObject idDataObject2 = new IdDataObject((long) 14);
-        Call<JsonObject> call2 = apiService.removeActivityToUser(11, idDataObject2);
+        IdDataObject idDataObject2 = new IdDataObject((long) 2);
+        Call<JsonObject> call2 = apiService.removeActivityToUser((long)42, idDataObject2);
         new AttachCall().execute(call2);
-        IdDataObject idDataObject3 = new IdDataObject((long) 15);
-        Call<JsonObject> call3 = apiService.removeActivityToUser(11, idDataObject3);
+        IdDataObject idDataObject3 = new IdDataObject((long) 2);
+        Call<JsonObject> call3 = apiService.removeActivityToUser((long)42, idDataObject3);
         new AttachCall().execute(call3);
     }
 
     public void attachUserToActivity() {
         ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
-        IdDataObject idDataObject = new IdDataObject((long) 4);
-        Call<JsonObject> call = apiService.addActivityToUser(11, idDataObject);
+        IdDataObject idDataObject = new IdDataObject((long) 35);
+        Call<JsonObject> call = apiService.addActivityToUser((long)42, idDataObject);
         new AttachCall().execute(call);
-        IdDataObject idDataObject2 = new IdDataObject((long) 5);
-        Call<JsonObject> call2 = apiService.addActivityToUser(11, idDataObject2);
+        IdDataObject idDataObject2 = new IdDataObject((long) 36);
+        Call<JsonObject> call2 = apiService.addActivityToUser((long)4242, idDataObject2);
         new AttachCall().execute(call2);
-        IdDataObject idDataObject3 = new IdDataObject((long) 6);
-        Call<JsonObject> call3 = apiService.addActivityToUser(11, idDataObject3);
+        IdDataObject idDataObject3 = new IdDataObject((long) 37);
+        Call<JsonObject> call3 = apiService.addActivityToUser((long)4242, idDataObject3);
         new AttachCall().execute(call3);
-        IdDataObject idDataObject4 = new IdDataObject((long) 7);
-        Call<JsonObject> call4 = apiService.addActivityToUser(11, idDataObject4);
+        IdDataObject idDataObject4 = new IdDataObject((long) 38);
+        Call<JsonObject> call4 = apiService.addActivityToUser((long)4242, idDataObject4);
         new AttachCall().execute(call4);
-        IdDataObject idDataObject5 = new IdDataObject((long) 8);
-        Call<JsonObject> call5 = apiService.addActivityToUser(11, idDataObject5);
-        new AttachCall().execute(call5);
+        IdDataObject idDataObject5 = new IdDataObject((long) 41);
+        Call<JsonObject> call5 = apiService.addActivityToUser((long)4242, idDataObject5);
+       /* new AttachCall().execute(call5);
         IdDataObject idDataObject6 = new IdDataObject((long) 9);
         Call<JsonObject> call6 = apiService.addActivityToUser(11, idDataObject6);
         new AttachCall().execute(call6);
@@ -149,7 +148,7 @@ public class ServerHelper {
         new AttachCall().execute(call7);
         IdDataObject idDataObject8 = new IdDataObject((long) 10);
         Call<JsonObject> call8 = apiService.addActivityToUser(11, idDataObject8);
-        new AttachCall().execute(call8);
+        new AttachCall().execute(call8);*/
 
 
     }
@@ -262,5 +261,31 @@ public class ServerHelper {
 
         }
     }
+    public void register(){
+        ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
+        UserDataObject bobby = new UserDataObject("Bobby","9a321fadbbba82b44ad772c30df207bed4cc1c4a8bf00816830e743657ee91c8");
+        Call<IdDataObject> call = apiService.newUser(bobby);
+        new RegisterCall().execute(call);
+    }
 
+    private class RegisterCall extends AsyncTask<Call, Void, Response<IdDataObject>> {
+        @Override
+        protected Response<IdDataObject> doInBackground(Call... params) {
+            try {
+                Call<IdDataObject> call = params[0];
+                Response<IdDataObject> response = call.execute();
+
+                return response;
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Response<IdDataObject> result) {
+
+
+        }
+    }
 }
