@@ -349,15 +349,6 @@ public class DataEntryActivity extends AppCompatActivity implements MainActivity
         }
     }
 
-    class UpdateBorderViewPagerFragment extends AsyncTask<CalendarFragment, Integer, Void> {
-
-
-        @Override
-        protected Void doInBackground(CalendarFragment... params) {
-
-            return null;
-        }
-    }
 }
 
 
