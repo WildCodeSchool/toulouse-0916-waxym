@@ -301,7 +301,7 @@ public class CalendarFragment extends Fragment {
         protected Void doInBackground(Void... params) {
             calendarAdapter = new MonthAdapter(getContext(), cells);
             grid.setNumColumns(7);
-            MainActivity activity = (MainActivity) getActivity();
+            DataEntryActivity activity = (DataEntryActivity) getActivity();
             MainActivityCallBackInterface mainActivityCallBackInterface = (MainActivityCallBackInterface) activity;
             calendarAdapter.setCallback(mainActivityCallBackInterface);
             grid.setAdapter(calendarAdapter);

@@ -33,7 +33,7 @@ import fr.wildcodeschool.haa.waxym.model.GridDateModel;
 import fr.wildcodeschool.haa.waxym.view.CustomViewPager;
 
 
-public class MainActivity extends AppCompatActivity implements MainActivityCallBackInterface {
+public class DataEntryActivity extends AppCompatActivity implements MainActivityCallBackInterface {
     private static final String LIST_FRAGMENT_TAG = "list_fragment";
     private DBHandler mDBHelper;
     private CustomViewPager viewPager;
@@ -56,10 +56,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         this.mDBHelper = new DBHandler(this);
 
 
-        ServerHelper serverHelper = new ServerHelper(this);
-        //serverHelper.attachUserToActivity();
-        serverHelper.updateServerListActivities();
-        //serverHelper.getActivitiesBetweenDate();
         final Button editButton = (Button) findViewById(R.id.buttonEdit);
         editButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -125,17 +121,18 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
                                 status.setCurrentDate(skipWeekend(calendar, false));
 
                             }
+                            showCurrentDate();
                             viewcurrentPosition = position;
+                        } else {
+                            Handler handler = new Handler();
+                            handler.postDelayed(new Runnable() {
+                                @Override
+                                public void run() {
+                                    updateCurrentViewPagerFragment();
+                                    showCurrentDate();
+                                }
+                            }, 200);
                         }
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                updateCurrentViewPagerFragment();
-                                showCurrentDate();
-                            }
-                        }, 200);
-
                     }
 
                     @Override
@@ -244,8 +241,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     }
 
 
-
-
     @Override
     public void onMethodCallBack() {
         // update current viewed fragment
@@ -260,7 +255,7 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
     @Override
     public void launchDayView() {
         StatusSingleton.getInstance().setLastMonthPosition(viewPager.getCurrentItem());
-        spin.setSelection(1);
+        spin.setSelection(Constants.DAY_VIEW_SPINNER);
 
     }
 
@@ -275,20 +270,17 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         String dateFormat;
         if (status.isInMonthView()) {
             header.setVisibility(View.VISIBLE);
-            dateFormat = "MMMM yyyy";
+            dateFormat = Constants.MONTH_DATE_FORMAT;
         } else if (status.isInDayView()) {
             header.setVisibility(View.INVISIBLE);
-            dateFormat = "EEEE dd MMMM";
+            dateFormat = Constants.DAY_DATE_FORMAT;
             Calendar calendar = Calendar.getInstance();
             calendar.setTime(gridDateModel.getDate());
             status.setCurrentDate(calendar);
         } else
-            dateFormat = "MMMM yyyy";
+            dateFormat = Constants.MONTH_DATE_FORMAT;
         SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.FRANCE);
-        // SimpleDateFormat sdf2 = new SimpleDateFormat("yyyy");
         String currentDate = sdf.format(gridDateModel.getDate());
-/*        currentDate += " ";
-        currentDate+= sdf2.format(gridDateModel.getDate());*/
         textDate.setText(currentDate);
 
     }
@@ -313,13 +305,6 @@ public class MainActivity extends AppCompatActivity implements MainActivityCallB
         rightCalendarFragment.updateCalendar(getApplicationContext());
         leftCalendarFragment = (CalendarFragment) fsp.instantiateItem(viewPager, viewPager.getCurrentItem() - 1);
         leftCalendarFragment.updateCalendar(getApplicationContext());
-
-       /* runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                new  UpdateBorderViewPagerFragment();
-            }
-        });*/
     }
 
     private Calendar skipWeekend(Calendar calendar, boolean isTotheFuture) {

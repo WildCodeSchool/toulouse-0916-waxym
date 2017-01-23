@@ -6,8 +6,12 @@ package fr.wildcodeschool.haa.waxym;
 
 public class Constants {
     public final static String DBNAME = "database.sqlite";
-    //
+    //date format
     public final static String DATE_FORMAT = "yyyy-MM-dd";
+    public final static String DAY_DATE_FORMAT = "EEEE dd MMMM";
+    public final static String MONTH_DATE_FORMAT = "MMMM yyyy";
+
+
     // table columns names
     public final static String ACTIVITY_COLOR = "activity_color";
     public final static String DATE = "date";
@@ -43,12 +47,17 @@ public class Constants {
     public final static String POSITION_KEY = "Month";
     public final static String SELECTED_DAYS = "selected";
     public final static int TOTAL_SLIDES = 120;
-    public final static long CLEAR_ACTIVITY = -666;
+    public final static Long CLEAR_ACTIVITY = Long.valueOf(-666);
     public final static int NOT_SENDED = 1;
+    public final static int MORNING_ID = 1;
+    public final static int AFTERNOON_ID = 2;
+    public final static int DAY_VIEW_SPINNER = 1;
+
+
 
 
     //Code server
-    public final static int BLANK_HOLIDAY = -1;
+    public final static Long BLANK_HOLIDAY = -1L;
     public final static int OK = 0;
     public final static int USER_KNOWNED = 1001;
     public final static int STATUS_CODE_OK = 200;

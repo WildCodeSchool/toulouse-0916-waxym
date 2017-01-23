@@ -21,7 +21,7 @@ public class DayStuffModel implements Parcelable {
     private long userId;
     private String activityColor;
     private int sendState;
-    private long activityId;
+    private Long activityId;
     private long activityDetailType;
 
     public DayStuffModel(Date date, String activity, long contractNumber, String activityColor, int morning, int afternoon, String userName, int userId, int sendState, long activityId, long activityDetailType) {
@@ -139,11 +139,11 @@ public class DayStuffModel implements Parcelable {
         this.sendState = sendState;
     }
 
-    public long getActivityId() {
+    public Long getActivityId() {
         return activityId;
     }
 
-    public void setActivityId(long activityId) {
+    public void setActivityId(Long activityId) {
         this.activityId = activityId;
     }
 
@@ -179,9 +179,9 @@ public class DayStuffModel implements Parcelable {
             return Constants.ID_ERROR;
         } else {
             if (getMorning() == 1)
-                return 1;
+                return Constants.MORNING_ID;
             else
-                return 2;
+                return Constants.AFTERNOON_ID;
         }
     }
 }

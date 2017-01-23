@@ -20,6 +20,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.ParseException;
 import java.util.ArrayList;
 
 import fr.wildcodeschool.haa.waxym.server.ServerHelper;
@@ -31,10 +32,10 @@ import retrofit2.Call;
 import retrofit2.Response;
 
 /**
- *  ask for login information  send to server and check if login succes/fail
+ * ask for login information  send to server and check if login succes/fail
  */
 
-public class LogActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity {
     private static final String TAG = "LogActivity";
     private Button btn_login;
     private EditText textEmailAddress;
@@ -43,6 +44,7 @@ public class LogActivity extends AppCompatActivity {
     private String encryptedPassword;
     private ProgressDialog progressDialog;
     private DBHandler mDBHelper;
+    private boolean isFirstLaunch = false;
 
 
     @Override
@@ -60,7 +62,13 @@ public class LogActivity extends AppCompatActivity {
         // check if database exist
         File database = this.getApplicationContext().getDatabasePath(Constants.DBNAME);
         //copyDatabase(getApplicationContext());
+
         if (!database.exists()) {
+            this.progressDialog = new ProgressDialog(LoginActivity.this,
+                    R.style.AppTheme2);
+            this.progressDialog.setIndeterminate(true);
+            this.progressDialog.setMessage(getString(R.string.initialization_message));
+            this.progressDialog.show();
             this.mDBHelper.getReadableDatabase();
             // and copy database with method
             if (!this.copyDatabase(this)) {
@@ -104,7 +112,7 @@ public class LogActivity extends AppCompatActivity {
 
         btn_login.setEnabled(false);
 
-        this.progressDialog = new ProgressDialog(LogActivity.this,
+        this.progressDialog = new ProgressDialog(LoginActivity.this,
                 R.style.AppTheme2);
         this.progressDialog.setIndeterminate(true);
         this.progressDialog.setMessage(getString(R.string.auth_message));
@@ -137,9 +145,9 @@ public class LogActivity extends AppCompatActivity {
     }
 
     public void onLoginSuccess() {
-        btn_login.setEnabled(true);
+
         finish();
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent(this, DataEntryActivity.class);
         startActivity(intent);
         this.progressDialog.dismiss();
     }
@@ -152,6 +160,8 @@ public class LogActivity extends AppCompatActivity {
     }
 
     private class NetworkCall extends AsyncTask<Call, Void, Response<IdDataObject>> {
+        boolean isTimeOut = false;
+
         @Override
         protected Response<IdDataObject> doInBackground(Call... params) {
             try {
@@ -160,37 +170,60 @@ public class LogActivity extends AppCompatActivity {
                 return response;
             } catch (IOException e) {
                 e.printStackTrace();
+                this.isTimeOut = true;
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Response<IdDataObject> result) {
+            if (!isTimeOut) {
+                if (result.body().getID() != Constants.BLANK_HOLIDAY) {
 
-            if (result.body().getID() != -1) {
-
-               ArrayList<Long> existingUserId = mDBHelper.getAllUsers();
-                boolean isExisting = false;
-                for (int i = 0; i < existingUserId.size(); i++) {
-                    if (existingUserId.get(i) == result.body().getID()) {
-                        isExisting = true;
-                        break;
+                    ArrayList<Long> existingUserId = mDBHelper.getAllUsers();
+                    boolean isExisting = false;
+                    for (int i = 0; i < existingUserId.size(); i++) {
+                        if (existingUserId.get(i) == result.body().getID()) {
+                            isExisting = true;
+                            break;
+                        }
                     }
-                }
-                    if (!isExisting){
+                    if (!isExisting) {
                         mDBHelper.newUser(result.body().getID(), textEmailAddress.getText().toString());
                     }
 
-                StatusSingleton status = StatusSingleton.getInstance();
-                status.setCurrentUserId(result.body().getID());
-                onLoginSuccess();
+                    StatusSingleton status = StatusSingleton.getInstance();
+                    status.setCurrentUserId(result.body().getID());
+                    ServerHelper serverHelper = new ServerHelper(getApplicationContext());
+                    try {
+                        if (mDBHelper.getNotSendedActivities().size() == 0) {
+                            serverHelper.updateServerListActivities();
+                        } else {
+                            serverHelper.sendDaysActivities();
+                            if (mDBHelper.getNotSendedActivities().size() == 0) {
+                                serverHelper.updateServerListActivities();
+                            }
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (isFirstLaunch) {
+                        serverHelper.getSavedActivitiesFromServer();
+                    }
+                    onLoginSuccess();
+                } else {
+                    onLoginFailed();
+                }
             } else {
                 onLoginFailed();
             }
         }
     }
+
     //copying database from assets to database folder
     private boolean copyDatabase(Context context) {
+        this.isFirstLaunch = true;
         try {
             InputStream inpuStream = context.getAssets().open(Constants.DBNAME);
             // set target of output
@@ -206,6 +239,7 @@ public class LogActivity extends AppCompatActivity {
             //clear buffer
             outputStream.flush();
             outputStream.close();
+            this.progressDialog.dismiss();
             Log.w("MainActivity", "DB copied");
             return true;
 

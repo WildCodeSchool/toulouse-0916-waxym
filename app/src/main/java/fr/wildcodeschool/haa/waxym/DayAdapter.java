@@ -72,7 +72,7 @@ public class DayAdapter extends BaseAdapter {
                 halfDay.setTextColor(Color.BLACK);
                 if (this.dayEvents.size() > 0) {
                     for (int i = 0; i < this.dayEvents.size(); i++) {
-                        if (this.dayEvents.get(i).getActivityId() != Constants.CLEAR_ACTIVITY) {
+                        if (!this.dayEvents.get(i).getActivityId().equals(Constants.CLEAR_ACTIVITY)) {
                             if (this.dayEvents.get(i).getMorning() == 1) {
                                 halfDay.setText(this.dayEvents.get(i).getActivity());
                                 gd.setColor(Color.parseColor("#" + this.dayEvents.get(i).getActivityColor()));
@@ -90,7 +90,7 @@ public class DayAdapter extends BaseAdapter {
 
                 if (dayEvents.size() != 0) {
                     for (int i = 0; i < this.dayEvents.size(); i++) {
-                        if (this.dayEvents.get(i).getActivityId() != Constants.CLEAR_ACTIVITY) {
+                        if (!this.dayEvents.get(i).getActivityId().equals(Constants.CLEAR_ACTIVITY)) {
                             if (this.dayEvents.get(i).getAfternoon() == 1) {
                                 halfDay.setText(this.dayEvents.get(i).getActivity());
                                 gd.setColor(Color.parseColor("#" + this.dayEvents.get(i).getActivityColor()));
