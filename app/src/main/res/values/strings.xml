@@ -31,6 +31,7 @@
     <string name="auth_message">Authenticating...</string>
     <string name="database_error_message">error cannot copy Database</string>
     <string name="initialization_message">Initalisation</string>
+    <string name="server_error_message">Server Error try later</string>
 
     <drawable name="icon_sliding">@drawable/ic_action_view_as_list</drawable>
     <string-array name="spinner_list">

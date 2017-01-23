@@ -17,6 +17,7 @@ import java.util.List;
 
 import fr.wildcodeschool.haa.waxym.Constants;
 import fr.wildcodeschool.haa.waxym.DataEntryActivity;
+import fr.wildcodeschool.haa.waxym.R;
 import fr.wildcodeschool.haa.waxym.dataObject.UserDataObject;
 import fr.wildcodeschool.haa.waxym.database.DBHandler;
 import fr.wildcodeschool.haa.waxym.dataObject.DayActivitiesDataObject;
@@ -305,7 +306,7 @@ public class ServerHelper {
                     }
                 }
             }else
-                Toast.makeText(context,"Server Error try later",Toast.LENGTH_SHORT ).show();
+                Toast.makeText(context, R.string.server_error_message,Toast.LENGTH_SHORT ).show();
         }
     }
     public void register(){
