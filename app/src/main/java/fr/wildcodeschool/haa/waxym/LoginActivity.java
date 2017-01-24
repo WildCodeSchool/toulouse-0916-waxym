@@ -210,6 +210,12 @@ public class LoginActivity extends AppCompatActivity {
 
                     if (isFirstLaunch) {
                         serverHelper.getSavedActivitiesFromServer();
+                    }else try {
+                        if (mDBHelper.getNotSendedActivities().size() >0){
+                            serverHelper.sendDaysActivities();
+                        }
+                    } catch (ParseException e) {
+                        e.printStackTrace();
                     }
                     onLoginSuccess();
                 } else {

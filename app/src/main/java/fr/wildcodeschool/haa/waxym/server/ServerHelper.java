@@ -70,7 +70,7 @@ public class ServerHelper {
         @Override
         protected void onPostExecute(Response<ListOfActivitiesDataObject> result) {
             DBHandler mDBHandler = new DBHandler(context);
-                mDBHandler.updateActivitiesList(result.body().getListOfActivities());
+            mDBHandler.updateActivitiesList(result.body().getListOfActivities());
 
         }
     }
@@ -82,7 +82,7 @@ public class ServerHelper {
         //ActivityDataobject cp = new ActivityDataobject(2 ,"TI","dab398"); id = 37
         //ActivityDataobject cp = new ActivityDataobject(3, "Infomil",52, 35,"FCDC12"); id = 38
         //ActivityDataobject cp = new ActivityDataobject(3, "AXA",503, 98,"9683EC"); id = 41
-        ActivityDataobject cp = new ActivityDataobject(3, "AXA",503, 98,"9683EC");
+        ActivityDataobject cp = new ActivityDataobject(3, "AXA", 503, 98, "9683EC");
         Call<IdDataObject> call = apiService.addActivity(cp);
         new AddActivityCall().execute(call);
 
@@ -114,32 +114,32 @@ public class ServerHelper {
     public void detachUserToActivity() {
         ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
         IdDataObject idDataObject = new IdDataObject((long) 1);
-        Call<JsonObject> call = apiService.removeActivityToUser((long)42, idDataObject);
+        Call<JsonObject> call = apiService.removeActivityToUser((long) 42, idDataObject);
         new AttachCall().execute(call);
         IdDataObject idDataObject2 = new IdDataObject((long) 2);
-        Call<JsonObject> call2 = apiService.removeActivityToUser((long)42, idDataObject2);
+        Call<JsonObject> call2 = apiService.removeActivityToUser((long) 42, idDataObject2);
         new AttachCall().execute(call2);
         IdDataObject idDataObject3 = new IdDataObject((long) 2);
-        Call<JsonObject> call3 = apiService.removeActivityToUser((long)42, idDataObject3);
+        Call<JsonObject> call3 = apiService.removeActivityToUser((long) 42, idDataObject3);
         new AttachCall().execute(call3);
     }
 
     public void attachUserToActivity() {
         ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
         IdDataObject idDataObject = new IdDataObject((long) 35);
-        Call<JsonObject> call = apiService.addActivityToUser((long)42, idDataObject);
+        Call<JsonObject> call = apiService.addActivityToUser((long) 42, idDataObject);
         new AttachCall().execute(call);
         IdDataObject idDataObject2 = new IdDataObject((long) 36);
-        Call<JsonObject> call2 = apiService.addActivityToUser((long)4242, idDataObject2);
+        Call<JsonObject> call2 = apiService.addActivityToUser((long) 4242, idDataObject2);
         new AttachCall().execute(call2);
         IdDataObject idDataObject3 = new IdDataObject((long) 37);
-        Call<JsonObject> call3 = apiService.addActivityToUser((long)4242, idDataObject3);
+        Call<JsonObject> call3 = apiService.addActivityToUser((long) 4242, idDataObject3);
         new AttachCall().execute(call3);
         IdDataObject idDataObject4 = new IdDataObject((long) 38);
-        Call<JsonObject> call4 = apiService.addActivityToUser((long)4242, idDataObject4);
+        Call<JsonObject> call4 = apiService.addActivityToUser((long) 4242, idDataObject4);
         new AttachCall().execute(call4);
         IdDataObject idDataObject5 = new IdDataObject((long) 41);
-        Call<JsonObject> call5 = apiService.addActivityToUser((long)4242, idDataObject5);
+        Call<JsonObject> call5 = apiService.addActivityToUser((long) 4242, idDataObject5);
     }
 
     private class AttachCall extends AsyncTask<Call, Void, Response<JsonObject>> {
@@ -179,7 +179,7 @@ public class ServerHelper {
                 if (dayActivitiesModel != null) {
                     if (dayActivitiesModel.getPmActivityId() != Constants.CLEAR_ACTIVITY) {
                         dayActivitiesModel.setPmActivityId(originalList.get(i).getActivityId());
-                    }else {
+                    } else {
                         dayActivitiesModel.clearPmActivity();
                     }
                     convertedListTosend.put(this.sdf.format(originalList.get(i).getDate()), dayActivitiesModel);
@@ -191,7 +191,7 @@ public class ServerHelper {
                 if (dayActivitiesModel != null) {
                     if (dayActivitiesModel.getPmActivityId() != Constants.CLEAR_ACTIVITY) {
                         dayActivitiesModel.setAmActivityId(originalList.get(i).getActivityId());
-                    }else {
+                    } else {
                         dayActivitiesModel.clearPmActivity();
                     }
                     convertedListTosend.put(this.sdf.format(originalList.get(i).getDate()), dayActivitiesModel);
@@ -201,7 +201,7 @@ public class ServerHelper {
                 }
             }
         }
-        for (String str : convertedListTosend.keySet()){
+        for (String str : convertedListTosend.keySet()) {
             finalListTosend.add(convertedListTosend.get(str));
         }
         ListOfDayActivitiesDataObject listOfDayActivitiesDataObject = new ListOfDayActivitiesDataObject(finalListTosend);
@@ -210,6 +210,8 @@ public class ServerHelper {
     }
 
     private class SendActivitiesCall extends AsyncTask<Call, Void, Response<JsonObject>> {
+        boolean isTimeOut = false;
+
         @Override
         protected Response<JsonObject> doInBackground(Call... params) {
             try {
@@ -219,38 +221,41 @@ public class ServerHelper {
                 return response;
             } catch (IOException e) {
                 e.printStackTrace();
+                this.isTimeOut = true;
             }
             return null;
         }
 
         @Override
         protected void onPostExecute(Response<JsonObject> result) {
-           for (int i = 0; i < originalList.size(); i++){
-               originalList.get(i).setSendState(0);
-               DBHandler mDBHandler = new DBHandler(context);
-               try {
-                   mDBHandler.setEventEraser(originalList.get(i));
-               } catch (ParseException e) {
-                   e.printStackTrace();
-               }
-           }
-
+            if (!isTimeOut) {
+                for (int i = 0; i < originalList.size(); i++) {
+                    originalList.get(i).setSendState(0);
+                    DBHandler mDBHandler = new DBHandler(context);
+                    try {
+                        mDBHandler.setEventEraser(originalList.get(i));
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
 
         }
     }
 
-    public void getSavedActivitiesFromServer(){
+    public void getSavedActivitiesFromServer() {
         Calendar calendarFrom = Calendar.getInstance();
         Calendar calendarTo = Calendar.getInstance();
-        calendarFrom.add(Calendar.DAY_OF_YEAR,-30);
+        calendarFrom.add(Calendar.DAY_OF_YEAR, -30);
         calendarTo.add(Calendar.DAY_OF_YEAR, 15);
         ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
-        Call<ListOfDayActivitiesDataObject> call = apiService.getDayActivities(StatusSingleton.getInstance().getCurrentUserId(),sdf.format(calendarFrom.getTime()),sdf.format(calendarTo.getTime()));
+        Call<ListOfDayActivitiesDataObject> call = apiService.getDayActivities(StatusSingleton.getInstance().getCurrentUserId(), sdf.format(calendarFrom.getTime()), sdf.format(calendarTo.getTime()));
         new GetSavedActivitiesCall().execute(call);
     }
 
     private class GetSavedActivitiesCall extends AsyncTask<Call, Void, Response<ListOfDayActivitiesDataObject>> {
         private boolean isTimeOut = false;
+
         @Override
         protected Response<ListOfDayActivitiesDataObject> doInBackground(Call... params) {
             try {
@@ -305,13 +310,14 @@ public class ServerHelper {
                         }
                     }
                 }
-            }else
-                Toast.makeText(context, R.string.server_error_message,Toast.LENGTH_SHORT ).show();
+            } else
+                Toast.makeText(context, R.string.server_error_message, Toast.LENGTH_SHORT).show();
         }
     }
-    public void register(){
+
+    public void register() {
         ServerInterface apiService = ServerInterface.retrofit.create(ServerInterface.class);
-        UserDataObject bobby = new UserDataObject("Bobby","9a321fadbbba82b44ad772c30df207bed4cc1c4a8bf00816830e743657ee91c8");
+        UserDataObject bobby = new UserDataObject("Bobby", "9a321fadbbba82b44ad772c30df207bed4cc1c4a8bf00816830e743657ee91c8");
         Call<IdDataObject> call = apiService.newUser(bobby);
         new RegisterCall().execute(call);
     }

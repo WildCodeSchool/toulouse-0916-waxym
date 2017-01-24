@@ -119,8 +119,8 @@ public class DataEntryActivity extends AppCompatActivity implements MainActivity
                             } else {
                                 calendar.add(Calendar.DAY_OF_MONTH, -1);
                                 status.setCurrentDate(skipWeekend(calendar, false));
-
                             }
+                            updateCurrentViewPagerFragment();
                             showCurrentDate();
                             viewcurrentPosition = position;
                         } else {
@@ -174,15 +174,15 @@ public class DataEntryActivity extends AppCompatActivity implements MainActivity
                     status.setInMonthView(false);
                     status.setLastMonthPosition(viewPager.getCurrentItem());
                     viewPager.setCurrentItem(Constants.TOTAL_SLIDES / 2);
-                    updateCurrentViewPagerFragment();
                     updateBorderViewPagerFragment();
+                    updateCurrentViewPagerFragment();
 
                 } else if (position == 3) {
                     status.setInDayView(false);
                     status.setInMonthView(true);
                     viewPager.setCurrentItem(status.getLastMonthPosition());
-                    updateCurrentViewPagerFragment();
                     updateBorderViewPagerFragment();
+                    updateCurrentViewPagerFragment();
                 }
                 showCurrentDate();
 
