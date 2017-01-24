@@ -1,0 +1,92 @@
+package fr.wildcodeschool.haa.waxym;
+
+import java.util.Calendar;
+
+/**
+ * get current status of app
+ * if is in different mode and viewpager last position
+ */
+
+public class StatusSingleton {
+    private static StatusSingleton mInstance = null;
+    private boolean isMenuCreated;
+    private boolean isEditMode;
+    private boolean isInMonthView;
+    private boolean isInDayView;
+    private Calendar currentDate;
+    private int lastMonthPosition;
+    private long currentUserId;
+
+    private StatusSingleton() {
+        isEditMode = false;
+        isMenuCreated = false;
+        isInMonthView = true;
+        isInDayView = false;
+        this.currentDate = Calendar.getInstance();
+        this.currentUserId = 0;
+        this.lastMonthPosition = Constants.TOTAL_SLIDES/2;
+    }
+
+    public static StatusSingleton getInstance() {
+        if (mInstance == null) {
+            mInstance = new StatusSingleton();
+        }
+        return mInstance;
+    }
+
+    public boolean isMenuCreated() {
+        return isMenuCreated;
+    }
+
+    public boolean isInMonthView() {
+        return isInMonthView;
+    }
+
+    public void setInMonthView(boolean inMonthView) {
+        isInMonthView = inMonthView;
+    }
+
+    public void setMenuCreated(boolean menuCreated) {
+        isMenuCreated = menuCreated;
+    }
+
+    public boolean isEditMode() {
+        return isEditMode;
+    }
+
+    public void setEditMode(boolean editMode) {
+        isEditMode = editMode;
+    }
+
+    public boolean isInDayView() {
+        return isInDayView;
+    }
+
+    public void setInDayView(boolean inDayView) {
+        isInDayView = inDayView;
+    }
+
+    public Calendar getCurrentDate() {
+        return currentDate;
+    }
+
+    public void setCurrentDate(Calendar currentDate) {
+        this.currentDate = currentDate;
+    }
+
+    public int getLastMonthPosition() {
+        return lastMonthPosition;
+    }
+
+    public void setLastMonthPosition(int lastMonthPosition) {
+        this.lastMonthPosition = lastMonthPosition;
+    }
+
+    public long getCurrentUserId() {
+        return currentUserId;
+    }
+
+    public void setCurrentUserId(long currentUserId) {
+        this.currentUserId = currentUserId;
+    }
+}

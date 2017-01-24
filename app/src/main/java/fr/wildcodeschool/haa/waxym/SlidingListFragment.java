@@ -1,64 +1,168 @@
 package fr.wildcodeschool.haa.waxym;
 
-import android.app.ListFragment;
-import android.graphics.Color;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ListView;
+import android.widget.Toast;
+
+
+import java.text.ParseException;
+import java.util.ArrayList;
+
+import fr.wildcodeschool.haa.waxym.server.ServerHelper;
+import fr.wildcodeschool.haa.waxym.database.DBHandler;
+import fr.wildcodeschool.haa.waxym.model.ActivityItemModel;
+import fr.wildcodeschool.haa.waxym.model.DayStuffModel;
+
 
 /**
- * Created by apprenti on 15/11/16.
+ * used as a popup to get user wishes about data entry
  */
 
-public class SlidingListFragment extends ListFragment {
+public class SlidingListFragment extends DialogFragment {
+    private ArrayList<ActivityItemModel> mesContrats;
+    private ActivityItemModel selectedContract;
+    private ArrayList<DayStuffModel> selectedDays;
+    private boolean isEraseChoice = false;
+    private boolean isWritingModeChoiceDone = false;
+    private boolean isContractSelected = false;
+    Button complete;
+    Button erase;
+    DBHandler mHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.sliding_fragment_layout, container, false);
-    }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        setListAdapter(new MyListAdapter());
-    }
+        this.selectedDays = getArguments().getParcelableArrayList(Constants.SELECTED_DAYS);
 
-    private class MyListAdapter extends BaseAdapter {
+        final View view = inflater.inflate(R.layout.sliding_fragment_layout, container, false);
+        this.mHandler = new DBHandler(view.getContext());
+        this.mesContrats = this.mHandler.getUserActivitiesList();
 
-        @Override
-        //nombre de fragments
-        public int getCount() {
-            return 4;
-        }
 
-        @Override
-        public Object getItem(int position) {
-            return null;
-        }
+        final BaseAdapter customAdapter = new ContractAdapter(view.getContext(), mesContrats);
+        final ListView listView = (ListView) view.findViewById(R.id.listview);
+        listView.setAdapter(customAdapter);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                isContractSelected = true;
+                selectedContract = mesContrats.get(position);
+                mesContrats.get(position).setSelected(true);
+                for (int i = 0; i < mesContrats.size(); i++) {
+                    if (i != position) {
+                        mesContrats.get(i).setSelected(false);
+                    }
+                }
+                listView.setAdapter(customAdapter);
+                listView.setSelection(position);
+                if (isWritingModeChoiceDone) {
+                    addSelectedContractToSelectedDays();
 
-        @Override
-        public long getItemId(int position) {
-            return 0;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            Button result = (Button) convertView;
-            if (result == null) {
-                result = (Button) LayoutInflater.from(parent.getContext())
-                        .inflate(R.layout.list_view_item, parent, false);
+                }
             }
-            //ici le texte dans les fragments
-            result.setText("couleur" + position);
-            result.setBackgroundColor(Color.rgb(30,127,203));
+        });
 
-            return result;
+
+        this.complete = (Button) view.findViewById(R.id.complete);
+        this.complete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isWritingModeChoiceDone = true;
+                if (isContractSelected)
+                    addSelectedContractToSelectedDays();
+                isEraseChoice = false;
+                complete.setBackgroundResource(R.drawable.button2_selected);
+                erase.setBackgroundResource(R.drawable.button);
+            }
+        });
+        this.erase = (Button) view.findViewById(R.id.erase);
+        this.erase.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                isWritingModeChoiceDone = true;
+                if (isContractSelected)
+                    addSelectedContractToSelectedDays();
+                isEraseChoice = true;
+                erase.setBackgroundResource(R.drawable.button_selected);
+                complete.setBackgroundResource(R.drawable.button2);
+            }
+        });
+
+        Button validate = (Button) view.findViewById(R.id.validate);
+        validate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (isContractSelected) {
+                    if (isWritingModeChoiceDone) {
+                        try {
+                            writeInDatabase();
+                            ServerHelper serverHelper = new ServerHelper(view.getContext());
+                            serverHelper.sendDaysActivities();
+                        } catch (ParseException e) {
+                            e.printStackTrace();
+                        }
+                        closeFragment();
+                    } else
+                        Toast.makeText(view.getContext(), "Veuillez sélectionner compléter ou écraser", Toast.LENGTH_SHORT).show();
+                } else
+                    Toast.makeText(view.getContext(), "Veuillez sélectionner le type d'activité", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        final Button cancel = (Button) view.findViewById(R.id.cancel);
+        cancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeFragment();
+            }
+        });
+
+        return view;
+    }
+
+    private void addSelectedContractToSelectedDays() {
+        for (int i = 0; i < selectedDays.size(); i++) {
+            selectedDays.get(i).setActivityId(selectedContract.getActivityID());
+            selectedDays.get(i).setUserId(StatusSingleton.getInstance().getCurrentUserId());
+            selectedDays.get(i).setSendState(Constants.NOT_SENDED);
         }
     }
+
+    private void writeInDatabase() throws ParseException {
+        if (this.selectedDays.size() > 0) {
+            for (int i = 0; i < this.selectedDays.size(); i++) {
+                if (!this.isEraseChoice) {
+                    ArrayList<DayStuffModel> lastSelectedDayevents = mHandler.getDayEvents(StatusSingleton.getInstance().getCurrentUserId(), this.selectedDays.get(i).getDate());
+                    if (lastSelectedDayevents.size() > 0) {
+                        for (int j = 0; j < lastSelectedDayevents.size(); j++) {
+                            if (lastSelectedDayevents.get(j).getActivityId().equals(Constants.CLEAR_ACTIVITY)) {
+                                mHandler.setEventEraser(selectedDays.get(i));
+                            }
+                        }
+                    }
+                    mHandler.setEventCompleter(selectedDays.get(i));
+                } else
+                    mHandler.setEventEraser(selectedDays.get(i));
+            }
+
+        }
+    }
+
+    private void closeFragment() {
+        getActivity().getFragmentManager().beginTransaction().remove(SlidingListFragment.this).commit();
+        ((MainActivityCallBackInterface) getView().getContext()
+        ).onMethodCallBack();
+
+
+    }
+
 }
 

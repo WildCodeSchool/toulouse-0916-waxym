@@ -1,16 +1,16 @@
-package fr.wildcodeschool.haa.waxym;
+package fr.wildcodeschool.haa.waxym.model;
 
 import java.util.Date;
 
 /**
- * Created by tuffery on 20/11/16.
+ * used to generate calendar view in gridview
  */
 
-public class GridDate {
+public class GridDateModel {
     private Date date;
     private boolean state;
 
-    public GridDate(Date date) {
+    public GridDateModel(Date date) {
         this.date = date;
         this.state = false;
     }
@@ -29,5 +29,12 @@ public class GridDate {
 
     public void setState(boolean state) {
         this.state = state;
+    }
+
+    public int getMonth() {
+        if (getDate()!=null){
+            return getDate().getMonth();
+        }
+        return -1;
     }
 }

@@ -1,11 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:fr.wildcodeschool.haa.waxym = "http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".DataEntryActivity">
+
+    <item android:id="@+id/item1"
+        android:title="@string/jours"
+        android:orderInCategory="0"
+        fr.wildcodeschool.haa.waxym:showAsAction="always"
+        fr.wildcodeschool.haa.waxym:actionViewClass="android.widget.Spinner" />
 
     <item android:id="@+id/action_show_list"
-        android:title="click ici"
-        android:icon="@drawable/ic_action_view_as_list"
-        android:showAsAction="always"/>
+        android:title="@string/click_here"
+        android:icon="@drawable/calendar_flat"
+        android:orderInCategory="1"
+        fr.wildcodeschool.haa.waxym:showAsAction="always"/>
 
 </menu>
