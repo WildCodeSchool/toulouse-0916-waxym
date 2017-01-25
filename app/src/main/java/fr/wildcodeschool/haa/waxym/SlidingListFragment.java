@@ -32,9 +32,9 @@ public class SlidingListFragment extends DialogFragment {
     private boolean isEraseChoice = false;
     private boolean isWritingModeChoiceDone = false;
     private boolean isContractSelected = false;
-    Button complete;
-    Button erase;
-    DBHandler mHandler;
+    private Button complete;
+    private Button erase;
+    private DBHandler mHandler;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
